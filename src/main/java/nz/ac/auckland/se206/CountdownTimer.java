@@ -11,7 +11,7 @@ import javafx.util.Duration;
 public class CountdownTimer {
   private static final int secondDuration = 1;
   private static Timeline countdownTimer;
-  private static final IntegerProperty secondsRemaining = new SimpleIntegerProperty(120);
+  private static final IntegerProperty secondsRemaining = new SimpleIntegerProperty(300);
   private static boolean guessed = false;
 
   static {
@@ -49,7 +49,7 @@ public class CountdownTimer {
       // TTS for last question
       try {
         playEndTtsAudio();
-        secondsRemaining.set(10);
+        secondsRemaining.set(60);
         guessed = true;
       } catch (Exception e) {
         e.printStackTrace();
