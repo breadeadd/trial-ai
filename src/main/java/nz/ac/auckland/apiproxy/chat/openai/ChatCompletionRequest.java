@@ -17,8 +17,6 @@ import org.apache.http.impl.client.HttpClients;
 public class ChatCompletionRequest {
 
   public enum Model {
-    GPT_5_MINI("gpt-5-mini"),
-    GPT_5_NANO("gpt-5-nano"),
     GPT_4_1_MINI("gpt-4.1-mini"),
     GPT_4_1_NANO("gpt-4.1-nano"),
     GPT_4o_MINI("gpt-4o-mini");
@@ -161,14 +159,8 @@ public class ChatCompletionRequest {
       if (!responseChat.success && responseChat.code != 0) {
         throw new ApiProxyException("Problem calling API: " + responseChat.message);
       }
-      ChatCompletionResult result = new ChatCompletionResult(responseChat.chat_completion);
-      System.out.println(
-          "*** ChatCompletion used "
-              + result.getUsageTotalTokens()
-              + " tokens. If this seems like a lot, try other models that might use less tokens."
-              + " GPT4 models tend to use less than the GPT5 models.");
+      return new ChatCompletionResult(responseChat.chat_completion);
 
-      return result;
     } catch (Exception e) {
       throw new ApiProxyException("Problem calling API: " + e.getMessage());
     }

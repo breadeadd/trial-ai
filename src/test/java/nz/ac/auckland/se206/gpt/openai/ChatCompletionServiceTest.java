@@ -5,7 +5,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.util.HashSet;
 import java.util.Set;
 import nz.ac.auckland.apiproxy.chat.openai.ChatCompletionRequest;
-import nz.ac.auckland.apiproxy.chat.openai.ChatCompletionRequest.Model;
 import nz.ac.auckland.apiproxy.chat.openai.ChatCompletionResult;
 import nz.ac.auckland.apiproxy.chat.openai.ChatMessage;
 import nz.ac.auckland.apiproxy.chat.openai.Choice;
@@ -28,8 +27,9 @@ public class ChatCompletionServiceTest {
         .addMessage("user", "What's one city there?");
 
     chatCompletionRequest.setN(1);
-    chatCompletionRequest.setMaxTokens(300);
-    chatCompletionRequest.setModel(Model.GPT_4_1_NANO);
+    chatCompletionRequest.setTemperature(1.5);
+    chatCompletionRequest.setTopP(0.05);
+    chatCompletionRequest.setMaxTokens(100);
     Set<String> results = new HashSet<>();
     try {
       ChatCompletionResult chatCompletionResult = chatCompletionRequest.execute();

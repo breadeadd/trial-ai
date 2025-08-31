@@ -2,34 +2,33 @@ package nz.ac.auckland.se206.controllers;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
-import javafx.scene.shape.Rectangle;
-import nz.ac.auckland.se206.App;
 import nz.ac.auckland.se206.CountdownTimer;
+import nz.ac.auckland.se206.GameStateContext;
 
 /**
  * Controller class for the room view. Handles user interactions within the room where the user can
  * chat with witnesses and defendant to gain a better understanding.
  */
-public class RoomController {
-  private static boolean isFirstTimeInit = true;
-  private boolean firstDefendant = false;
-  private boolean firstHuman = false;
-  private boolean firstAi = false;
-  private MediaPlayer mediaPlayer; // Keep reference to prevent garbage collection
+public class EndController {
 
-  @FXML private Rectangle rectCashier;
-  @FXML private Rectangle rectPerson1;
-  @FXML private Rectangle rectPerson2;
-  @FXML private Rectangle rectPerson3;
-  @FXML private Rectangle rectWaitress;
-  @FXML private Button btnGuess;
+  // Static instance to allow access from countdownTimer
+  public static EndController instance;
+  private static GameStateContext context = new GameStateContext();
+
+  @FXML private Button yesBtn;
+  @FXML private Button noBtn;
+  @FXML private Label questionTxt;
+  @FXML private Label reasonText;
+  private MediaPlayer mediaPlayer;
 
   /**
    * Initializes the room view. If it's the first time initialization, it will provide instructions
@@ -37,20 +36,38 @@ public class RoomController {
    */
   @FXML
   public void initialize() {
-    if (isFirstTimeInit) {
-      try {
-        playOpenTtsAudio();
-      } catch (URISyntaxException e) {
-        e.printStackTrace();
-      }
-      isFirstTimeInit = false;
+    // Set static instance for access from CountdownTimer
+    instance = this;
+    reasonText.setVisible(false);
+  }
+
+  public void setVisible() {
+    noBtn.setVisible(false);
+    yesBtn.setVisible(false);
+    reasonText.setVisible(true);
+  }
+
+  public void setMessage(String caseType) {
+    switch (caseType) {
+      case "yes":
+        questionTxt.setText("You chose YES. You are wrong.");
+        break;
+      case "no":
+        questionTxt.setText("You chose NO. This is correct!");
+        break;
+      case "timeout":
+        questionTxt.setText("TIME OUT! YOU HAVE RUN OUT OF TIME.");
+        break;
+      default:
+        questionTxt.setText("TIME OUT! YOU HAVE RUN OUT OF TIME.");
+        break;
     }
   }
 
   // Call this method where you want to play the audio
-  private void playOpenTtsAudio() throws URISyntaxException {
+  public void playEndTtsAudio() throws URISyntaxException {
     try {
-      String audioPath = getClass().getResource("/audio/openTts.mp3").toURI().toString();
+      String audioPath = getClass().getResource("/audio/endTts.mp3").toURI().toString();
       Media media = new Media(audioPath);
       this.mediaPlayer = new MediaPlayer(media);
       mediaPlayer.setVolume(1.0);
@@ -95,51 +112,27 @@ public class RoomController {
    */
 
   // defendant clicked - switch scene
+
   @FXML
-  private void defendantClicked(MouseEvent event) throws IOException {
-    App.setRoot("defendantChat");
-
-    DefendantController controller = (DefendantController) App.getController("defendantChat");
-    controller.syncChatHistoryAsync();
-
-    if (!firstDefendant) {
-      controller.runFlashback();
-      firstDefendant = true;
-    } else {
-      controller.runAfterFirst();
-    }
+  private void yesPressed(MouseEvent event) throws IOException {
+    Platform.runLater(
+        () -> {
+          this.setMessage("yes");
+          this.setVisible();
+          CountdownTimer.stop();
+        });
   }
 
   // human witness clicked
 
   @FXML
-  private void humanWitnessClicked(MouseEvent event) throws IOException {
-    App.setRoot("witnessChat");
-
-    HumanWitnessController controller = (HumanWitnessController) App.getController("witnessChat");
-    controller.syncChatHistoryAsync();
-
-    if (!firstHuman) {
-      firstHuman = true;
-    } else {
-      controller.runAfterFirst();
-    }
-  }
-
-  // ai witness clicked
-
-  @FXML
-  private void aiWitnessClicked(MouseEvent event) throws IOException {
-    App.setRoot("aiChat");
-
-    AiWitnessController controller = (AiWitnessController) App.getController("aiChat");
-    controller.syncChatHistoryAsync();
-
-    if (!firstAi) {
-      firstAi = true;
-    } else {
-      controller.runAfterFirst();
-    }
+  private void noPressed(MouseEvent event) throws IOException {
+    Platform.runLater(
+        () -> {
+          this.setMessage("no");
+          this.setVisible();
+          CountdownTimer.stop();
+        });
   }
 
   /**
@@ -150,7 +143,6 @@ public class RoomController {
    */
   @FXML
   private void handleGuessClick(ActionEvent event) throws IOException {
-    CountdownTimer.guess();
-    App.setRoot("answer");
+    context.handleGuessClick();
   }
 }

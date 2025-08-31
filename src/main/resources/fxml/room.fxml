@@ -8,30 +8,23 @@
 <?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
 
-<Pane fx:id="room" focusTraversable="true" onKeyPressed="#onKeyPressed" onKeyReleased="#onKeyReleased" prefHeight="599.0" prefWidth="789.0" style="-fx-background-color: #A9A9A9;" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="nz.ac.auckland.se206.controllers.RoomController">
+<Pane fx:id="room" focusTraversable="true" onKeyPressed="#onKeyPressed" onKeyReleased="#onKeyReleased" prefHeight="658.0" prefWidth="789.0" style="-fx-background-color: #FFFFFF;" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="nz.ac.auckland.se206.controllers.RoomController">
    <children>
-      <ImageView fitHeight="452.0" fitWidth="789.0" layoutY="149.0" preserveRatio="true">
+      <ImageView fitHeight="559.0" fitWidth="816.0" layoutX="-1.0" layoutY="136.0" preserveRatio="true">
          <image>
-            <Image url="@../images/cafe.png" />
+            <Image url="@../images/court.jpeg" />
          </image>
       </ImageView>
-      <Rectangle fx:id="rectCashier" arcHeight="5.0" arcWidth="5.0" fill="#1f93ff" focusTraversable="true" height="73.0" layoutX="222.0" layoutY="262.0" onMouseClicked="#handleRectangleClick" opacity="0.0" stroke="BLACK" strokeType="INSIDE" width="38.0" />
-      <Rectangle fx:id="rectPerson1" arcHeight="5.0" arcWidth="5.0" fill="#1f93ff" focusTraversable="true" height="128.0" layoutX="105.0" layoutY="291.0" onMouseClicked="#handleRectangleClick" opacity="0.0" stroke="BLACK" strokeType="INSIDE" width="109.0" />
-      <Rectangle fx:id="rectPerson3" arcHeight="5.0" arcWidth="5.0" fill="#1f93ff" focusTraversable="true" height="135.0" layoutX="587.0" layoutY="284.0" onMouseClicked="#handleRectangleClick" opacity="0.0" stroke="BLACK" strokeType="INSIDE" width="91.0" />
-      <Rectangle fx:id="rectWaitress" arcHeight="5.0" arcWidth="5.0" fill="#1f93ff" focusTraversable="true" height="251.0" layoutX="463.0" layoutY="237.0" onMouseClicked="#handleRectangleClick" opacity="0.0" stroke="BLACK" strokeType="INSIDE" width="52.0" />
-      <Rectangle fx:id="rectPerson2" arcHeight="5.0" arcWidth="5.0" fill="#1f93ff" focusTraversable="true" height="171.0" layoutX="368.0" layoutY="305.0" onMouseClicked="#handleRectangleClick" opacity="0.0" stroke="BLACK" strokeType="INSIDE" width="77.0" />
-      <Label layoutX="155.0" layoutY="14.0" text="SOFTENG206 - Guess Who ?">
+      <Rectangle fx:id="defendant" arcHeight="5.0" arcWidth="5.0" fill="#1f93ff" focusTraversable="true" height="148.0" layoutX="122.0" layoutY="379.0" onMouseClicked="#defendantClicked" opacity="0.0" stroke="BLACK" strokeType="INSIDE" width="125.0" />
+      <Rectangle fx:id="humanWitness" arcHeight="5.0" arcWidth="5.0" fill="#1f93ff" focusTraversable="true" height="161.0" layoutX="380.0" layoutY="355.0" onMouseClicked="#humanWitnessClicked" opacity="0.0" stroke="BLACK" strokeType="INSIDE" width="145.0" />
+      <Rectangle fx:id="aiWitness" arcHeight="5.0" arcWidth="5.0" fill="#1f93ff" focusTraversable="true" height="148.0" layoutX="585.0" layoutY="366.0" onMouseClicked="#aiWitnessClicked" opacity="0.0" stroke="BLACK" strokeType="INSIDE" width="145.0" />
+      <Label layoutX="334.0" layoutY="14.0" text="TrialAI">
          <font>
-            <Font size="38.0" />
+            <Font name="System Bold" size="38.0" />
          </font>
       </Label>
-      <Button fx:id="btnGuess" layoutX="340.0" layoutY="101.0" mnemonicParsing="false" onAction="#handleGuessClick" text="Make a Guess" />
-      <Label layoutX="43.0" layoutY="61.0" text="Chat with the three customers, and guess who is the ">
-         <font>
-            <Font size="21.0" />
-         </font>
-      </Label>
-      <Label fx:id="lblProfession" layoutX="503.0" layoutY="56.0" prefHeight="37.0" prefWidth="289.0" wrapText="true">
+      <Button fx:id="btnGuess" layoutX="340.0" layoutY="101.0" mnemonicParsing="false" onAction="#handleGuessClick" style="-fx-background-color: #5f9ed9;" text="Make a Verdict" />
+      <Label alignment="CENTER" layoutX="57.0" layoutY="69.0" text="Talk to the characters and determine if the Aegis I's actions were ethical">
          <font>
             <Font size="21.0" />
          </font>
