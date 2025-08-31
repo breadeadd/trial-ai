@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ProgressIndicator?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="599.0" prefWidth="789.0" style="-fx-background-color: #FFFFFF;" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="nz.ac.auckland.se206.controllers.DefendantController">
+  <children>
+      <ImageView fx:id="flashbackSlideshow" fitHeight="558.0" fitWidth="796.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../images/defendantFlashback/defFlash1.jpg" />
+         </image>
+      </ImageView>
+    <TextArea fx:id="txtaChat" editable="false" layoutX="15.0" layoutY="421.0" opacity="0.9" prefHeight="131.0" prefWidth="759.0" wrapText="true" />
+    <TextField fx:id="txtInput" layoutX="17.0" layoutY="567.0" prefHeight="26.0" prefWidth="639.0" />
+    <Button fx:id="btnSend" layoutX="664.0" layoutY="567.0" mnemonicParsing="false" onAction="#onSendMessage" prefHeight="25.0" prefWidth="109.0" style="-fx-background-color: #5f9ed9;" text="Send" />
+    <Button layoutX="14.0" layoutY="14.0" mnemonicParsing="false" onAction="#onGoBack" style="-fx-background-color: #faafc5;" text="Go Back" />
+      <Text layoutX="85.0" layoutY="37.0" strokeType="OUTSIDE" strokeWidth="0.0" text="AEGIS I" wrappingWidth="86.02509307861328">
+         <font>
+            <Font name="System Bold" size="21.0" />
+         </font>
+      </Text>
+      <ProgressIndicator fx:id="loading" layoutX="382.0" layoutY="467.0" progress="0.0" visible="false" />
+  </children>
+</AnchorPane>

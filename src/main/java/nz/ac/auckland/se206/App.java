@@ -1,14 +1,22 @@
 package nz.ac.auckland.se206;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.CountDownLatch;
 import javafx.application.Application;
+import javafx.application.Platform;
+import javafx.concurrent.Task;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
-import nz.ac.auckland.se206.controllers.ChatController;
 
 /**
  * This is the entry point of the JavaFX application. This class initializes and runs the JavaFX
@@ -16,7 +24,34 @@ import nz.ac.auckland.se206.controllers.ChatController;
  */
 public class App extends Application {
 
+  // Bundle to hold both root and controller
+  public static class SceneBundle {
+    public final Parent root;
+    public final Object controller;
+
+    public SceneBundle(Parent root, Object controller) {
+      this.root = root;
+      this.controller = controller;
+    }
+  }
+
+  private static Map<String, SceneBundle> preloadedBundles = new HashMap<>();
+
+  private static StackPane stackPaneRoot;
+  private static BorderPane rootLayout;
+  private static Label timerLabel;
   private static Scene scene;
+
+  /**
+   * Gets the controller for a preloaded scene.
+   *
+   * @param fxml the name of the FXML file (without extension)
+   * @return the controller instance, or null if not found
+   */
+  public static Object getController(String fxml) {
+    SceneBundle bundle = preloadedBundles.get(fxml);
+    return bundle == null ? null : bundle.controller;
+  }
 
   /**
    * The main method that launches the JavaFX application.
@@ -34,19 +69,39 @@ public class App extends Application {
    * @throws IOException if the FXML file is not found
    */
   public static void setRoot(String fxml) throws IOException {
-    scene.setRoot(loadFxml(fxml));
+    SceneBundle bundle = preloadedBundles.get(fxml);
+    if (bundle == null) {
+      throw new IOException("Scene not preloaded: " + fxml);
+    }
+    rootLayout.setCenter(bundle.root);
+    System.out.println("Switched to scene: " + fxml);
   }
 
   /**
-   * Loads the FXML file and returns the associated node. The method expects that the file is
-   * located in "src/main/resources/fxml".
+   * Preloads an FXML scene in a background thread.
    *
-   * @param fxml the name of the FXML file (without extension)
-   * @return the root node of the FXML file
-   * @throws IOException if the FXML file is not found
+   * @param fxml the name of the FXML file (without extension) to preload
    */
-  private static Parent loadFxml(final String fxml) throws IOException {
-    return new FXMLLoader(App.class.getResource("/fxml/" + fxml + ".fxml")).load();
+  public static void preloadSceneAsync(String fxml, CountDownLatch latch) {
+    Task<Void> preloadTask =
+        new Task<Void>() {
+          @Override
+          protected Void call() throws Exception {
+            try {
+              FXMLLoader loader = new FXMLLoader(App.class.getResource("/fxml/" + fxml + ".fxml"));
+              Parent loadedRoot = loader.load();
+              Object loadedController = loader.getController();
+              SceneBundle loadedBundle = new SceneBundle(loadedRoot, loadedController);
+              Platform.runLater(() -> preloadedBundles.put(fxml, loadedBundle));
+            } catch (IOException e) {
+              e.printStackTrace();
+            } finally {
+              latch.countDown();
+            }
+            return null;
+          }
+        };
+    new Thread(preloadTask).start();
   }
 
   /**
@@ -56,15 +111,28 @@ public class App extends Application {
    * @param profession the profession to set in the chat controller
    * @throws IOException if the FXML file is not found
    */
-  public static void openChat(MouseEvent event, String profession) throws IOException {
-    FXMLLoader loader = new FXMLLoader(App.class.getResource("/fxml/chat.fxml"));
-    Parent root = loader.load();
-
-    ChatController chatController = loader.getController();
-    chatController.setProfession(profession);
-
+  public static void openChat(MouseEvent event, String bot) throws IOException {
     Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-    scene = new Scene(root);
+    String fxml;
+    switch (bot) {
+      case "defendant":
+        fxml = "defendantChat";
+        break;
+      case "humanWitness":
+        fxml = "witnessChat";
+        break;
+      case "aiWitness":
+        fxml = "aiChat";
+        break;
+      default:
+        throw new IllegalArgumentException("Unknown bot type: " + bot);
+    }
+    SceneBundle bundle = preloadedBundles.get(fxml);
+    if (bundle == null) {
+      throw new IOException("Scene not preloaded: " + fxml);
+    }
+
+    scene = new Scene(bundle.root);
     stage.setScene(scene);
     stage.show();
   }
@@ -77,10 +145,78 @@ public class App extends Application {
    */
   @Override
   public void start(final Stage stage) throws IOException {
-    Parent root = loadFxml("room");
-    scene = new Scene(root);
+    rootLayout = new BorderPane();
+    timerLabel = new Label();
+    timerLabel.setStyle(
+        "-fx-font-size: 24px; -fx-padding: 12; -fx-background-color: white; -fx-border-radius: 8;"
+            + " -fx-background-radius: 8;");
+    new CountdownTimer();
+
+    // timer's property
+    timerLabel
+        .textProperty()
+        .bind(
+            new javafx.beans.binding.StringBinding() {
+              {
+                bind(CountdownTimer.secondsRemainingProperty());
+              }
+
+              @Override
+              protected String computeValue() {
+                int totalSeconds = CountdownTimer.secondsRemainingProperty().get();
+                int minutes = totalSeconds / 60;
+                int seconds = totalSeconds % 60;
+                return String.format("%d:%02d", minutes, seconds);
+              }
+            });
+
+    // --- Background preloading ---
+    final String[] scenesToPreload = {"room", "defendantChat", "witnessChat", "aiChat", "answer"};
+    final CountDownLatch latch = new CountDownLatch(scenesToPreload.length);
+    for (String fxml : scenesToPreload) {
+      preloadSceneAsync(fxml, latch);
+    }
+
+    // Layouts for timer and title
+    stackPaneRoot = new StackPane(rootLayout, timerLabel);
+    StackPane.setAlignment(timerLabel, Pos.TOP_RIGHT);
+    scene = new Scene(stackPaneRoot, 800, 600);
     stage.setScene(scene);
+    stage.setTitle("TrialAI");
     stage.show();
-    root.requestFocus();
+
+    // Wait for preloading, then show room and start timer
+    Task<Void> waitTask =
+        new Task<Void>() {
+          @Override
+          protected Void call() throws Exception {
+            latch.await();
+            return null;
+          }
+
+          @Override
+          protected void succeeded() {
+            Platform.runLater(
+                () -> {
+                  try {
+                    // set current root to main page
+                    setRoot("room");
+                    CountdownTimer.start();
+                    SceneBundle roomBundle = preloadedBundles.get("room");
+                    if (roomBundle != null && roomBundle.root != null) {
+                      roomBundle.root.requestFocus();
+                    }
+
+                    // output for debugging
+                    System.out.println("All scenes preloaded and switched to room.");
+                  } catch (IOException e) {
+                    e.printStackTrace();
+                  }
+                });
+          }
+        };
+
+    // Starting the task
+    new Thread(waitTask).start();
   }
 }

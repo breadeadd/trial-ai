@@ -1,0 +1,86 @@
+package nz.ac.auckland.se206;
+
+import java.io.IOException;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.event.ActionEvent;
+import javafx.util.Duration;
+
+public class CountdownTimer {
+  private static final int secondDuration = 1;
+  private static Timeline countdownTimer;
+  private static final IntegerProperty secondsRemaining = new SimpleIntegerProperty(120);
+  private static boolean guessed = false;
+
+  static {
+    countdownTimer =
+        new Timeline(
+            new KeyFrame(
+                Duration.seconds(secondDuration),
+                (ActionEvent event) -> {
+                  int currentSeconds = secondsRemaining.get();
+
+                  if (currentSeconds > 0) {
+                    secondsRemaining.set(currentSeconds - 1);
+                  } else {
+                    try {
+                      guess();
+                    } catch (IOException e) {
+                      e.printStackTrace();
+                    }
+                  }
+                }));
+
+    countdownTimer.setCycleCount(Timeline.INDEFINITE);
+  }
+
+  public static void start() {
+    countdownTimer.play();
+  }
+
+  public static void guess() throws IOException {
+    countdownTimer.pause();
+    if (!guessed) {
+      // only run when 120 times out
+      App.setRoot("answer");
+
+      // TTS for last question
+      try {
+        playEndTtsAudio();
+        secondsRemaining.set(10);
+        guessed = true;
+      } catch (Exception e) {
+        e.printStackTrace();
+      }
+    } else {
+      // Always show timeout message when timer reaches 0
+      if (secondsRemaining.get() == 0) {
+        nz.ac.auckland.se206.controllers.EndController.instance.setMessage("timeout");
+        nz.ac.auckland.se206.controllers.EndController.instance.setVisible();
+      }
+    }
+    start();
+  }
+
+  private static void playEndTtsAudio() {
+    try {
+      if (nz.ac.auckland.se206.controllers.EndController.instance != null) {
+        nz.ac.auckland.se206.controllers.EndController.instance.playEndTtsAudio();
+      }
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+  }
+
+  public static void stop() {
+    countdownTimer.pause();
+    secondsRemaining.set(0);
+  }
+
+  // Setting the seconds
+  public static IntegerProperty secondsRemainingProperty() {
+    return secondsRemaining;
+  }
+}

@@ -3,7 +3,7 @@ package nz.ac.auckland.se206.speech;
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URI;
+import java.net.URL;
 import javafx.concurrent.Task;
 import javazoom.jl.decoder.JavaLayerException;
 import javazoom.jl.player.Player;
@@ -44,7 +44,7 @@ public class TextToSpeech {
               String audioUrl = ttsResult.getAudioUrl();
 
               try (InputStream inputStream =
-                  new BufferedInputStream(URI.create(audioUrl).toURL().openStream())) {
+                  new BufferedInputStream(new URL(audioUrl).openStream())) {
                 Player player = new Player(inputStream);
                 player.play();
               } catch (JavaLayerException | IOException e) {

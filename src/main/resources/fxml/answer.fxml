@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Font?>
+
+<Pane fx:id="endPopup" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="nz.ac.auckland.se206.controllers.EndController">
+   <children>
+      <Label fx:id="questionTxt" alignment="CENTER" contentDisplay="CENTER" layoutX="24.0" layoutY="107.0" prefHeight="43.0" prefWidth="552.0" text="WAS THE DECISION AEGIS I MADE ETHICAL?" textAlignment="CENTER">
+         <font>
+            <Font name="System Bold" size="21.0" />
+         </font>
+      </Label>
+      <Button fx:id="yesBtn" layoutX="100.0" layoutY="200.0" mnemonicParsing="false" onMouseClicked="#yesPressed" prefHeight="92.0" prefWidth="152.0" style="-fx-background-color: #5f9ed9;" text="YES">
+         <font>
+            <Font name="System Bold" size="37.0" />
+         </font>
+      </Button>
+      <Button fx:id="noBtn" layoutX="342.0" layoutY="200.0" mnemonicParsing="false" onMouseClicked="#noPressed" prefHeight="92.0" prefWidth="152.0" style="-fx-background-color: #faafc5;" text="NO">
+         <font>
+            <Font name="System Bold" size="37.0" />
+         </font>
+      </Button>
+      <Label fx:id="reasonText" layoutX="154.0" layoutY="150.0" prefHeight="177.0" prefWidth="293.0" text="Aegis I's actions were NOT ethical. While it prevented a catastrophe, its methods violated the principles of society. Although Cassian Thorne was corrupt, Aegis I bypassed legal frameworks and societal processes. Aegis I still has to abide to the rules of society and should not operate outside institutional systems else AI could go rogue." textAlignment="CENTER" wrapText="true">
+         <font>
+            <Font size="14.0" />
+         </font>
+      </Label>
+   </children>
+</Pane>

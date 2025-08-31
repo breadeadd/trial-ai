@@ -35,14 +35,16 @@ public class GameStarted implements GameState {
   public void handleRectangleClick(MouseEvent event, String rectangleId) throws IOException {
     // Transition to chat view or provide an introduction based on the clicked rectangle
     switch (rectangleId) {
-      case "rectCashier":
-        TextToSpeech.speak("Welcome to my cafe!");
+      case "defendant":
+        App.openChat(event, "defendant");
         return;
-      case "rectWaitress":
-        TextToSpeech.speak("Hi, let me know when you are ready to order!");
+      case "humanWitness":
+        App.openChat(event, "humanWitness");
+        return;
+      case "aiWitness":
+        App.openChat(event, "aiWitness");
         return;
     }
-    App.openChat(event, context.getProfession(rectangleId));
   }
 
   /**
