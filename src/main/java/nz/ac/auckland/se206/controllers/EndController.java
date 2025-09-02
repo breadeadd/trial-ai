@@ -31,8 +31,11 @@ public class EndController {
   @FXML private Label reasonText;
   @FXML private Label rationalTxt;
   @FXML private TextArea enterRationale;
+  @FXML private Button guessBtn;
 
   private MediaPlayer mediaPlayer;
+
+  private String verdictPlayer;
 
   /**
    * Initializes the room view. If it's the first time initialization, it will provide instructions
@@ -40,9 +43,9 @@ public class EndController {
    */
   @FXML
   public void initialize() {
-    // Set static instance for access from CountdownTimer
     instance = this;
     reasonText.setVisible(false);
+    guessBtn.setDisable(true);
   }
 
   // occurs when enter
@@ -51,6 +54,7 @@ public class EndController {
     yesBtn.setVisible(false);
     enterRationale.setVisible(false);
     rationalTxt.setVisible(false);
+    guessBtn.setVisible(false);
     reasonText.setVisible(true);
   }
 
@@ -124,7 +128,10 @@ public class EndController {
   private void yesPressed(MouseEvent event) throws IOException {
     Platform.runLater(
         () -> {
-          this.setMessage("yes");
+          yesBtn.setDisable(true);
+          noBtn.setDisable(false);
+          guessBtn.setDisable(false);
+          verdictPlayer = "yes";
         });
   }
 
@@ -134,7 +141,10 @@ public class EndController {
   private void noPressed(MouseEvent event) throws IOException {
     Platform.runLater(
         () -> {
-          this.setMessage("no");
+          yesBtn.setDisable(false);
+          noBtn.setDisable(true);
+          guessBtn.setDisable(false);
+          verdictPlayer = "no";
         });
   }
 
@@ -142,6 +152,7 @@ public class EndController {
   private void guessMade(MouseEvent event) throws IOException {
     Platform.runLater(
         () -> {
+          this.setMessage(verdictPlayer);
           this.setVisible();
           CountdownTimer.stop();
         });
