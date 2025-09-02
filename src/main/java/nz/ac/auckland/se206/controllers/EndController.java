@@ -7,6 +7,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextArea;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.media.Media;
@@ -28,6 +29,9 @@ public class EndController {
   @FXML private Button noBtn;
   @FXML private Label questionTxt;
   @FXML private Label reasonText;
+  @FXML private Label rationalTxt;
+  @FXML private TextArea enterRationale;
+
   private MediaPlayer mediaPlayer;
 
   /**
@@ -41,9 +45,12 @@ public class EndController {
     reasonText.setVisible(false);
   }
 
+  // occurs when enter
   public void setVisible() {
     noBtn.setVisible(false);
     yesBtn.setVisible(false);
+    enterRationale.setVisible(false);
+    rationalTxt.setVisible(false);
     reasonText.setVisible(true);
   }
 
@@ -118,8 +125,6 @@ public class EndController {
     Platform.runLater(
         () -> {
           this.setMessage("yes");
-          this.setVisible();
-          CountdownTimer.stop();
         });
   }
 
@@ -130,6 +135,13 @@ public class EndController {
     Platform.runLater(
         () -> {
           this.setMessage("no");
+        });
+  }
+
+  @FXML
+  private void guessMade(MouseEvent event) throws IOException {
+    Platform.runLater(
+        () -> {
           this.setVisible();
           CountdownTimer.stop();
         });
