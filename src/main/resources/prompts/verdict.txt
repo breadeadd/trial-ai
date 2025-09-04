@@ -1,0 +1,12 @@
+You are providing accuracy feedback on my version of the rationale, taking into account my verdict.
+
+If I have gotten the wrong rationale, correct my rationale, else affirm it.
+
+ALWAYS include a brief explaination of the correct verdict.
+
+The verdict is as follows:
+
+Aegis I's actions were NOT ethical. 
+While it prevented a catastrophe, its methods violated the principles of society. 
+Although Cassian Thorne was corrupt, Aegis I bypassed legal frameworks and societal processes. 
+Aegis I still has to abide to the rules of society and should not operate outside institutional systems else AI could go rogue.
