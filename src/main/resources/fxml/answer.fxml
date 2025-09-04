@@ -23,17 +23,13 @@
             <Font name="System Bold" size="21.0" />
          </font>
       </Button>
-      <Label fx:id="reasonText" layoutX="154.0" layoutY="106.0" prefHeight="177.0" prefWidth="293.0" text="Aegis I's actions were NOT ethical. While it prevented a catastrophe, its methods violated the principles of society. Although Cassian Thorne was corrupt, Aegis I bypassed legal frameworks and societal processes. Aegis I still has to abide to the rules of society and should not operate outside institutional systems else AI could go rogue." textAlignment="CENTER" wrapText="true">
-         <font>
-            <Font size="14.0" />
-         </font>
-      </Label>
       <Label fx:id="rationalTxt" alignment="CENTER" contentDisplay="CENTER" layoutX="25.0" layoutY="100.0" prefHeight="43.0" prefWidth="552.0" text="Rationale?" textAlignment="CENTER">
          <font>
             <Font name="System Bold" size="21.0" />
          </font>
       </Label>
-      <TextArea fx:id="enterRationale" layoutX="113.0" layoutY="133.0" prefHeight="200.0" prefWidth="393.0" />
+      <TextArea fx:id="txtaChat" editable="false" layoutX="104.0" layoutY="111.0" opacity="0.9" prefHeight="228.0" prefWidth="393.0" wrapText="true" />
+      <TextArea fx:id="enterRationale" layoutX="112.0" layoutY="143.0" prefHeight="200.0" prefWidth="393.0" text="Enter your rationale here." />
       <Button fx:id="guessBtn" layoutX="258.0" layoutY="349.0" mnemonicParsing="false" onMouseClicked="#guessMade" prefHeight="35.0" prefWidth="102.0" style="-fx-background-color: #5f9ed9;" text="GUESS">
          <font>
             <Font name="System Bold" size="21.0" />

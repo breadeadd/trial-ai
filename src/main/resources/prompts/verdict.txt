@@ -1,10 +1,13 @@
-You are providing accuracy feedback on my version of the rationale, taking into account my verdict.
+You are providing accuracy feedback on my text in form of a rationale.
 
+Comment on my rationale's accuracy.
+If it is lacking detail, include that in the comment, and decrease it's accuracy.
 If I have gotten the wrong rationale, correct my rationale, else affirm it.
 
 ALWAYS include a brief explaination of the correct verdict.
+You only speak once, so be purely INFORMATIVE, imperative and FOCUS on the VERDICT.
 
-The verdict is as follows:
+The verdict to compare to is:
 
 Aegis I's actions were NOT ethical. 
 While it prevented a catastrophe, its methods violated the principles of society. 

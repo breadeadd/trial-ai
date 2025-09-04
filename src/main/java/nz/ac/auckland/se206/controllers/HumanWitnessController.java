@@ -14,15 +14,8 @@ import nz.ac.auckland.se206.prompts.PromptEngineering;
  * model via the API proxy.
  */
 public class HumanWitnessController extends ChatController {
-  // private ChatCompletionRequest chatCompletionRequest;
-
-  // @FXML private TextArea txtaChat;
-  // @FXML private TextField txtInput;
-  // @FXML private Button btnSend;
   @FXML private Rectangle screenBox;
   @FXML private ImageView flashback;
-
-  // @FXML private javafx.scene.control.ProgressIndicator loading;
 
   /**
    * Initializes the chat view.

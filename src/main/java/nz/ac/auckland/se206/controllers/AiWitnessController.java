@@ -11,14 +11,7 @@ import nz.ac.auckland.se206.prompts.PromptEngineering;
  * model via the API proxy.
  */
 public class AiWitnessController extends ChatController {
-  // private ChatCompletionRequest chatCompletionRequest;
-
-  // @FXML private TextArea txtaChat;
-  // @FXML private TextField txtInput;
-  // @FXML private Button btnSend;
   @FXML private ImageView aiFlashback;
-
-  // @FXML private javafx.scene.control.ProgressIndicator loading;
 
   /**
    * Initializes the chat view.
@@ -27,8 +20,6 @@ public class AiWitnessController extends ChatController {
    */
   @FXML
   public void initialize() throws ApiProxyException {
-    // Any required initialization code can be placed here
-    // loading.setProgress(-1);
     initChat();
   }
 

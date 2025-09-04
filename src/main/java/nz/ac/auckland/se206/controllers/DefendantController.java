@@ -18,20 +18,13 @@ import nz.ac.auckland.se206.prompts.PromptEngineering;
  * model via the API proxy.
  */
 public class DefendantController extends ChatController {
-  // private ChatCompletionRequest chatCompletionRequest;
-
   // slideshow variables
   private List<Image> images = new ArrayList<>();
   private int currentImageIndex = 0;
   private Timeline animationTime;
   private final int slideshowDuration = 2;
 
-  // @FXML private TextArea txtaChat;
-  // @FXML private TextField txtInput;
-  // @FXML private Button btnSend;
   @FXML private ImageView flashbackSlideshow;
-
-  // @FXML private javafx.scene.control.ProgressIndicator loading;
 
   /**
    * Initializes the chat view.
