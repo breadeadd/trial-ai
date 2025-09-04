@@ -1,6 +1,7 @@
 package nz.ac.auckland.se206.controllers;
 
 import java.io.IOException;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -13,58 +14,98 @@ import nz.ac.auckland.apiproxy.chat.openai.ChatMessage;
 import nz.ac.auckland.apiproxy.chat.openai.Choice;
 import nz.ac.auckland.apiproxy.config.ApiProxyConfig;
 import nz.ac.auckland.apiproxy.exceptions.ApiProxyException;
-import nz.ac.auckland.se206.prompts.PromptEngineering;
+import nz.ac.auckland.se206.ChatHistory;
 
 /**
  * Controller class for the chat view. Handles user interactions and communication with the GPT
  * model via the API proxy.
  */
-public class ChatController {
-  private ChatCompletionRequest chatCompletionRequest;
+public abstract class ChatController {
+  protected ChatCompletionRequest chatCompletionRequest;
 
-  @FXML private TextArea txtaChat;
-  @FXML private TextField txtInput;
-  @FXML private Button btnSend;
+  @FXML protected TextArea txtaChat;
+  @FXML protected TextField txtInput;
+  @FXML protected Button btnSend;
+  @FXML protected javafx.scene.control.ProgressIndicator loading;
 
-  /**
-   * Initializes the chat view.
-   *
-   * @throws ApiProxyException if there is an error communicating with the API proxy
-   */
-  @FXML
-  public void initialize() throws ApiProxyException {
-    // Any required initialization code can be placed here
-    initChat();
-  }
+  // Methods to get specific details:
+  protected abstract String getSystemPrompt();
 
-  /**
-   * Generates the system prompt based on the profession.
-   *
-   * @return the system prompt string
-   */
-  private String getSystemPrompt() {
-    return PromptEngineering.getPrompt("chat.txt");
-  }
+  // speaker context in chat history
+  protected abstract String getCharacterName();
 
-  /**
-   * Sets the profession for the chat context and initializes the ChatCompletionRequest.
-   *
-   * @param profession the profession to set
-   */
-  public void initChat() {
-    try {
-      ApiProxyConfig config = ApiProxyConfig.readConfig();
-      chatCompletionRequest =
-          new ChatCompletionRequest(config)
-              .setN(1)
-              .setTemperature(0.2)
-              .setTopP(0.5)
-              .setModel(Model.GPT_4_1_MINI)
-              .setMaxTokens(100);
-      runGpt(new ChatMessage("system", getSystemPrompt()));
-    } catch (ApiProxyException e) {
-      e.printStackTrace();
+  // for UI display purposes
+  protected abstract String getDisplayRole();
+
+  /** Initializes the ChatCompletionRequest and starts the chat. */
+  protected void initChat() {
+    // loading indicator
+    if (loading != null) {
+      loading.setProgress(-1);
+      loading.setVisible(true);
     }
+    if (txtInput != null) {
+      txtInput.setDisable(true);
+    }
+    if (btnSend != null) {
+      btnSend.setDisable(true);
+    }
+
+    new Thread(
+            () -> {
+              try {
+                ApiProxyConfig config = ApiProxyConfig.readConfig();
+                chatCompletionRequest =
+                    new ChatCompletionRequest(config)
+                        .setN(1)
+                        .setTemperature(0.2)
+                        .setTopP(0.5)
+                        .setModel(Model.GPT_4_1_MINI)
+                        .setMaxTokens(100);
+                runGpt(new ChatMessage("system", getSystemPrompt()));
+              } catch (ApiProxyException e) {
+                e.printStackTrace();
+              }
+
+              Platform.runLater(
+                  () -> {
+                    if (loading != null) {
+                      loading.setVisible(false);
+                    }
+                    if (txtInput != null) {
+                      txtInput.setDisable(false);
+                    }
+                    if (btnSend != null) {
+                      btnSend.setDisable(false);
+                    }
+                  });
+            })
+        .start();
+  }
+
+  /** Syncs chat history for this character. */
+  public void syncChatHistoryAsync() {
+    new Thread(
+            () -> {
+              try {
+                ApiProxyConfig config = ApiProxyConfig.readConfig();
+                ChatCompletionRequest newRequest =
+                    new ChatCompletionRequest(config)
+                        .setN(1)
+                        .setTemperature(0.2)
+                        .setTopP(0.5)
+                        .setModel(Model.GPT_4_1_MINI)
+                        .setMaxTokens(100);
+                newRequest.addMessage(new ChatMessage("system", getSystemPrompt()));
+                for (ChatMessage msg : ChatHistory.getHistory()) {
+                  newRequest.addMessage(msg);
+                }
+                Platform.runLater(() -> chatCompletionRequest = newRequest);
+              } catch (Exception e) {
+                e.printStackTrace();
+              }
+            })
+        .start();
   }
 
   /**
@@ -72,8 +113,32 @@ public class ChatController {
    *
    * @param msg the chat message to append
    */
-  private void appendChatMessage(ChatMessage msg) {
-    txtaChat.appendText(msg.getRole() + ": " + msg.getContent() + "\n\n");
+  protected void appendChatMessage(ChatMessage msg) {
+    // Store message in shared chat history with speaker context
+    String speaker = msg.getRole().equals("assistant") ? getCharacterName() : "User";
+    ChatHistory.addMessage(msg, speaker);
+
+    // Display only the original message content (without speaker prefix)
+    String displayRole;
+    if (msg.getRole().equals("assistant")) {
+      displayRole = getDisplayRole();
+    } else if (msg.getRole().equals("user")) {
+      displayRole = "You";
+    } else {
+      displayRole = msg.getRole();
+    }
+
+    if (txtaChat != null) {
+      txtaChat.appendText(
+          displayRole
+              + ": "
+              + msg.getContent()
+                  .replaceFirst("^User said: ", "")
+                  .replaceFirst("^Aegis I said: ", "")
+                  .replaceFirst("^Echo II said: ", "")
+                  .replaceFirst("^Orion Vale said: ", "")
+              + "\n\n");
+    }
   }
 
   /**
@@ -83,14 +148,16 @@ public class ChatController {
    * @return the response chat message
    * @throws ApiProxyException if there is an error communicating with the API proxy
    */
-  private ChatMessage runGpt(ChatMessage msg) throws ApiProxyException {
+  protected ChatMessage runGpt(ChatMessage msg) throws ApiProxyException {
     chatCompletionRequest.addMessage(msg);
     try {
       ChatCompletionResult chatCompletionResult = chatCompletionRequest.execute();
       Choice result = chatCompletionResult.getChoices().iterator().next();
-      chatCompletionRequest.addMessage(result.getChatMessage());
-      appendChatMessage(result.getChatMessage());
-      return result.getChatMessage();
+      ChatMessage responseMsg = result.getChatMessage();
+      // Don't prepend character name here - ChatHistory will handle speaker context
+      chatCompletionRequest.addMessage(responseMsg);
+      appendChatMessage(responseMsg);
+      return responseMsg;
     } catch (ApiProxyException e) {
       e.printStackTrace();
       return null;
@@ -105,15 +172,37 @@ public class ChatController {
    * @throws IOException if there is an I/O error
    */
   @FXML
-  private void onSendMessage(ActionEvent event) throws ApiProxyException, IOException {
+  protected void onSendMessage(ActionEvent event) throws ApiProxyException, IOException {
     String message = txtInput.getText().trim();
     if (message.isEmpty()) {
       return;
     }
     txtInput.clear();
+    if (loading != null) {
+      loading.setVisible(true);
+    }
+    txtInput.setDisable(true);
+    btnSend.setDisable(true);
     ChatMessage msg = new ChatMessage("user", message);
     appendChatMessage(msg);
-    runGpt(msg);
+    new Thread(
+            () -> {
+              try {
+                runGpt(msg);
+              } catch (ApiProxyException e) {
+                e.printStackTrace();
+              }
+              Platform.runLater(
+                  () -> {
+                    // set loading symbols invisible
+                    if (loading != null) {
+                      loading.setVisible(false);
+                    }
+                    txtInput.setDisable(false);
+                    btnSend.setDisable(false);
+                  });
+            })
+        .start();
   }
 
   /**
@@ -124,7 +213,7 @@ public class ChatController {
    * @throws IOException if there is an I/O error
    */
   @FXML
-  private void onGoBack(ActionEvent event) throws ApiProxyException, IOException {
+  protected void onGoBack(ActionEvent event) throws ApiProxyException, IOException {
     nz.ac.auckland.se206.App.setRoot("room");
   }
 }
