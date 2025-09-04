@@ -182,7 +182,6 @@ public class EndController extends ChatController {
           // Get the rationale text and send to GPT without showing user input
           String rationaleText = enterRationale.getText().trim();
 
-          // Putting together full message for GPT
           String fullMessage =
               String.format(
                   "CASE VERDICT ANALYSIS\n"
@@ -192,6 +191,12 @@ public class EndController extends ChatController {
                   verdictPlayer, rationaleText);
 
           if (!rationaleText.isEmpty()) {
+            // Show loading wheel
+            if (loading != null) {
+              loading.setVisible(true);
+              loading.setProgress(-1); // Indeterminate progress
+            }
+
             // Send rationale to GPT in background thread - one-time response only
             new Thread(
                     () -> {
@@ -199,6 +204,14 @@ public class EndController extends ChatController {
                         getSingleGptResponse(fullMessage);
                       } catch (Exception e) {
                         e.printStackTrace();
+                      } finally {
+                        // Hide loading wheel when done
+                        Platform.runLater(
+                            () -> {
+                              if (loading != null) {
+                                loading.setVisible(false);
+                              }
+                            });
                       }
                     })
                 .start();
@@ -238,7 +251,7 @@ public class EndController extends ChatController {
               .setTemperature(0.2)
               .setTopP(0.5)
               .setModel(Model.GPT_4_1_MINI)
-              .setMaxTokens(150);
+              .setMaxTokens(300);
 
       // Add system prompt and user message
       singleRequest.addMessage(new ChatMessage("system", getSystemPrompt()));
