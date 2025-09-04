@@ -2,6 +2,7 @@ package nz.ac.auckland.se206.controllers;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -12,6 +13,7 @@ import javafx.scene.media.MediaPlayer;
 import javafx.scene.shape.Rectangle;
 import nz.ac.auckland.se206.App;
 import nz.ac.auckland.se206.CountdownTimer;
+import nz.ac.auckland.se206.states.GameStateManager;
 
 /**
  * Controller class for the room view. Handles user interactions within the room where the user can
@@ -45,6 +47,9 @@ public class RoomController {
       }
       isFirstTimeInit = false;
     }
+
+    // always check if all characters have been spoken to
+    Platform.runLater(() -> updateButtonState());
   }
 
   // Call this method where you want to play the audio
@@ -153,4 +158,15 @@ public class RoomController {
     CountdownTimer.guess();
     App.setRoot("answer");
   }
+
+  // In whatever controller has the button that should be locked
+  public void updateButtonState() {
+    System.out.println("Updating button state..."); // Debug
+    GameStateManager.getInstance().printStatus(); // Debug
+    boolean canProceed = GameStateManager.getInstance().hasSpokenToAllCharacters();
+    btnGuess.setDisable(!canProceed);
+  }
+
+  // Call this method whenever you want to check/update the button state
+  // For example, after each conversation or in initialize()
 }

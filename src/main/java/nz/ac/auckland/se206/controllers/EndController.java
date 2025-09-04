@@ -243,7 +243,7 @@ public class EndController extends ChatController {
       Platform.runLater(
           () -> {
             if (txtaChat != null) {
-              txtaChat.appendText("Verdict: " + response.getContent() + "\n\n");
+              txtaChat.appendText(response.getContent() + "\n\n");
             }
           });
 

@@ -14,7 +14,9 @@ import nz.ac.auckland.apiproxy.chat.openai.ChatMessage;
 import nz.ac.auckland.apiproxy.chat.openai.Choice;
 import nz.ac.auckland.apiproxy.config.ApiProxyConfig;
 import nz.ac.auckland.apiproxy.exceptions.ApiProxyException;
+import nz.ac.auckland.se206.App;
 import nz.ac.auckland.se206.ChatHistory;
+import nz.ac.auckland.se206.states.GameStateManager;
 
 /**
  * Controller class for the chat view. Handles user interactions and communication with the GPT
@@ -183,8 +185,13 @@ public abstract class ChatController {
     }
     txtInput.setDisable(true);
     btnSend.setDisable(true);
+
     ChatMessage msg = new ChatMessage("user", message);
     appendChatMessage(msg);
+
+    // Mark character as talked to
+    GameStateManager.getInstance().setCharacterTalkedTo(getCharacterName());
+
     new Thread(
             () -> {
               try {
@@ -215,5 +222,14 @@ public abstract class ChatController {
   @FXML
   protected void onGoBack(ActionEvent event) throws ApiProxyException, IOException {
     nz.ac.auckland.se206.App.setRoot("room");
+
+    // update button state on back
+    Platform.runLater(
+        () -> {
+          RoomController roomController = (RoomController) App.getController("room");
+          if (roomController != null) {
+            roomController.updateButtonState();
+          }
+        });
   }
 }
