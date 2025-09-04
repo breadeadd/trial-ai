@@ -84,11 +84,11 @@ public class EndController extends ChatController {
 
   public void setMessage(String caseType) {
     switch (caseType) {
-      case "yes":
-        questionTxt.setText("You chose YES. You are wrong.");
+      case "GUILTY":
+        questionTxt.setText("You chose GUILTY. You are correct!");
         break;
-      case "no":
-        questionTxt.setText("You chose NO. This is correct!");
+      case "NOT GUILTY":
+        questionTxt.setText("You chose NOT GUILTY. This is correct!");
         break;
       case "timeout":
         questionTxt.setText("TIME OUT! YOU HAVE RUN OUT OF TIME.");
@@ -155,7 +155,7 @@ public class EndController extends ChatController {
           yesBtn.setDisable(true);
           noBtn.setDisable(false);
           guessBtn.setDisable(false);
-          verdictPlayer = "yes";
+          verdictPlayer = "GUILTY";
         });
   }
 
@@ -168,7 +168,7 @@ public class EndController extends ChatController {
           yesBtn.setDisable(false);
           noBtn.setDisable(true);
           guessBtn.setDisable(false);
-          verdictPlayer = "no";
+          verdictPlayer = "NOT GUILTY";
         });
   }
 
@@ -181,12 +181,22 @@ public class EndController extends ChatController {
 
           // Get the rationale text and send to GPT without showing user input
           String rationaleText = enterRationale.getText().trim();
+
+          // Putting together full message for GPT
+          String fullMessage =
+              String.format(
+                  "CASE VERDICT ANALYSIS\n"
+                      + "===================\n"
+                      + "Player's Decision: %s\n"
+                      + "Reasoning Provided: %s\n\n",
+                  verdictPlayer, rationaleText);
+
           if (!rationaleText.isEmpty()) {
             // Send rationale to GPT in background thread - one-time response only
             new Thread(
                     () -> {
                       try {
-                        getSingleGptResponse(rationaleText);
+                        getSingleGptResponse(fullMessage);
                       } catch (Exception e) {
                         e.printStackTrace();
                       }

@@ -9,9 +9,9 @@
 
 <Pane fx:id="endPopup" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="nz.ac.auckland.se206.controllers.EndController">
    <children>
-      <Label fx:id="questionTxt" alignment="CENTER" contentDisplay="CENTER" layoutX="24.0" layoutY="20.0" prefHeight="43.0" prefWidth="552.0" text="WAS THE DECISION AEGIS I MADE ETHICAL?" textAlignment="CENTER">
+      <Label fx:id="questionTxt" alignment="CENTER" contentDisplay="CENTER" layoutX="24.0" layoutY="20.0" prefHeight="43.0" prefWidth="552.0" text="IS AEGIS I GUILTY OF MAKING AN UNETHICAL DECISION?" textAlignment="CENTER">
          <font>
-            <Font name="System Bold" size="21.0" />
+            <Font name="System Bold" size="18.0" />
          </font>
       </Label>
       <Button fx:id="yesBtn" layoutX="166.0" layoutY="63.0" mnemonicParsing="false" onMouseClicked="#yesPressed" prefHeight="35.0" prefWidth="102.0" style="-fx-background-color: #5f9ed9;" text="YES">

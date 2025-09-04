@@ -43,6 +43,18 @@ public class GameStateManager {
     return charactersTalkedTo.getOrDefault(characterName, false);
   }
 
+  /////////////////////////////////////////////////////////
+  // IMPLEMENT WHEN BOTHERED: FLASHBACK STATE TRACKING
+
+  // Set flashback visited true
+  // public void setCharacterFlashbackWatched(String characterName) {
+  //   gameFlags.put(characterName + "_flashback_watched", true);
+  // }
+
+  // public boolean hasWatchedFlashback(String characterName) {
+  //   return gameFlags.getOrDefault(characterName + "_flashback_watched", false);
+  // }
+
   // Generic flag system for future use
   public void setFlag(String flagName, boolean value) {
     gameFlags.put(flagName, value);
