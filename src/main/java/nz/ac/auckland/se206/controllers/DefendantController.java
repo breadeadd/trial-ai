@@ -2,14 +2,18 @@ package nz.ac.auckland.se206.controllers;
 
 import java.util.ArrayList;
 import java.util.List;
-import javafx.animation.KeyFrame;
-import javafx.animation.Timeline;
 import javafx.application.Platform;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.util.Duration;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
+// import javafx.animation.KeyFrame;
+// import javafx.animation.Timeline;
+// import javafx.event.ActionEvent;
+// import javafx.util.Duration;
+
 import nz.ac.auckland.apiproxy.exceptions.ApiProxyException;
 import nz.ac.auckland.se206.prompts.PromptEngineering;
 
@@ -21,8 +25,8 @@ public class DefendantController extends ChatController {
   // slideshow variables
   private List<Image> images = new ArrayList<>();
   private int currentImageIndex = 0;
-  private Timeline animationTime;
-  private final int slideshowDuration = 2;
+  // private Timeline animationTime; // No longer needed
+
 
   @FXML private ImageView flashbackSlideshow;
 
@@ -98,17 +102,19 @@ public class DefendantController extends ChatController {
 
     currentImageIndex = 0;
     flashbackSlideshow.setImage(images.get(currentImageIndex));
-    animationTime =
-        new Timeline(
-            new KeyFrame(
-                Duration.seconds(slideshowDuration),
-                (ActionEvent event) -> {
-                  currentImageIndex = (currentImageIndex + 1);
-                  flashbackSlideshow.setImage(images.get(currentImageIndex));
-                }));
-    animationTime.setCycleCount(images.size());
-    animationTime.setAutoReverse(false);
-    animationTime.play();
+
+    // Remove any previous event handler to avoid stacking
+    flashbackSlideshow.setOnMouseClicked(null);
+
+    flashbackSlideshow.setOnMouseClicked(event -> {
+      currentImageIndex++;
+      if (currentImageIndex < images.size()) {
+        flashbackSlideshow.setImage(images.get(currentImageIndex));
+      } else {
+        // Optionally, remove the handler or do something when finished
+        flashbackSlideshow.setOnMouseClicked(null);
+      }
+    });
   }
 
   public void runFlashback() {
