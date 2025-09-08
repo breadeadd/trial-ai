@@ -18,7 +18,7 @@
          </image>
       </ImageView>
     <TextArea fx:id="txtaChat" editable="false" layoutX="15.0" layoutY="421.0" opacity="0.9" prefHeight="131.0" prefWidth="759.0" wrapText="true" />
-    <TextField fx:id="txtInput" layoutX="17.0" layoutY="567.0" prefHeight="26.0" prefWidth="639.0" />
+    <TextField fx:id="txtInput" layoutX="17.0" layoutY="567.0" prefHeight="26.0" prefWidth="639.0" onAction="#onSendMessage" onKeyPressed="#onKeyPressed" />
     <Button fx:id="btnSend" layoutX="664.0" layoutY="567.0" mnemonicParsing="false" onAction="#onSendMessage" prefHeight="25.0" prefWidth="109.0" style="-fx-background-color: #5f9ed9;" text="Send" />
     <Button layoutX="14.0" layoutY="14.0" mnemonicParsing="false" onAction="#onGoBack" style="-fx-background-color: #faafc5;" text="Go Back" />
       <Text layoutX="85.0" layoutY="37.0" strokeType="OUTSIDE" strokeWidth="0.0" text="AEGIS I" wrappingWidth="86.02509307861328">
