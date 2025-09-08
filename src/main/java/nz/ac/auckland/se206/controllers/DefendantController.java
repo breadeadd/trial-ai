@@ -1,5 +1,6 @@
 package nz.ac.auckland.se206.controllers;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import javafx.animation.KeyFrame;
@@ -9,6 +10,8 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.util.Duration;
 import nz.ac.auckland.apiproxy.exceptions.ApiProxyException;
 import nz.ac.auckland.se206.prompts.PromptEngineering;
@@ -37,6 +40,13 @@ public class DefendantController extends ChatController {
     loadImages(null);
     initChat();
     // loading.setProgress(-1);
+  }
+
+  @FXML
+  private void onKeyPressed(KeyEvent event) throws ApiProxyException, IOException {
+    if (event.getCode() == KeyCode.ENTER) {
+      onSendMessage(null); // Message gets send on enter key press
+    }
   }
 
   @Override

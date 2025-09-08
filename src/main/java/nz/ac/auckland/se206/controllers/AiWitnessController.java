@@ -1,8 +1,11 @@
 package nz.ac.auckland.se206.controllers;
 
+import java.io.IOException;
 import javafx.fxml.FXML;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import nz.ac.auckland.apiproxy.exceptions.ApiProxyException;
 import nz.ac.auckland.se206.prompts.PromptEngineering;
 
@@ -21,6 +24,13 @@ public class AiWitnessController extends ChatController {
   @FXML
   public void initialize() throws ApiProxyException {
     initChat();
+  }
+
+  @FXML
+  private void onKeyPressed(KeyEvent event) throws ApiProxyException, IOException {
+    if (event.getCode() == KeyCode.ENTER) {
+      onSendMessage(null); // Message gets send on enter key press
+    }
   }
 
   /**
