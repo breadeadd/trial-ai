@@ -7,6 +7,8 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import nz.ac.auckland.apiproxy.chat.openai.ChatCompletionRequest;
 import nz.ac.auckland.apiproxy.chat.openai.ChatCompletionRequest.Model;
 import nz.ac.auckland.apiproxy.chat.openai.ChatCompletionResult;
@@ -173,6 +175,13 @@ public abstract class ChatController {
    * @throws ApiProxyException if there is an error communicating with the API proxy
    * @throws IOException if there is an I/O error
    */
+  @FXML
+  private void onKeyPressed(KeyEvent event) throws ApiProxyException, IOException {
+    if (event.getCode() == KeyCode.ENTER) {
+      onSendMessage(null); // Call existing send method
+    }
+  }
+
   @FXML
   protected void onSendMessage(ActionEvent event) throws ApiProxyException, IOException {
     String message = txtInput.getText().trim();
