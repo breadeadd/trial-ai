@@ -4,8 +4,6 @@ import java.io.IOException;
 import javafx.fxml.FXML;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.shape.Rectangle;
 import nz.ac.auckland.apiproxy.exceptions.ApiProxyException;
@@ -29,13 +27,6 @@ public class HumanWitnessController extends ChatController {
     // Any required initialization code can be placed here
     // loading.setProgress(-1);
     initChat();
-  }
-
-  @FXML
-  private void onKeyPressed(KeyEvent event) throws ApiProxyException, IOException {
-    if (event.getCode() == KeyCode.ENTER) {
-      onSendMessage(null); // Message gets send on enter key press
-    }
   }
 
   @Override
