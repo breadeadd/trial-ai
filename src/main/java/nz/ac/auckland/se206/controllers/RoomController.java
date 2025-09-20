@@ -26,11 +26,9 @@ public class RoomController {
   private boolean firstAi = false;
   private MediaPlayer mediaPlayer; // Keep reference to prevent garbage collection
 
-  @FXML private Rectangle rectCashier;
-  @FXML private Rectangle rectPerson1;
-  @FXML private Rectangle rectPerson2;
-  @FXML private Rectangle rectPerson3;
-  @FXML private Rectangle rectWaitress;
+  @FXML private Rectangle humanWitness;
+  @FXML private Rectangle aiWitness;
+  @FXML private Rectangle defendant;
   @FXML private Button btnGuess;
 
   /**
@@ -40,11 +38,11 @@ public class RoomController {
   @FXML
   public void initialize() {
     if (isFirstTimeInit) {
-      try {
-        playOpenTtsAudio();
-      } catch (URISyntaxException e) {
-        e.printStackTrace();
-      }
+      // try {
+      //   playOpenTtsAudio();
+      // } catch (URISyntaxException e) {
+      //   e.printStackTrace();
+      // }
       isFirstTimeInit = false;
     }
 

@@ -1,9 +1,12 @@
 package nz.ac.auckland.se206.controllers;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import javafx.application.Platform;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 // import javafx.animation.KeyFrame;
@@ -21,9 +24,9 @@ public class DefendantController extends ChatController {
   // slideshow variables
   private List<Image> images = new ArrayList<>();
   private int currentImageIndex = 0;
-  // private Timeline animationTime; // No longer needed
 
   @FXML private ImageView flashbackSlideshow;
+  @FXML private Button nextButton;
 
   /**
    * Initializes the chat view.
@@ -53,6 +56,28 @@ public class DefendantController extends ChatController {
     return "Aegis I";
   }
 
+  // run flashback slideshow
+  public void startFlashbackSlideshow() {
+    // Load images and start slideshow after loading
+    if (images.isEmpty()) {
+      loadImages(this::startFlashbackSlideshow);
+      return;
+    }
+
+    currentImageIndex = 0;
+    flashbackSlideshow.setImage(images.get(currentImageIndex));
+  }
+
+  public void runFlashback() {
+    startFlashbackSlideshow();
+  }
+
+  // Not first time
+  public void runAfterFirst() {
+    flashbackSlideshow.setImage(
+        new Image(getClass().getResourceAsStream("/images/memories/defendantMem.png")));
+  }
+
   // loading images for flashback
   private void loadImages(Runnable onLoaded) {
     new Thread(
@@ -71,6 +96,8 @@ public class DefendantController extends ChatController {
                   new Image(
                       getClass()
                           .getResourceAsStream("/images/flashbacks/defendant/defendant3F.png")));
+              loadedImages.add(
+                  new Image(getClass().getResourceAsStream("/images/memories/defendantMem.png")));
               ;
               Platform.runLater(
                   () -> {
@@ -85,39 +112,17 @@ public class DefendantController extends ChatController {
         .start();
   }
 
-  // run flashback slideshow
-  public void startFlashbackSlideshow() {
-    // Load images and start slideshow after loading
-    if (images.isEmpty()) {
-      loadImages(this::startFlashbackSlideshow);
-      return;
+  @FXML
+  protected void nextScene(ActionEvent event) throws ApiProxyException, IOException {
+    currentImageIndex++;
+    if (currentImageIndex < images.size()) {
+      flashbackSlideshow.setImage(images.get(currentImageIndex));
+    } else {
+      flashbackSlideshow.setOnMouseClicked(null);
     }
 
-    currentImageIndex = 0;
-    flashbackSlideshow.setImage(images.get(currentImageIndex));
-
-    // Remove any previous event handler to avoid stacking
-    flashbackSlideshow.setOnMouseClicked(null);
-
-    flashbackSlideshow.setOnMouseClicked(
-        event -> {
-          currentImageIndex++;
-          if (currentImageIndex < images.size()) {
-            flashbackSlideshow.setImage(images.get(currentImageIndex));
-          } else {
-            // Optionally, remove the handler or do something when finished
-            flashbackSlideshow.setOnMouseClicked(null);
-          }
-        });
-  }
-
-  public void runFlashback() {
-    startFlashbackSlideshow();
-  }
-
-  // Not first time
-  public void runAfterFirst() {
-    flashbackSlideshow.setImage(
-        new Image(getClass().getResourceAsStream("/images/memories/defendantMem.png")));
+    if (currentImageIndex == 3) {
+      nextButton.setVisible(false);
+    }
   }
 }
