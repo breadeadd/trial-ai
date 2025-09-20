@@ -12,7 +12,7 @@
    <children>
       <ImageView fitHeight="559.0" fitWidth="816.0" layoutX="-1.0" layoutY="136.0" preserveRatio="true">
          <image>
-            <Image url="@../images/court.jpeg" />
+            <Image url="@../images/court.png" />
          </image>
       </ImageView>
       <Rectangle fx:id="defendant" arcHeight="5.0" arcWidth="5.0" fill="#1f93ff" focusTraversable="true" height="148.0" layoutX="122.0" layoutY="379.0" onMouseClicked="#defendantClicked" opacity="0.0" stroke="BLACK" strokeType="INSIDE" width="125.0" />

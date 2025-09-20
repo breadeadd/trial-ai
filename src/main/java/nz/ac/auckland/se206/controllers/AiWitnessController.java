@@ -45,7 +45,6 @@ public class AiWitnessController extends ChatController {
 
   // Not first time visiting
   public void runAfterFirst() {
-    aiFlashback.setImage(
-        new Image(getClass().getResourceAsStream("/images/postFlashback/echo.jpeg")));
+    aiFlashback.setImage(new Image(getClass().getResourceAsStream("/images/memories/aiMem.png")));
   }
 }
