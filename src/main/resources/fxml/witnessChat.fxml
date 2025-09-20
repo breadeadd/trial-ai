@@ -15,7 +15,7 @@
   <children>
       <ImageView fx:id="flashback" fitHeight="549.0" fitWidth="761.0" pickOnBounds="true" preserveRatio="true">
          <image>
-            <Image url="@../images/humanFlashback/flashback.jpg" />
+            <Image url="@../images/flashbacks/human/human1F.png" />
          </image>
       </ImageView>
     <TextArea fx:id="txtaChat" editable="false" layoutX="13.0" layoutY="410.0" opacity="0.9" prefHeight="121.0" prefWidth="737.0" wrapText="true" />

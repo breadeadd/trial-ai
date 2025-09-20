@@ -6,14 +6,10 @@ import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.util.Duration;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
 // import javafx.animation.KeyFrame;
 // import javafx.animation.Timeline;
 // import javafx.event.ActionEvent;
 // import javafx.util.Duration;
-
 import nz.ac.auckland.apiproxy.exceptions.ApiProxyException;
 import nz.ac.auckland.se206.prompts.PromptEngineering;
 
@@ -26,7 +22,6 @@ public class DefendantController extends ChatController {
   private List<Image> images = new ArrayList<>();
   private int currentImageIndex = 0;
   // private Timeline animationTime; // No longer needed
-
 
   @FXML private ImageView flashbackSlideshow;
 
@@ -66,19 +61,17 @@ public class DefendantController extends ChatController {
               List<Image> loadedImages = new ArrayList<>();
               loadedImages.add(
                   new Image(
-                      getClass().getResourceAsStream("/images/defendantFlashback/defFlash1.jpg")));
+                      getClass()
+                          .getResourceAsStream("/images/flashbacks/defendant/defendant1F.png")));
               loadedImages.add(
                   new Image(
-                      getClass().getResourceAsStream("/images/defendantFlashback/defFlash2.jpg")));
+                      getClass()
+                          .getResourceAsStream("/images/flashbacks/defendant/defendant2F.png")));
               loadedImages.add(
                   new Image(
-                      getClass().getResourceAsStream("/images/defendantFlashback/defFlash3.jpg")));
-              loadedImages.add(
-                  new Image(
-                      getClass().getResourceAsStream("/images/defendantFlashback/defFlash4.jpg")));
-              loadedImages.add(
-                  new Image(
-                      getClass().getResourceAsStream("/images/defendantFlashback/defFlash5.jpg")));
+                      getClass()
+                          .getResourceAsStream("/images/flashbacks/defendant/defendant3F.png")));
+              ;
               Platform.runLater(
                   () -> {
                     // add all the images for viewing
@@ -106,15 +99,16 @@ public class DefendantController extends ChatController {
     // Remove any previous event handler to avoid stacking
     flashbackSlideshow.setOnMouseClicked(null);
 
-    flashbackSlideshow.setOnMouseClicked(event -> {
-      currentImageIndex++;
-      if (currentImageIndex < images.size()) {
-        flashbackSlideshow.setImage(images.get(currentImageIndex));
-      } else {
-        // Optionally, remove the handler or do something when finished
-        flashbackSlideshow.setOnMouseClicked(null);
-      }
-    });
+    flashbackSlideshow.setOnMouseClicked(
+        event -> {
+          currentImageIndex++;
+          if (currentImageIndex < images.size()) {
+            flashbackSlideshow.setImage(images.get(currentImageIndex));
+          } else {
+            // Optionally, remove the handler or do something when finished
+            flashbackSlideshow.setOnMouseClicked(null);
+          }
+        });
   }
 
   public void runFlashback() {
@@ -124,6 +118,6 @@ public class DefendantController extends ChatController {
   // Not first time
   public void runAfterFirst() {
     flashbackSlideshow.setImage(
-        new Image(getClass().getResourceAsStream("/images/postFlashback/aegis.jpeg")));
+        new Image(getClass().getResourceAsStream("/images/memories/defendantMem.png")));
   }
 }

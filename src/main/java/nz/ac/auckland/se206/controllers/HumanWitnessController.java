@@ -46,15 +46,13 @@ public class HumanWitnessController extends ChatController {
 
   // Not first time
   public void runAfterFirst() {
-    flashback.setImage(
-        new Image(getClass().getResourceAsStream("/images/postFlashback/orion.jpeg")));
+    flashback.setImage(new Image(getClass().getResourceAsStream("/images/memories/humanMem1.png")));
     screenBox.setVisible(false);
   }
 
   // Change to screen image
   @FXML
   private void screenClick(MouseEvent event) throws IOException {
-    flashback.setImage(
-        new Image(getClass().getResourceAsStream("/images/humanFlashback/screenInteract.jpg")));
+    flashback.setImage(new Image(getClass().getResourceAsStream("/images/memories/humanMem2.png")));
   }
 }
