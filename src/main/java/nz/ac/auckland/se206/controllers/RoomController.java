@@ -29,6 +29,7 @@ public class RoomController {
   @FXML private Rectangle humanWitness;
   @FXML private Rectangle aiWitness;
   @FXML private Rectangle defendant;
+
   @FXML private Button btnGuess;
 
   /**
@@ -38,11 +39,11 @@ public class RoomController {
   @FXML
   public void initialize() {
     if (isFirstTimeInit) {
-      // try {
-      //   playOpenTtsAudio();
-      // } catch (URISyntaxException e) {
-      //   e.printStackTrace();
-      // }
+      try {
+        playOpenTtsAudio();
+      } catch (URISyntaxException e) {
+        e.printStackTrace();
+      }
       isFirstTimeInit = false;
     }
 

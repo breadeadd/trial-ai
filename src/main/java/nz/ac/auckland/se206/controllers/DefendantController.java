@@ -38,7 +38,10 @@ public class DefendantController extends ChatController {
     // Any required initialization code can be placed here
     loadImages(null);
     initChat();
-    // loading.setProgress(-1);
+
+    btnSend.setVisible(false);
+    txtInput.setVisible(false);
+    txtaChat.setVisible(false);
   }
 
   @Override
@@ -123,6 +126,10 @@ public class DefendantController extends ChatController {
 
     if (currentImageIndex == 3) {
       nextButton.setVisible(false);
+
+      btnSend.setVisible(true);
+      txtInput.setVisible(true);
+      txtaChat.setVisible(true);
     }
   }
 }

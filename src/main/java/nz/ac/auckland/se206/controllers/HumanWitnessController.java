@@ -37,6 +37,10 @@ public class HumanWitnessController extends ChatController {
     // loading.setProgress(-1);
     loadImages(null);
     initChat();
+
+    btnSend.setVisible(false);
+    txtInput.setVisible(false);
+    txtaChat.setVisible(false);
   }
 
   @Override
@@ -119,6 +123,10 @@ public class HumanWitnessController extends ChatController {
 
     if (currentImageIndex == 3) {
       nextButton.setVisible(false);
+
+      btnSend.setVisible(true);
+      txtInput.setVisible(true);
+      txtaChat.setVisible(true);
     }
   }
 }

@@ -33,6 +33,10 @@ public class AiWitnessController extends ChatController {
   public void initialize() throws ApiProxyException {
     loadImages(null);
     initChat();
+
+    btnSend.setVisible(false);
+    txtInput.setVisible(false);
+    txtaChat.setVisible(false);
   }
 
   /**
@@ -116,6 +120,10 @@ public class AiWitnessController extends ChatController {
 
     if (currentImageIndex == 3) {
       nextButton.setVisible(false);
+
+      btnSend.setVisible(true);
+      txtInput.setVisible(true);
+      txtaChat.setVisible(true);
     }
   }
 }
