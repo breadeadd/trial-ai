@@ -21,7 +21,7 @@
     <Button fx:id="btnSend" layoutX="670.0" layoutY="578.0" mnemonicParsing="false" onAction="#onSendMessage" prefHeight="25.0" prefWidth="109.0" style="-fx-background-color: #5f9ed9;" text="Send" />
     <Button layoutX="14.0" layoutY="14.0" mnemonicParsing="false" onAction="#onGoBack" style="-fx-background-color: #faafc5;" text="Go Back" />
       <ProgressIndicator fx:id="loading" layoutX="381.0" layoutY="445.0" progress="0.0" visible="false" />
-      <Button fx:id="nextButton" alignment="CENTER" layoutX="723.0" layoutY="418.0" mnemonicParsing="false" onAction="#nextScene" prefHeight="61.0" prefWidth="59.0" style="-fx-background-color: #000000;" text="-&gt;" textFill="WHITE">
+      <Button fx:id="nextButton" alignment="CENTER" layoutX="712.0" layoutY="481.0" mnemonicParsing="false" onAction="#nextScene" prefHeight="61.0" prefWidth="59.0" style="-fx-background-color: #000000;" text="-&gt;" textFill="WHITE">
          <font>
             <Font name="VT323 Regular" size="28.0" />
          </font>
