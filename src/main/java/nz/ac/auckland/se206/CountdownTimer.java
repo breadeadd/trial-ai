@@ -79,6 +79,15 @@ public class CountdownTimer {
     secondsRemaining.set(0);
   }
 
+  /**
+   * Resets the timer for a new game.
+   */
+  public static void reset() {
+    countdownTimer.pause();
+    secondsRemaining.set(300);
+    guessed = false;
+  }
+
   // Setting the seconds
   public static IntegerProperty secondsRemainingProperty() {
     return secondsRemaining;

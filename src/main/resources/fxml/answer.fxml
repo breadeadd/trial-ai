@@ -31,11 +31,16 @@
       </Label>
       <TextArea fx:id="txtaChat" editable="false" layoutX="104.0" layoutY="111.0" opacity="0.9" prefHeight="228.0" prefWidth="393.0" style="-fx-font-size: 20px;" wrapText="true" />
       <TextArea fx:id="enterRationale" layoutX="112.0" layoutY="151.0" prefHeight="192.0" prefWidth="393.0" wrapText="true" />
-      <Button fx:id="guessBtn" layoutX="258.0" layoutY="349.0" mnemonicParsing="false" onMouseClicked="#guessMade" prefHeight="35.0" prefWidth="102.0" style="-fx-background-color: #5f9ed9;" text="GUESS">
+      <Button fx:id="guessBtn" layoutX="115.0" layoutY="343.0" mnemonicParsing="false" onMouseClicked="#guessMade" prefHeight="35.0" prefWidth="102.0" style="-fx-background-color: #5f9ed9;" text="GUESS">
          <font>
             <Font name="System Bold" size="21.0" />
          </font>
       </Button>
       <ProgressIndicator fx:id="loading" layoutX="292.0" layoutY="223.0" prefHeight="295.0" prefWidth="128.0" progress="0.0" visible="false" />
+      <Button fx:id="restartBtn" layoutX="379.0" layoutY="343.0" mnemonicParsing="false" onMouseClicked="#restartGame" prefHeight="45.0" prefWidth="126.0" style="-fx-background-color: #28a745;" text="RESTART" visible="false">
+         <font>
+            <Font name="System Bold" size="21.0" />
+         </font>
+      </Button>
    </children>
 </Pane>

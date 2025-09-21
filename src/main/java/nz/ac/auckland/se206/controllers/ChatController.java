@@ -42,7 +42,7 @@ public abstract class ChatController {
   protected abstract String getDisplayRole();
 
   /** Initializes the ChatCompletionRequest and starts the chat. */
-  protected void initChat() {
+  public void initChat() {
 
     new Thread(
             () -> {
