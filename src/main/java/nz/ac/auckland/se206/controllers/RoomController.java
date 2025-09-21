@@ -126,6 +126,7 @@ public class RoomController {
     controller.syncChatHistoryAsync();
 
     if (!firstHuman) {
+      controller.runFlashback();
       firstHuman = true;
     } else {
       controller.runAfterFirst();
@@ -144,6 +145,7 @@ public class RoomController {
     controller.syncChatHistoryAsync();
 
     if (!firstAi) {
+      controller.runFlashback();
       firstAi = true;
     } else {
       controller.runAfterFirst();
