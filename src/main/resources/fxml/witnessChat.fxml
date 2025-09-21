@@ -7,27 +7,24 @@
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
-<?import javafx.scene.text.Text?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="586.0" prefWidth="760.0" style="-fx-background-image: #FFFFFF;" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="nz.ac.auckland.se206.controllers.HumanWitnessController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="614.0" prefWidth="789.0" style="-fx-background-color: #000000;" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="nz.ac.auckland.se206.controllers.HumanWitnessController">
   <children>
-      <ImageView fx:id="flashback" fitHeight="549.0" fitWidth="761.0" pickOnBounds="true" preserveRatio="true">
+      <ImageView fx:id="flashbackSlideshow" fitHeight="666.0" fitWidth="789.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../images/flashbacks/human/human1F.png" />
          </image>
       </ImageView>
-    <TextArea fx:id="txtaChat" editable="false" layoutX="13.0" layoutY="410.0" opacity="0.9" prefHeight="121.0" prefWidth="737.0" wrapText="true" />
-    <TextField fx:id="txtInput" layoutX="14.0" layoutY="550.0" prefHeight="26.0" prefWidth="613.0" onAction="#onSendMessage" onKeyPressed="#onKeyPressed" />
-    <Button fx:id="btnSend" layoutX="636.0" layoutY="550.0" mnemonicParsing="false" onAction="#onSendMessage" prefHeight="25.0" prefWidth="109.0" style="-fx-background-color: #5f9ed9;" text="Send" />
+    <TextArea fx:id="txtaChat" editable="false" layoutX="12.0" layoutY="449.0" opacity="0.9" prefHeight="121.0" prefWidth="769.0" wrapText="true" />
+    <TextField fx:id="txtInput" layoutX="13.0" layoutY="579.0" onAction="#onSendMessage" onKeyPressed="#onKeyPressed" prefHeight="26.0" prefWidth="652.0" />
+    <Button fx:id="btnSend" layoutX="671.0" layoutY="579.0" mnemonicParsing="false" onAction="#onSendMessage" prefHeight="25.0" prefWidth="109.0" style="-fx-background-color: #5f9ed9;" text="Send" />
     <Button layoutX="14.0" layoutY="14.0" mnemonicParsing="false" onAction="#onGoBack" style="-fx-background-color: #faafc5;" text="Go Back" />
-      <Text layoutX="87.0" layoutY="34.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Orion Vale">
-         <font>
-            <Font name="System Bold" size="21.0" />
-         </font>
-      </Text>
-      <Rectangle fx:id="screenBox" arcHeight="5.0" arcWidth="5.0" fill="#1f93ff00" height="263.0" layoutX="33.0" layoutY="75.0" onMouseClicked="#screenClick" stroke="#ffffff00" strokeType="INSIDE" width="353.0" />
       <ProgressIndicator fx:id="loading" layoutX="385.0" layoutY="445.0" progress="0.0" visible="false" />
+      <Button fx:id="nextButton" alignment="CENTER" layoutX="712.0" layoutY="481.0" mnemonicParsing="false" onAction="#nextScene" prefHeight="61.0" prefWidth="59.0" style="-fx-background-color: #000000;" text="-&gt;" textFill="WHITE">
+         <font>
+            <Font name="VT323 Regular" size="28.0" />
+         </font>
+      </Button>
   </children>
 </AnchorPane>

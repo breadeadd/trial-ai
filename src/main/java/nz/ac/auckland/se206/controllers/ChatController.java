@@ -43,17 +43,6 @@ public abstract class ChatController {
 
   /** Initializes the ChatCompletionRequest and starts the chat. */
   protected void initChat() {
-    // loading indicator
-    if (loading != null) {
-      loading.setProgress(-1);
-      loading.setVisible(true);
-    }
-    if (txtInput != null) {
-      txtInput.setDisable(true);
-    }
-    if (btnSend != null) {
-      btnSend.setDisable(true);
-    }
 
     new Thread(
             () -> {
@@ -70,19 +59,6 @@ public abstract class ChatController {
               } catch (ApiProxyException e) {
                 e.printStackTrace();
               }
-
-              Platform.runLater(
-                  () -> {
-                    if (loading != null) {
-                      loading.setVisible(false);
-                    }
-                    if (txtInput != null) {
-                      txtInput.setDisable(false);
-                    }
-                    if (btnSend != null) {
-                      btnSend.setDisable(false);
-                    }
-                  });
             })
         .start();
   }
