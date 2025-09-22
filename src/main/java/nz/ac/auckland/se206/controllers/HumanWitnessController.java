@@ -240,8 +240,8 @@ public class HumanWitnessController extends ChatController {
     try {
       Image arrowImage = new Image(getClass().getResourceAsStream(imagePath));
       ImageView imageView = new ImageView(arrowImage);
-      imageView.setFitWidth(30); // Adjust size as needed
-      imageView.setFitHeight(15); // Adjust size as needed
+      imageView.setFitWidth(40); // Adjust size as needed
+      imageView.setFitHeight(40); // Adjust size as needed
       imageView.setPreserveRatio(true);
       dropUpArrow.setGraphic(imageView);
       dropUpArrow.setText(""); // Remove any text
@@ -257,7 +257,7 @@ public class HumanWitnessController extends ChatController {
   // Update arrow to dropDown shape and position above chatbox
   private void updateArrowToDropDown() {
     dropUpArrow.setLayoutX(14.0);
-    dropUpArrow.setLayoutY(419.0);
+    dropUpArrow.setLayoutY(400.0);
     setArrowImage("/images/assets/chatDown.png");
   }
 
