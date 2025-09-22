@@ -36,6 +36,7 @@ public class HumanWitnessController extends ChatController {
   @FXML private TextArea txtaChat;
   @FXML private TextField txtInput;
   @FXML private Button btnSend;
+  @FXML private Button backBtn;
 
   /**
    * Initializes the chat view.
@@ -50,6 +51,8 @@ public class HumanWitnessController extends ChatController {
     btnSend.setVisible(false);
     txtInput.setVisible(false);
     txtaChat.setVisible(false);
+    backBtn.setDisable(true);
+
     unlockSlider.setVisible(false); // Slider is initially hidden
     dropUpArrow.setVisible(false); // Drop up arrow initially hidden
     // Set initial upward arrow shape
@@ -143,8 +146,11 @@ public class HumanWitnessController extends ChatController {
       flashbackSlideshow.setOnMouseClicked(null);
     }
 
+    // flashback ends and chat begins
     if (currentImageIndex == 3) { // When reaching humanMem1.png
       nextButton.setVisible(false);
+      backBtn.setDisable(false);
+
       unlockSlider.setVisible(true);
       unlockSlider.setDisable(false);
       dropUpArrow.setVisible(true);

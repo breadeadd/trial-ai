@@ -34,6 +34,7 @@ public class DefendantController extends ChatController {
   @FXML private ImageView btn2img;
   @FXML private ImageView btn3img;
   @FXML private ImageView btn4img;
+  @FXML private Button backBtn;
 
   /**
    * Initializes the chat view.
@@ -50,6 +51,7 @@ public class DefendantController extends ChatController {
     btnSend.setVisible(false);
     txtInput.setVisible(false);
     txtaChat.setVisible(false);
+    backBtn.setDisable(true);
   }
 
   @Override
@@ -132,8 +134,10 @@ public class DefendantController extends ChatController {
       flashbackSlideshow.setOnMouseClicked(null);
     }
 
+    // flashback ends and chat begins
     if (currentImageIndex == 3) {
       nextButton.setVisible(false);
+      backBtn.setDisable(false);
 
       btnSend.setVisible(true);
       txtInput.setVisible(true);
