@@ -56,7 +56,7 @@ public class HumanWitnessController extends ChatController {
     unlockSlider.setVisible(false); // Slider is initially hidden
     dropUpArrow.setVisible(false); // Drop up arrow initially hidden
     // Set initial upward arrow shape
-    dropUpArrow.setStyle("-fx-background-color: #ffffff; -fx-shape: 'M 0 15 L 15 0 L 30 15 Z';");
+    setArrowImage("/images/arrow_up.png");
   }
 
   @Override
@@ -235,18 +235,37 @@ public class HumanWitnessController extends ChatController {
     }
   }
 
+  // arrow image
+  private void setArrowImage(String imagePath) {
+    try {
+      Image arrowImage = new Image(getClass().getResourceAsStream(imagePath));
+      ImageView imageView = new ImageView(arrowImage);
+      imageView.setFitWidth(30); // Adjust size as needed
+      imageView.setFitHeight(15); // Adjust size as needed
+      imageView.setPreserveRatio(true);
+      dropUpArrow.setGraphic(imageView);
+      dropUpArrow.setText(""); // Remove any text
+      dropUpArrow.setStyle("-fx-background-color: transparent;"); // Make background transparent
+    } catch (Exception e) {
+      System.err.println("Could not load arrow image: " + imagePath);
+      // Fallback to text if image fails
+      dropUpArrow.setGraphic(null);
+      dropUpArrow.setText("▼");
+    }
+  }
+
   // Update arrow to dropDown shape and position above chatbox
   private void updateArrowToDropDown() {
     dropUpArrow.setLayoutX(14.0);
     dropUpArrow.setLayoutY(419.0);
-    dropUpArrow.setStyle("-fx-background-color: #ffffff; -fx-shape: 'M 0 0 L 15 15 L 30 0 Z';");
+    setArrowImage("/images/assets/chatDown.png");
   }
 
   // Update arrow to dropUp shape and original position
   private void updateArrowToDropUp() {
     dropUpArrow.setLayoutX(14.0);
     dropUpArrow.setLayoutY(540.0);
-    dropUpArrow.setStyle("-fx-background-color: #ffffff; -fx-shape: 'M 0 15 L 15 0 L 30 15 Z';");
+    setArrowImage("/images/assets/chatUp.png");
   }
 
   // Animate the vertical transition
