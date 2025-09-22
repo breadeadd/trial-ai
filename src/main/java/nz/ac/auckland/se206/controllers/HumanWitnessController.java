@@ -17,6 +17,7 @@ import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
 import nz.ac.auckland.apiproxy.exceptions.ApiProxyException;
 import nz.ac.auckland.se206.prompts.PromptEngineering;
+import nz.ac.auckland.se206.states.GameStateManager;
 
 /**
  * Controller class for the chat view. Handles user interactions and communication with the GPT
@@ -86,15 +87,20 @@ public class HumanWitnessController extends ChatController {
 
   // Not first time
   public void runAfterFirst() {
-    currentImageIndex = 3; // Start at humanMem1.png
-    flashbackSlideshow.setImage(images.get(currentImageIndex));
-    unlockSlider.setVisible(true); // Show slider when on humanMem1.png
-    unlockSlider.setDisable(false); // Enabling slider
-    unlockSlider.setValue(0.0); // Resetting to starting pos
-    dropUpArrow.setVisible(true); // Show arrow on humanMem1.png
-    // Set to dropDownArrow shape
-    updateArrowToDropDown();
-    toggleChatVisibility(null);
+    if (GameStateManager.getInstance().getInteractionFlag("OrionInt") == true) {
+      currentImageIndex = 4; // Start at humanMem2.png
+      flashbackSlideshow.setImage(images.get(currentImageIndex));
+    } else {
+      currentImageIndex = 3; // Start at humanMem1.png
+      flashbackSlideshow.setImage(images.get(currentImageIndex));
+      unlockSlider.setVisible(true); // Show slider when on humanMem1.png
+      unlockSlider.setDisable(false); // Enabling slider
+      unlockSlider.setValue(0.0); // Resetting to starting pos
+      dropUpArrow.setVisible(true); // Show arrow on humanMem1.png
+      // Set to dropDownArrow shape
+      updateArrowToDropDown();
+      toggleChatVisibility(null);
+    }
   }
 
   // Loading images for flashback
@@ -175,6 +181,7 @@ public class HumanWitnessController extends ChatController {
   protected void onSliderReleased() {
     if (currentImageIndex == 3 && unlockSlider.getValue() >= 100.0) {
       currentImageIndex = 4; // Move to humanMem2.png
+      GameStateManager.getInstance().setInteractionFlag("OrionInt", true);
       flashbackSlideshow.setImage(images.get(currentImageIndex));
       unlockSlider.setDisable(true);
       unlockSlider.setVisible(false);

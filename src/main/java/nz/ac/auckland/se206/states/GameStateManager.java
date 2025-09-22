@@ -13,6 +13,7 @@ public class GameStateManager {
     charactersTalkedTo = new HashMap<>();
     gameFlags = new HashMap<>();
     initializeCharacters();
+    initializeInteractionFlags();
   }
 
   public static GameStateManager getInstance() {
@@ -41,6 +42,21 @@ public class GameStateManager {
   // Get specific character status
   public boolean hasSpokenTo(String characterName) {
     return charactersTalkedTo.getOrDefault(characterName, false);
+  }
+
+  // Interaction Flags
+  private void initializeInteractionFlags() {
+    gameFlags.put("AegisInt", false);
+    gameFlags.put("EchoInt", false);
+    gameFlags.put("OrionInt", false);
+  }
+
+  public void setInteractionFlag(String charInteract, boolean value) {
+    gameFlags.put(charInteract, value);
+  }
+
+  public boolean getInteractionFlag(String charInteract) {
+    return gameFlags.getOrDefault(charInteract, false);
   }
 
   /////////////////////////////////////////////////////////
