@@ -11,12 +11,9 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.shape.Rectangle;
-// import javafx.animation.KeyFrame;
-// import javafx.animation.Timeline;
-// import javafx.event.ActionEvent;
-// import javafx.util.Duration;
 import nz.ac.auckland.apiproxy.exceptions.ApiProxyException;
 import nz.ac.auckland.se206.prompts.PromptEngineering;
+import nz.ac.auckland.se206.states.GameStateManager;
 
 /**
  * Controller class for the chat view. Handles user interactions and communication with the GPT
@@ -162,23 +159,44 @@ public class DefendantController extends ChatController {
     btn4img.setVisible(false);
   }
 
+  // check all buttons have been clicked
+  private boolean allButtonsClicked() {
+    return btn1img.isVisible() && btn2img.isVisible() && btn3img.isVisible() && btn4img.isVisible();
+  }
+
   @FXML
   private void button1Clicked(MouseEvent event) throws IOException {
     btn1img.setVisible(!btn1img.isVisible());
+
+    if (allButtonsClicked()) {
+      GameStateManager.getInstance().setInteractionFlag("AegisInt", true);
+    }
   }
 
   @FXML
   private void button2Clicked(MouseEvent event) throws IOException {
     btn2img.setVisible(!btn2img.isVisible());
+
+    if (allButtonsClicked()) {
+      GameStateManager.getInstance().setInteractionFlag("AegisInt", true);
+    }
   }
 
   @FXML
   private void button3Clicked(MouseEvent event) throws IOException {
     btn3img.setVisible(!btn3img.isVisible());
+
+    if (allButtonsClicked()) {
+      GameStateManager.getInstance().setInteractionFlag("AegisInt", true);
+    }
   }
 
   @FXML
   private void button4Clicked(MouseEvent event) throws IOException {
     btn4img.setVisible(!btn4img.isVisible());
+
+    if (allButtonsClicked()) {
+      GameStateManager.getInstance().setInteractionFlag("AegisInt", true);
+    }
   }
 }
