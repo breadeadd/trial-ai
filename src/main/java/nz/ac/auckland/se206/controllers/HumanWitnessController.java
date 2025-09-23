@@ -274,4 +274,60 @@ public class HumanWitnessController extends ChatController {
     transition.setToY(toY);
     transition.play();
   }
+
+  /**
+   * Resets the controller to its initial state for game restart.
+   */
+  public void resetControllerState() {
+    Platform.runLater(() -> {
+      // Reset image index to beginning
+      currentImageIndex = 0;
+      
+      // Reset chat visibility to initial state (visible)
+      chatVisible = true;
+      
+      // Reset chat UI elements to initial positions
+      if (txtaChat != null) {
+        txtaChat.setTranslateY(0);
+        txtaChat.setVisible(false);
+      }
+      if (txtInput != null) {
+        txtInput.setTranslateY(0);
+        txtInput.setVisible(false);
+      }
+      if (btnSend != null) {
+        btnSend.setTranslateY(0);
+        btnSend.setVisible(false);
+      }
+      
+      // Reset dropdown arrow to bottom position and hide it
+      if (dropUpArrow != null) {
+        dropUpArrow.setVisible(false);
+        dropUpArrow.setLayoutX(14.0);
+        dropUpArrow.setLayoutY(540.0); // Bottom position
+      }
+      
+      // Show next button for flashbacks
+      if (nextButton != null) {
+        nextButton.setVisible(true);
+      }
+      
+      // Reset back button
+      if (backBtn != null) {
+        backBtn.setDisable(true);
+      }
+      
+      // Reset slider
+      if (unlockSlider != null) {
+        unlockSlider.setVisible(false);
+        unlockSlider.setDisable(false);
+        unlockSlider.setValue(0.0);
+      }
+      
+      // Reset flashback slideshow to first image
+      if (flashbackSlideshow != null && !images.isEmpty()) {
+        flashbackSlideshow.setImage(images.get(0));
+      }
+    });
+  }
 }

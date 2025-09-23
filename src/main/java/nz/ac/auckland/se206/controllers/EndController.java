@@ -265,10 +265,10 @@ public class EndController extends ChatController {
         // Switch back to room scene
         App.setRoot("room");
         
-        // Update the guess button state immediately after restart
+        // Reset room controller state and update button state
         RoomController roomController = (RoomController) App.getController("room");
         if (roomController != null) {
-          roomController.updateButtonState();
+          roomController.resetRoomState();
         }
         
         // Restart the timer
@@ -289,21 +289,24 @@ public class EndController extends ChatController {
       try {
         Thread.sleep(500); // Short delay to ensure everything is reset
         Platform.runLater(() -> {
-          // Initialize DefendantController chat
+          // Reset and initialize DefendantController
           DefendantController defendantController = (DefendantController) App.getController("defendantChat");
           if (defendantController != null) {
+            defendantController.resetControllerState();
             defendantController.initChat();
           }
           
-          // Initialize HumanWitnessController chat
+          // Reset and initialize HumanWitnessController
           HumanWitnessController humanController = (HumanWitnessController) App.getController("witnessChat");
           if (humanController != null) {
+            humanController.resetControllerState();
             humanController.initChat();
           }
           
-          // Initialize AiWitnessController chat
+          // Reset and initialize AiWitnessController
           AiWitnessController aiController = (AiWitnessController) App.getController("aiChat");
           if (aiController != null) {
+            aiController.resetControllerState();
             aiController.initChat();
           }
         });

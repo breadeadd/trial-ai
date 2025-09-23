@@ -18,20 +18,20 @@
       </ImageView>
       <ImageView fx:id="aiFlashback" fitHeight="558.0" fitWidth="804.0" pickOnBounds="true" preserveRatio="true" visible="false" />
       
-      <!-- Draggable Event Images (positioned in middle of screen) -->
-      <ImageView fx:id="event1Image" fitHeight="150.0" fitWidth="150.0" layoutX="85.0" layoutY="320.0" pickOnBounds="true" preserveRatio="true" visible="false">
-         <image>
-            <Image url="@../images/memories/assets/event1.png" />
-         </image>
-      </ImageView>
-      <ImageView fx:id="event2Image" fitHeight="150.0" fitWidth="150.0" layoutX="320.0" layoutY="320.0" pickOnBounds="true" preserveRatio="true" visible="false">
+      <!-- Draggable Event Images (positioned in scrambled order: 2-3-1) -->
+      <ImageView fx:id="event2Image" fitHeight="150.0" fitWidth="150.0" layoutX="85.0" layoutY="320.0" pickOnBounds="true" preserveRatio="true" visible="false">
          <image>
             <Image url="@../images/memories/assets/event2.png" />
          </image>
       </ImageView>
-      <ImageView fx:id="event3Image" fitHeight="150.0" fitWidth="150.0" layoutX="550.0" layoutY="320.0" pickOnBounds="true" preserveRatio="true" visible="false">
+      <ImageView fx:id="event3Image" fitHeight="150.0" fitWidth="150.0" layoutX="320.0" layoutY="320.0" pickOnBounds="true" preserveRatio="true" visible="false">
          <image>
             <Image url="@../images/memories/assets/event3.png" />
+         </image>
+      </ImageView>
+      <ImageView fx:id="event1Image" fitHeight="150.0" fitWidth="150.0" layoutX="550.0" layoutY="320.0" pickOnBounds="true" preserveRatio="true" visible="false">
+         <image>
+            <Image url="@../images/memories/assets/event1.png" />
          </image>
       </ImageView>
       
@@ -49,5 +49,6 @@
             <Font name="VT323 Regular" size="28.0" />
          </font>
       </Button>
+      <Button fx:id="dropUpArrow" layoutX="14.0" layoutY="400.0" mnemonicParsing="false" onAction="#toggleChatVisibility" prefHeight="40.0" prefWidth="40.0" style="-fx-background-color: transparent;" visible="false" />
   </children>
 </AnchorPane>

@@ -3,6 +3,8 @@ package nz.ac.auckland.se206.controllers;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import javafx.animation.ScaleTransition;
+import javafx.animation.TranslateTransition;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -14,8 +16,10 @@ import javafx.scene.input.DragEvent;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.TransferMode;
+import javafx.util.Duration;
 import nz.ac.auckland.apiproxy.exceptions.ApiProxyException;
 import nz.ac.auckland.se206.prompts.PromptEngineering;
+import nz.ac.auckland.se206.states.GameStateManager;
 
 /**
  * Controller class for the chat view. Handles user interactions and communication with the GPT
@@ -24,6 +28,7 @@ import nz.ac.auckland.se206.prompts.PromptEngineering;
 public class AiWitnessController extends ChatController {
   private List<Image> images = new ArrayList<>();
   private int currentImageIndex = 0;
+  private boolean chatVisible = true; // Track chat visibility state
   
   // Drag and drop variables
   private String[] slotContents = new String[3]; // Track what's in each slot
@@ -33,6 +38,7 @@ public class AiWitnessController extends ChatController {
   @FXML private ImageView flashbackSlideshow;
   @FXML private ImageView aiFlashback;
   @FXML private Button nextButton;
+  @FXML private Button dropUpArrow;
   
   // Event images (draggable)
   @FXML private ImageView event1Image;
@@ -57,6 +63,7 @@ public class AiWitnessController extends ChatController {
     btnSend.setVisible(false);
     txtInput.setVisible(false);
     txtaChat.setVisible(false);
+    dropUpArrow.setVisible(false); // Drop up arrow initially hidden
     
     // Initialize drag and drop functionality
     setupDragAndDrop();
@@ -116,11 +123,42 @@ public class AiWitnessController extends ChatController {
 
   // Not first time visiting
   public void runAfterFirst() {
-    aiFlashback.setImage(new Image(getClass().getResourceAsStream("/images/memories/aiMem.png")));
-    aiFlashback.setVisible(true);
-    
-    // Show drag and drop elements when on memory screen
-    showDragAndDropElements();
+    // Check if AI witness interaction has been completed
+    if (GameStateManager.getInstance().getInteractionFlag("EchoInt") == true) {
+      // If puzzle was completed, go directly to memory screen
+      currentImageIndex = 3;
+      if (!images.isEmpty()) {
+        flashbackSlideshow.setImage(images.get(currentImageIndex));
+      }
+      
+      // Show memory screen elements
+      btnSend.setVisible(true);
+      txtInput.setVisible(true);
+      txtaChat.setVisible(true);
+      dropUpArrow.setVisible(true);
+      updateArrowToDropDown();
+      nextButton.setVisible(false);
+      
+      // Show drag and drop elements
+      showDragAndDropElements();
+    } else {
+      // If puzzle wasn't completed, show memory screen but allow puzzle interaction
+      currentImageIndex = 3;
+      if (!images.isEmpty()) {
+        flashbackSlideshow.setImage(images.get(currentImageIndex));
+      }
+      
+      // Show memory screen elements
+      btnSend.setVisible(true);
+      txtInput.setVisible(true);
+      txtaChat.setVisible(true);
+      dropUpArrow.setVisible(true);
+      updateArrowToDropDown();
+      nextButton.setVisible(false);
+      
+      // Show drag and drop elements for puzzle
+      showDragAndDropElements();
+    }
   }
   
   /**
@@ -154,11 +192,50 @@ public class AiWitnessController extends ChatController {
    * Sets up a draggable image with the specified event ID.
    */
   private void setupDraggableImage(ImageView imageView, String eventId) {
+    // Change cursor to indicate draggable and add hover effect
+    imageView.setOnMouseEntered(e -> {
+      imageView.getScene().setCursor(javafx.scene.Cursor.OPEN_HAND);
+      // Subtle scale up on hover
+      ScaleTransition hoverScale = new ScaleTransition(Duration.millis(100), imageView);
+      hoverScale.setToX(1.05);
+      hoverScale.setToY(1.05);
+      hoverScale.play();
+    });
+    
+    imageView.setOnMouseExited(e -> {
+      imageView.getScene().setCursor(javafx.scene.Cursor.DEFAULT);
+      // Scale back down
+      ScaleTransition exitScale = new ScaleTransition(Duration.millis(100), imageView);
+      exitScale.setToX(1.0);
+      exitScale.setToY(1.0);
+      exitScale.play();
+    });
+    
     imageView.setOnDragDetected((MouseEvent event) -> {
       Dragboard dragboard = imageView.startDragAndDrop(TransferMode.MOVE);
       ClipboardContent content = new ClipboardContent();
       content.putString(eventId);
       dragboard.setContent(content);
+      
+      // Create drag image preview with better visual feedback
+      javafx.scene.image.WritableImage dragImage = imageView.snapshot(null, null);
+      dragboard.setDragView(dragImage, dragImage.getWidth() / 2, dragImage.getHeight() / 2);
+      
+      // Make original image semi-transparent during drag
+      imageView.setOpacity(0.5);
+      
+      // Change cursor
+      imageView.getScene().setCursor(javafx.scene.Cursor.CLOSED_HAND);
+      
+      event.consume();
+    });
+    
+    // Reset opacity and cursor when drag ends
+    imageView.setOnDragDone((DragEvent event) -> {
+      imageView.setOpacity(1.0);
+      imageView.setScaleX(1.0); // Reset scale
+      imageView.setScaleY(1.0);
+      imageView.getScene().setCursor(javafx.scene.Cursor.DEFAULT);
       event.consume();
     });
   }
@@ -167,14 +244,28 @@ public class AiWitnessController extends ChatController {
    * Sets up a drop target slot.
    */
   private void setupDropTarget(ImageView dropSlot, int slotIndex) {
+    // Store original style for restoration
+    String originalStyle = dropSlot.getStyle();
+    
     dropSlot.setOnDragOver((DragEvent event) -> {
       if (event.getGestureSource() != dropSlot && event.getDragboard().hasString()) {
         event.acceptTransferModes(TransferMode.MOVE);
+        // Highlight drop zone with glowing effect
+        dropSlot.setStyle(originalStyle + "; -fx-effect: dropshadow(gaussian, #00ff00, 10, 0.8, 0, 0);");
       }
       event.consume();
     });
     
+    dropSlot.setOnDragExited((DragEvent event) -> {
+      // Remove highlight when drag leaves the area
+      dropSlot.setStyle(originalStyle);
+      event.consume();
+    });
+    
     dropSlot.setOnDragDropped((DragEvent event) -> {
+      // Remove highlight on drop
+      dropSlot.setStyle(originalStyle);
+      
       Dragboard dragboard = event.getDragboard();
       boolean success = false;
       
@@ -190,8 +281,28 @@ public class AiWitnessController extends ChatController {
         slotContents[slotIndex] = eventId;
         ImageView eventImage = getEventImageById(eventId);
         if (eventImage != null) {
-          eventImage.setLayoutX(dropSlot.getLayoutX());
-          eventImage.setLayoutY(dropSlot.getLayoutY());
+          // Smooth animation to snap into place
+          TranslateTransition snapTransition = new TranslateTransition(Duration.millis(200), eventImage);
+          snapTransition.setToX(dropSlot.getLayoutX() - eventImage.getLayoutX());
+          snapTransition.setToY(dropSlot.getLayoutY() - eventImage.getLayoutY());
+          snapTransition.setOnFinished(e -> {
+            // Reset translate and update actual position
+            eventImage.setTranslateX(0);
+            eventImage.setTranslateY(0);
+            eventImage.setLayoutX(dropSlot.getLayoutX());
+            eventImage.setLayoutY(dropSlot.getLayoutY());
+            
+            // Small scale pulse effect to show successful placement
+            ScaleTransition pulseScale = new ScaleTransition(Duration.millis(150), eventImage);
+            pulseScale.setFromX(1.0);
+            pulseScale.setFromY(1.0);
+            pulseScale.setToX(1.1);
+            pulseScale.setToY(1.1);
+            pulseScale.setAutoReverse(true);
+            pulseScale.setCycleCount(2);
+            pulseScale.play();
+          });
+          snapTransition.play();
         }
         
         success = true;
@@ -211,8 +322,18 @@ public class AiWitnessController extends ChatController {
     if (eventImage != null) {
       int index = getEventIndex(eventId);
       if (index >= 0) {
-        eventImage.setLayoutX(originalX[index]);
-        eventImage.setLayoutY(originalY[index]);
+        // Smooth animation back to original position
+        TranslateTransition returnTransition = new TranslateTransition(Duration.millis(300), eventImage);
+        returnTransition.setToX(originalX[index] - eventImage.getLayoutX());
+        returnTransition.setToY(originalY[index] - eventImage.getLayoutY());
+        returnTransition.setOnFinished(e -> {
+          // Reset translate and update actual position
+          eventImage.setTranslateX(0);
+          eventImage.setTranslateY(0);
+          eventImage.setLayoutX(originalX[index]);
+          eventImage.setLayoutY(originalY[index]);
+        });
+        returnTransition.play();
       }
     }
   }
@@ -264,7 +385,11 @@ public class AiWitnessController extends ChatController {
    */
   private void handleCorrectOrder() {
     System.out.println("Events are in the correct order!");
-    // TODO: Add logic here for what happens when the events are in the right order
+    
+    // Mark AI witness interaction as completed
+    GameStateManager.getInstance().setInteractionFlag("EchoInt", true);
+    
+    // TODO: Add additional logic here for what happens when the events are in the right order
     // This could be:
     // - Show a success message
     // - Unlock additional chat functionality
@@ -347,8 +472,197 @@ public class AiWitnessController extends ChatController {
       txtInput.setVisible(true);
       txtaChat.setVisible(true);
       
+      dropUpArrow.setVisible(true); // Show drop up arrow when chat appears
+      updateArrowToDropDown(); // Set initial arrow to drop down arrow
+      
       // Show drag and drop elements when reaching the memory screen
       showDragAndDropElements();
     }
+  }
+
+  // Toggle chat visibility with drop-up/down animation
+  @FXML
+  private void toggleChatVisibility(ActionEvent event) {
+    if (chatVisible) {
+      // Drop down (hide)
+      animateTranslate(txtaChat, 150.0);
+      animateTranslate(txtInput, 150.0);
+      animateTranslate(btnSend, 150.0);
+
+      // Change to dropUpArrow shape and original position
+      updateArrowToDropUp();
+      chatVisible = false;
+      btnSend.setVisible(false);
+      txtInput.setVisible(false);
+      txtaChat.setVisible(false);
+    } else {
+      // Drop up (show)
+      animateTranslate(txtaChat, 0.0);
+      animateTranslate(txtInput, 0.0);
+      animateTranslate(btnSend, 0.0);
+
+      // Change to dropDownArrow shape and position above chatbox
+      updateArrowToDropDown();
+      chatVisible = true;
+      btnSend.setVisible(true);
+      txtInput.setVisible(true);
+      txtaChat.setVisible(true);
+    }
+  }
+
+  // Arrow image
+  private void setArrowImage(String imagePath) {
+    try {
+      Image arrowImage = new Image(getClass().getResourceAsStream(imagePath));
+      ImageView imageView = new ImageView(arrowImage);
+      imageView.setFitWidth(40); // Adjust size as needed
+      imageView.setFitHeight(40); // Adjust size as needed
+      imageView.setPreserveRatio(true);
+      dropUpArrow.setGraphic(imageView);
+      dropUpArrow.setText(""); // Remove any text
+      dropUpArrow.setStyle("-fx-background-color: transparent;"); // Make background transparent
+    } catch (Exception e) {
+      System.err.println("Could not load arrow image: " + imagePath);
+      // Fallback to text if image fails
+      dropUpArrow.setGraphic(null);
+      dropUpArrow.setText("▼");
+    }
+  }
+
+  // Update arrow to dropDown shape and position above chatbox
+  private void updateArrowToDropDown() {
+    dropUpArrow.setLayoutX(14.0);
+    dropUpArrow.setLayoutY(400.0);
+    setArrowImage("/images/assets/chatDown.png");
+  }
+
+  // Update arrow to dropUp shape and original position
+  private void updateArrowToDropUp() {
+    dropUpArrow.setLayoutX(14.0);
+    dropUpArrow.setLayoutY(540.0);
+    setArrowImage("/images/assets/chatUp.png");
+  }
+
+  // Animate the vertical transition
+  private void animateTranslate(javafx.scene.Node node, double toY) {
+    TranslateTransition transition = new TranslateTransition(Duration.millis(300), node);
+    transition.setToY(toY);
+    transition.play();
+  }
+
+  /**
+   * Resets the controller to its initial state for game restart.
+   */
+  public void resetControllerState() {
+    Platform.runLater(() -> {
+      // Reset image index to beginning
+      currentImageIndex = 0;
+      
+      // Reset chat visibility to initial state (visible)
+      chatVisible = true;
+      
+      // Reset chat UI elements to initial positions
+      if (txtaChat != null) {
+        txtaChat.setTranslateY(0);
+        txtaChat.setVisible(false);
+      }
+      if (txtInput != null) {
+        txtInput.setTranslateY(0);
+        txtInput.setVisible(false);
+      }
+      if (btnSend != null) {
+        btnSend.setTranslateY(0);
+        btnSend.setVisible(false);
+      }
+      
+      // Reset dropdown arrow to bottom position and hide it
+      if (dropUpArrow != null) {
+        dropUpArrow.setVisible(false);
+        dropUpArrow.setLayoutX(14.0);
+        dropUpArrow.setLayoutY(540.0); // Bottom position
+      }
+      
+      // Show next button for flashbacks
+      if (nextButton != null) {
+        nextButton.setVisible(true);
+      }
+      
+      // Reset flashback slideshow to first image
+      if (flashbackSlideshow != null && !images.isEmpty()) {
+        flashbackSlideshow.setImage(images.get(0));
+        flashbackSlideshow.setVisible(true); // Ensure main slideshow is visible
+      }
+      
+      // Hide the memory screen overlay
+      if (aiFlashback != null) {
+        aiFlashback.setVisible(false);
+      }
+      
+      // Reset drag and drop puzzle elements
+      resetPuzzleState();
+    });
+  }
+
+  /**
+   * Resets the drag and drop puzzle to its initial state.
+   */
+  private void resetPuzzleState() {
+    // Clear slot contents
+    for (int i = 0; i < slotContents.length; i++) {
+      slotContents[i] = null;
+    }
+    
+    // Hide all drag and drop elements
+    if (event1Image != null) {
+      event1Image.setVisible(false);
+      event1Image.setOpacity(1.0);
+      event1Image.setScaleX(1.0);
+      event1Image.setScaleY(1.0);
+      event1Image.setTranslateX(0);
+      event1Image.setTranslateY(0);
+    }
+    if (event2Image != null) {
+      event2Image.setVisible(false);
+      event2Image.setOpacity(1.0);
+      event2Image.setScaleX(1.0);
+      event2Image.setScaleY(1.0);
+      event2Image.setTranslateX(0);
+      event2Image.setTranslateY(0);
+    }
+    if (event3Image != null) {
+      event3Image.setVisible(false);
+      event3Image.setOpacity(1.0);
+      event3Image.setScaleX(1.0);
+      event3Image.setScaleY(1.0);
+      event3Image.setTranslateX(0);
+      event3Image.setTranslateY(0);
+    }
+    
+    // Hide drop slots
+    if (dropSlot1 != null) {
+      dropSlot1.setVisible(false);
+    }
+    if (dropSlot2 != null) {
+      dropSlot2.setVisible(false);
+    }
+    if (dropSlot3 != null) {
+      dropSlot3.setVisible(false);
+    }
+    
+    // Reset event images to original scrambled positions (2-3-1 order)
+    Platform.runLater(() -> {
+      if (event1Image != null) {
+        event1Image.setLayoutX(originalX[0]); // Position for event1 (550.0)
+        event1Image.setLayoutY(originalY[0]);
+      }
+      if (event2Image != null) {
+        event2Image.setLayoutX(originalX[1]); // Position for event2 (85.0)
+        event2Image.setLayoutY(originalY[1]);
+      }
+      if (event3Image != null) {
+        event3Image.setLayoutX(originalX[2]); // Position for event3 (320.0)
+        event3Image.setLayoutY(originalY[2]);
+      }
+    });
   }
 }
