@@ -3,6 +3,7 @@ package nz.ac.auckland.se206.controllers;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import javafx.animation.TranslateTransition;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -11,6 +12,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.shape.Rectangle;
+import javafx.util.Duration;
 import nz.ac.auckland.apiproxy.exceptions.ApiProxyException;
 import nz.ac.auckland.se206.prompts.PromptEngineering;
 import nz.ac.auckland.se206.states.GameStateManager;
@@ -23,6 +25,7 @@ public class DefendantController extends ChatController {
   // slideshow variables
   private List<Image> images = new ArrayList<>();
   private int currentImageIndex = 0;
+  private boolean chatVisible = true; // tracking chat visibility
 
   @FXML private ImageView flashbackSlideshow;
   @FXML private Button nextButton;
@@ -35,6 +38,7 @@ public class DefendantController extends ChatController {
   @FXML private ImageView btn3img;
   @FXML private ImageView btn4img;
   @FXML private Button backBtn;
+  @FXML private Button dropUpArrow; // New button for chat visibility toggle.
 
   /**
    * Initializes the chat view.
@@ -52,6 +56,7 @@ public class DefendantController extends ChatController {
     txtInput.setVisible(false);
     txtaChat.setVisible(false);
     backBtn.setDisable(true);
+    dropUpArrow.setVisible(false);
   }
 
   @Override
@@ -147,6 +152,9 @@ public class DefendantController extends ChatController {
       button2.setVisible(true);
       button3.setVisible(true);
       button4.setVisible(true);
+
+      dropUpArrow.setVisible(true); // showing drop up arrow when chat appears
+      updateArrowToDropDown(); // set initial arrow to drop down arrow
     }
   }
 
@@ -202,5 +210,85 @@ public class DefendantController extends ChatController {
     if (allButtonsClicked()) {
       GameStateManager.getInstance().setInteractionFlag("AegisInt", true);
     }
+  }
+
+  // toggle chat visibility with drop up/down animation
+  @FXML
+  private void toggleChatVisibility(ActionEvent event) {
+    if (chatVisible) {
+      // Drop down
+      animateTranslate(txtaChat, 150.0);
+      animateTranslate(txtInput, 150.0);
+      animateTranslate(btnSend, 150.0);
+
+      // Change to dropUpArrow shape and position
+      updateArrowToDropUp();
+      chatVisible = false;
+      btnSend.setVisible(false);
+      txtInput.setVisible(false);
+      txtaChat.setVisible(false);
+
+      button1.setVisible(false);
+      button2.setVisible(false);
+      button3.setVisible(false);
+      button4.setVisible(false);
+    } else {
+      // show drop up
+      animateTranslate(txtaChat, 0.0);
+      animateTranslate(txtInput, 0.0);
+      animateTranslate(btnSend, 0.0);
+
+      // Change to dropDownArrow shape
+      updateArrowToDropDown();
+      chatVisible = true;
+      btnSend.setVisible(true);
+      txtInput.setVisible(true);
+      txtaChat.setVisible(true);
+
+      button1.setVisible(true);
+      button2.setVisible(true);
+      button3.setVisible(true);
+      button4.setVisible(true);
+    }
+  }
+
+  // arrow image
+  private void setArrowImage(String imagePath) {
+    try {
+      Image arrowImage = new Image(getClass().getResourceAsStream(imagePath));
+      ImageView imageView = new ImageView(arrowImage);
+      imageView.setFitWidth(40); // Adjust size as needed
+      imageView.setFitHeight(40); // Adjust size as needed
+      imageView.setPreserveRatio(true);
+      dropUpArrow.setGraphic(imageView);
+      dropUpArrow.setText(""); // Remove any text
+      dropUpArrow.setStyle("-fx-background-color: transparent;"); // Make background transparent
+    } catch (Exception e) {
+      System.err.println("Could not load arrow image: " + imagePath);
+      // Fallback to text if image fails
+      dropUpArrow.setGraphic(null);
+      dropUpArrow.setText("▼");
+    }
+  }
+
+  // Update arrow to dropDown shape and position above chatbox
+  private void updateArrowToDropDown() {
+    dropUpArrow.setLayoutX(14.0);
+    dropUpArrow.setLayoutY(400.0); // Adjust Y position above chatbox
+    setArrowImage("/images/assets/chatDown.png");
+  }
+
+  // Update arrow to dropUp shape and original position
+  private void updateArrowToDropUp() {
+    dropUpArrow.setLayoutX(14.0);
+    dropUpArrow.setLayoutY(540.0); // Adjust Y position below chatbox when hidden
+    setArrowImage("/images/assets/chatUp.png");
+  }
+
+  // Animate the vertical transition
+  private void animateTranslate(javafx.scene.Node node, double toY) {
+    TranslateTransition transition = new TranslateTransition(Duration.millis(300), node);
+    transition.setToY(toY);
+    transition.play();
   }
 }
