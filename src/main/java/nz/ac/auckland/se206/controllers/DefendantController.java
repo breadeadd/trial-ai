@@ -291,4 +291,82 @@ public class DefendantController extends ChatController {
     transition.setToY(toY);
     transition.play();
   }
+
+  /**
+   * Resets the controller to its initial state for game restart.
+   */
+  public void resetControllerState() {
+    Platform.runLater(() -> {
+      // Reset image index to beginning
+      currentImageIndex = 0;
+      
+      // Reset chat visibility to initial state (visible)
+      chatVisible = true;
+      
+      // Reset chat UI elements to initial positions
+      if (txtaChat != null) {
+        txtaChat.setTranslateY(0);
+        txtaChat.setVisible(false);
+      }
+      if (txtInput != null) {
+        txtInput.setTranslateY(0);
+        txtInput.setVisible(false);
+      }
+      if (btnSend != null) {
+        btnSend.setTranslateY(0);
+        btnSend.setVisible(false);
+      }
+      
+      // Reset dropdown arrow to bottom position and hide it
+      if (dropUpArrow != null) {
+        dropUpArrow.setVisible(false);
+        dropUpArrow.setLayoutX(14.0);
+        dropUpArrow.setLayoutY(540.0); // Bottom position
+      }
+      
+      // Show next button for flashbacks
+      if (nextButton != null) {
+        nextButton.setVisible(true);
+      }
+      
+      // Reset flashback slideshow to first image
+      if (flashbackSlideshow != null && !images.isEmpty()) {
+        flashbackSlideshow.setImage(images.get(0));
+      }
+      
+      // Reset memory button states
+      resetMemoryButtons();
+    });
+  }
+
+  /**
+   * Resets all memory buttons to their initial state.
+   */
+  private void resetMemoryButtons() {
+    // Hide all buttons and their images
+    if (button1 != null) {
+      button1.setVisible(false);
+    }
+    if (button2 != null) {
+      button2.setVisible(false);
+    }
+    if (button3 != null) {
+      button3.setVisible(false);
+    }
+    if (button4 != null) {
+      button4.setVisible(false);
+    }
+    if (btn1img != null) {
+      btn1img.setVisible(false);
+    }
+    if (btn2img != null) {
+      btn2img.setVisible(false);
+    }
+    if (btn3img != null) {
+      btn3img.setVisible(false);
+    }
+    if (btn4img != null) {
+      btn4img.setVisible(false);
+    }
+  }
 }

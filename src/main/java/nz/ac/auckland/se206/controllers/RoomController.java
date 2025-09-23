@@ -126,7 +126,6 @@ public class RoomController {
     controller.syncChatHistoryAsync();
 
     if (!firstHuman) {
-      controller.runFlashback();
       firstHuman = true;
     } else {
       controller.runAfterFirst();
@@ -172,6 +171,19 @@ public class RoomController {
     GameStateManager.getInstance().printStatus(); // Debug
     boolean canProceed = GameStateManager.getInstance().hasSpokenToAllCharacters();
     btnGuess.setDisable(!canProceed);
+  }
+
+  /**
+   * Resets the room controller state for game restart.
+   */
+  public void resetRoomState() {
+    // Reset first-time visit flags so flashbacks play again
+    firstDefendant = false;
+    firstHuman = false;
+    firstAi = false;
+    
+    // Update button state
+    updateButtonState();
   }
 
   // Call this method whenever you want to check/update the button state
