@@ -23,6 +23,7 @@ public class AiWitnessController extends ChatController {
   @FXML private ImageView flashbackSlideshow;
   @FXML private ImageView aiFlashback;
   @FXML private Button nextButton;
+  @FXML private Button backBtn;
 
   /**
    * Initializes the chat view.
@@ -37,6 +38,7 @@ public class AiWitnessController extends ChatController {
     btnSend.setVisible(false);
     txtInput.setVisible(false);
     txtaChat.setVisible(false);
+    backBtn.setDisable(true);
   }
 
   /**
@@ -118,8 +120,10 @@ public class AiWitnessController extends ChatController {
       flashbackSlideshow.setOnMouseClicked(null);
     }
 
+    // flashback ends and chat begins
     if (currentImageIndex == 3) {
       nextButton.setVisible(false);
+      backBtn.setDisable(false);
 
       btnSend.setVisible(true);
       txtInput.setVisible(true);
