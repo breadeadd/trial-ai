@@ -16,15 +16,16 @@
             <Image url="@../images/flashbacks/ai/ai1F.png" />
          </image>
       </ImageView>
-    <TextArea fx:id="txtaChat" editable="false" layoutX="7.0" layoutY="439.0" opacity="0.9" prefHeight="131.0" prefWidth="773.0" wrapText="true" />
-    <TextField fx:id="txtInput" layoutX="9.0" layoutY="578.0" onAction="#onSendMessage" onKeyPressed="#onKeyPressed" prefHeight="26.0" prefWidth="655.0" />
-    <Button fx:id="btnSend" layoutX="670.0" layoutY="578.0" mnemonicParsing="false" onAction="#onSendMessage" prefHeight="25.0" prefWidth="109.0" style="-fx-background-color: #5f9ed9;" text="Send" />
-    <Button fx:id="backBtn" layoutX="14.0" layoutY="14.0" mnemonicParsing="false" onAction="#onGoBack" style="-fx-background-color: #faafc5;" text="Go Back" />
+      <TextArea fx:id="txtaChat" editable="false" layoutX="7.0" layoutY="439.0" opacity="0.9" prefHeight="131.0" prefWidth="773.0" wrapText="true" />
+      <TextField fx:id="txtInput" layoutX="9.0" layoutY="578.0" onAction="#onSendMessage" onKeyPressed="#onKeyPressed" prefHeight="26.0" prefWidth="655.0" />
+      <Button fx:id="btnSend" layoutX="670.0" layoutY="578.0" mnemonicParsing="false" onAction="#onSendMessage" prefHeight="25.0" prefWidth="109.0" style="-fx-background-color: #5f9ed9;" text="Send" />
+      <Button fx:id="backBtn" layoutX="14.0" layoutY="14.0" mnemonicParsing="false" onAction="#onGoBack" style="-fx-background-color: #faafc5;" text="Go Back" />
       <ProgressIndicator fx:id="loading" layoutX="381.0" layoutY="445.0" progress="0.0" visible="false" />
       <Button fx:id="nextButton" alignment="CENTER" layoutX="712.0" layoutY="481.0" mnemonicParsing="false" onAction="#nextScene" prefHeight="61.0" prefWidth="59.0" style="-fx-background-color: #000000;" text="-&gt;" textFill="WHITE">
          <font>
             <Font name="VT323 Regular" size="28.0" />
          </font>
       </Button>
+      <Button fx:id="dropUpArrow" layoutX="14.0" layoutY="540.0" mnemonicParsing="false" onAction="#toggleChatVisibility" prefHeight="30.0" prefWidth="30.0" style="-fx-background-color: #ffffff; -fx-shape: 'M 0 15 L 15 0 L 30 15 Z';" text="" visible="false" />
   </children>
 </AnchorPane>
