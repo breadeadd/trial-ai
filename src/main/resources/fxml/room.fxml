@@ -18,18 +18,18 @@
       <Rectangle fx:id="defendant" arcHeight="5.0" arcWidth="5.0" fill="#1f93ff" focusTraversable="true" height="173.0" layoutX="95.0" layoutY="161.0" onMouseClicked="#defendantClicked" opacity="0.0" stroke="BLACK" strokeType="INSIDE" width="118.0" />
       <Rectangle fx:id="humanWitness" arcHeight="5.0" arcWidth="5.0" fill="#1f93ff" focusTraversable="true" height="181.0" layoutX="380.0" layoutY="160.0" onMouseClicked="#humanWitnessClicked" opacity="0.0" stroke="BLACK" strokeType="INSIDE" width="145.0" />
       <Rectangle fx:id="aiWitness" arcHeight="5.0" arcWidth="5.0" fill="#1f93ff" focusTraversable="true" height="158.0" layoutX="585.0" layoutY="173.0" onMouseClicked="#aiWitnessClicked" opacity="0.0" stroke="BLACK" strokeType="INSIDE" width="128.0" />
-      <Label layoutX="307.0" layoutY="28.0" prefWidth="186.0" text="TrialAI" textFill="WHITE">
+      <Label layoutX="307.0" layoutY="14.0" prefWidth="186.0" text="TrialAI" textFill="WHITE">
          <font>
             <Font name="VT323 Regular" size="52.0" />
          </font>
       </Label>
-      <Button fx:id="btnGuess" layoutX="279.0" layoutY="459.0" mnemonicParsing="false" onAction="#handleGuessClick" prefHeight="55.0" prefWidth="202.0" style="-fx-background-color: #5f9ed9;" text="Make a Verdict">
+      <Button fx:id="btnGuess" layoutX="273.0" layoutY="459.0" mnemonicParsing="false" onAction="#handleGuessClick" prefHeight="57.0" prefWidth="215.0" style="-fx-background-color: #5f9ed9;" text="Make a Verdict">
          <font>
             <Font name="VT323 Regular" size="27.0" />
          </font></Button>
-      <Label alignment="CENTER" layoutX="9.0" layoutY="573.0" text="Talk to the characters and determine if the Aegis I's actions were ethical" textFill="WHITE">
+      <Label alignment="CENTER" layoutX="-13.0" layoutY="562.0" prefHeight="38.0" prefWidth="826.0" text="Talk to the characters and determine if the Aegis I's actions were ethical" textFill="WHITE">
          <font>
-            <Font name="VT323 Regular" size="26.0" />
+            <Font size="23.0" />
          </font>
       </Label>
    </children>
