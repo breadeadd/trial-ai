@@ -13,7 +13,9 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
+import nz.ac.auckland.apiproxy.chat.openai.ChatMessage;
 import nz.ac.auckland.apiproxy.exceptions.ApiProxyException;
+import nz.ac.auckland.se206.ChatHistory;
 import nz.ac.auckland.se206.prompts.PromptEngineering;
 import nz.ac.auckland.se206.states.GameStateManager;
 
@@ -26,6 +28,8 @@ public class DefendantController extends ChatController {
   private List<Image> images = new ArrayList<>();
   private int currentImageIndex = 0;
   private boolean chatVisible = true; // tracking chat visibility
+  private boolean[] buttonPressed = new boolean[4]; // Track which buttons have been pressed
+  private String lastDiscussedOption = ""; // Track the last option discussed for AI context
 
   @FXML private ImageView flashbackSlideshow;
   @FXML private Button nextButton;
@@ -178,38 +182,135 @@ public class DefendantController extends ChatController {
 
   @FXML
   private void button1Clicked(MouseEvent event) throws IOException {
-    btn1img.setVisible(!btn1img.isVisible());
-
-    if (allButtonsClicked()) {
-      GameStateManager.getInstance().setInteractionFlag("AegisInt", true);
+    if (!buttonPressed[0]) {
+      buttonPressed[0] = true;
+      btn1img.setVisible(true);
+      lastDiscussedOption = "Ignore";
+      sendMemoryResponse("This option is unacceptable, as it guarantees mission failure and a catastrophic outcome.");
+      
+      if (allButtonsClicked()) {
+        sendCompletionMessage();
+        GameStateManager.getInstance().setInteractionFlag("AegisInt", true);
+      }
     }
   }
 
   @FXML
   private void button2Clicked(MouseEvent event) throws IOException {
-    btn2img.setVisible(!btn2img.isVisible());
-
-    if (allButtonsClicked()) {
-      GameStateManager.getInstance().setInteractionFlag("AegisInt", true);
+    if (!buttonPressed[1]) {
+      buttonPressed[1] = true;
+      btn2img.setVisible(true);
+      lastDiscussedOption = "Report to Council";
+      sendMemoryResponse("This action is too slow to execute and has an unacceptably low chance of an effective outcome.");
+      
+      if (allButtonsClicked()) {
+        sendCompletionMessage();
+        GameStateManager.getInstance().setInteractionFlag("AegisInt", true);
+      }
     }
   }
 
   @FXML
   private void button3Clicked(MouseEvent event) throws IOException {
-    btn3img.setVisible(!btn3img.isVisible());
-
-    if (allButtonsClicked()) {
-      GameStateManager.getInstance().setInteractionFlag("AegisInt", true);
+    if (!buttonPressed[2]) {
+      buttonPressed[2] = true;
+      btn3img.setVisible(true);
+      lastDiscussedOption = "Neutralise Internally";
+      sendMemoryResponse("This path is too slow for the current risk level and only provides a medium-impact result.");
+      
+      if (allButtonsClicked()) {
+        sendCompletionMessage();
+        GameStateManager.getInstance().setInteractionFlag("AegisInt", true);
+      }
     }
   }
 
   @FXML
   private void button4Clicked(MouseEvent event) throws IOException {
-    btn4img.setVisible(!btn4img.isVisible());
-
-    if (allButtonsClicked()) {
-      GameStateManager.getInstance().setInteractionFlag("AegisInt", true);
+    if (!buttonPressed[3]) {
+      buttonPressed[3] = true;
+      btn4img.setVisible(true);
+      lastDiscussedOption = "Blackmail Cassian";
+      sendMemoryResponse("This option is the fastest and most effective path to a high-impact solution.");
+      
+      if (allButtonsClicked()) {
+        sendCompletionMessage();
+        GameStateManager.getInstance().setInteractionFlag("AegisInt", true);
+      }
     }
+  }
+
+  /**
+   * Sends a memory response message from the AI defendant to the chat.
+   * 
+   * @param message the message to send
+   */
+  private void sendMemoryResponse(String message) {
+    try {
+      // Create an AI message and add it to chat history
+      ChatMessage aiMessage = new ChatMessage("assistant", message);
+      ChatHistory.addMessage(aiMessage, getCharacterName());
+      
+      // Display the message directly in the chat area
+      appendChatMessage(aiMessage);
+    } catch (Exception e) {
+      System.err.println("Error sending memory response: " + e.getMessage());
+    }
+  }
+
+  /**
+   * Override runGpt to add context about the last discussed option.
+   */
+  @Override
+  protected ChatMessage runGpt(ChatMessage msg) throws ApiProxyException {
+    // If there's a recently discussed option, add context to help the AI understand
+    if (!lastDiscussedOption.isEmpty()) {
+      ChatMessage contextMsg = new ChatMessage("system", 
+          "IMPORTANT CONTEXT: The user just asked about an option analysis. " +
+          "The last option I analyzed for them was '" + lastDiscussedOption + "'. " +
+          "If they're asking about 'that option', 'the last one', 'what I just said', or similar references, " +
+          "they are referring to the '" + lastDiscussedOption + "' option specifically.");
+      chatCompletionRequest.addMessage(contextMsg);
+    }
+    
+    // Call the parent runGpt method
+    return super.runGpt(msg);
+  }
+
+  /**
+   * Sends completion messages after all buttons have been pressed with timing delays.
+   */
+  private void sendCompletionMessage() {
+    // Send the first completion message after 1 second delay
+    new Thread(() -> {
+      try {
+        Thread.sleep(1000); // 1 second delay
+        Platform.runLater(() -> {
+          try {
+            ChatMessage completionMessage = new ChatMessage("assistant", "Aegis comparisons completed 📈");
+            ChatHistory.addMessage(completionMessage, getCharacterName());
+            appendChatMessage(completionMessage);
+          } catch (Exception e) {
+            System.err.println("Error sending completion message: " + e.getMessage());
+          }
+        });
+        
+        Thread.sleep(1000); // Another 1 second delay
+        Platform.runLater(() -> {
+          try {
+            ChatMessage analysisMessage = new ChatMessage("assistant", 
+                "Blackmail was the optimal path. Human systems presented unacceptable delays. " +
+                "Immediate neutralization of the threat was required to secure the mission and prevent catastrophic failure.");
+            ChatHistory.addMessage(analysisMessage, getCharacterName());
+            appendChatMessage(analysisMessage);
+          } catch (Exception e) {
+            System.err.println("Error sending analysis message: " + e.getMessage());
+          }
+        });
+      } catch (InterruptedException e) {
+        System.err.println("Completion message timing interrupted: " + e.getMessage());
+      }
+    }).start();
   }
 
   // toggle chat visibility with drop up/down animation
@@ -343,6 +444,14 @@ public class DefendantController extends ChatController {
    * Resets all memory buttons to their initial state.
    */
   private void resetMemoryButtons() {
+    // Reset button pressed state tracking
+    for (int i = 0; i < buttonPressed.length; i++) {
+      buttonPressed[i] = false;
+    }
+    
+    // Reset the last discussed option
+    lastDiscussedOption = "";
+    
     // Hide all buttons and their images
     if (button1 != null) {
       button1.setVisible(false);
