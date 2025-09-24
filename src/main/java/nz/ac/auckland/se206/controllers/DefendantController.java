@@ -500,3 +500,4 @@ public class DefendantController extends ChatController {
       btn4img.setVisible(false);
     }
   }
+}
