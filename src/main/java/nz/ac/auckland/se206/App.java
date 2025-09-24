@@ -36,7 +36,6 @@ public class App extends Application {
   }
 
   private static Map<String, SceneBundle> preloadedBundles = new HashMap<>();
-
   private static StackPane stackPaneRoot;
   private static BorderPane rootLayout;
   private static Label timerLabel;
@@ -94,6 +93,7 @@ public class App extends Application {
               SceneBundle loadedBundle = new SceneBundle(loadedRoot, loadedController);
               Platform.runLater(() -> preloadedBundles.put(fxml, loadedBundle));
             } catch (IOException e) {
+              System.err.println("Failed to preload scene: " + fxml);
               e.printStackTrace();
             } finally {
               latch.countDown();
@@ -147,12 +147,22 @@ public class App extends Application {
   public void start(final Stage stage) throws IOException {
     rootLayout = new BorderPane();
     timerLabel = new Label();
+
+    // Applying CSS styling for timer
     timerLabel.setStyle(
-        "-fx-font-size: 24px; -fx-padding: 12; -fx-background-color: white; -fx-border-radius: 8;"
-            + " -fx-background-radius: 8;");
+        "-fx-font-size: 24px;"
+            + "-fx-padding: 8px;"
+            + "-fx-background-color: #ffffff;"
+            + "-fx-border-radius: 8px;"
+            + "-fx-background-radius: 8px;"
+            + "-fx-text-fill: #333333;"
+            + "-fx-border-color: #4a90e2;"
+            + "-fx-border-width: 2px;"
+            + "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 5, 0.5, 0, 1);");
+
     new CountdownTimer();
 
-    // timer's property
+    // Timers property
     timerLabel
         .textProperty()
         .bind(
@@ -170,13 +180,6 @@ public class App extends Application {
               }
             });
 
-    // --- Background preloading ---
-    final String[] scenesToPreload = {"room", "defendantChat", "witnessChat", "aiChat", "answer"};
-    final CountDownLatch latch = new CountDownLatch(scenesToPreload.length);
-    for (String fxml : scenesToPreload) {
-      preloadSceneAsync(fxml, latch);
-    }
-
     // Layouts for timer and title
     stackPaneRoot = new StackPane(rootLayout, timerLabel);
     StackPane.setAlignment(timerLabel, Pos.TOP_RIGHT);
@@ -184,6 +187,46 @@ public class App extends Application {
     stage.setScene(scene);
     stage.setTitle("TrialAI");
     stage.show();
+
+    // Warning style when timer is < 30 sec
+    CountdownTimer.secondsRemainingProperty()
+        .addListener(
+            (obs, oldValue, newValue) -> {
+              Platform.runLater(
+                  () -> {
+                    if (newValue.intValue() <= 30 && newValue.intValue() > 0) {
+                      timerLabel.setStyle(
+                          "-fx-font-size: 24px;"
+                              + "-fx-padding: 8px;"
+                              + "-fx-background-color: #ffcccc;"
+                              + "-fx-border-radius: 8px;"
+                              + "-fx-background-radius: 8px;"
+                              + "-fx-text-fill: #e74c3c;"
+                              + "-fx-border-color: #e74c3c;"
+                              + "-fx-border-width: 2px;"
+                              + "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 5, 0.5, 0, 1);");
+                    } else {
+                      // Revert to normal style when above 30 seconds
+                      timerLabel.setStyle(
+                          "-fx-font-size: 24px;"
+                              + "-fx-padding: 8px;"
+                              + "-fx-background-color: #ffffff;"
+                              + "-fx-border-radius: 8px;"
+                              + "-fx-background-radius: 8px;"
+                              + "-fx-text-fill: #333333;"
+                              + "-fx-border-color: #4a90e2;"
+                              + "-fx-border-width: 2px;"
+                              + "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 5, 0.5, 0, 1);");
+                    }
+                  });
+            });
+
+    // Background preloading
+    final String[] scenesToPreload = {"room", "defendantChat", "witnessChat", "aiChat", "answer"};
+    final CountDownLatch latch = new CountDownLatch(scenesToPreload.length);
+    for (String fxml : scenesToPreload) {
+      preloadSceneAsync(fxml, latch);
+    }
 
     // Wait for preloading, then show room and start timer
     Task<Void> waitTask =
@@ -199,7 +242,7 @@ public class App extends Application {
             Platform.runLater(
                 () -> {
                   try {
-                    // set current root to main page
+                    // Set current root to main page
                     setRoot("room");
                     CountdownTimer.start();
                     SceneBundle roomBundle = preloadedBundles.get("room");
@@ -207,9 +250,10 @@ public class App extends Application {
                       roomBundle.root.requestFocus();
                     }
 
-                    // output for debugging
+                    // Output for debugging
                     System.out.println("All scenes preloaded and switched to room.");
                   } catch (IOException e) {
+                    System.err.println("Failed to switch to room scene");
                     e.printStackTrace();
                   }
                 });
