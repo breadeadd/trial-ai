@@ -12,15 +12,19 @@ public class ChatHistory {
     String prefix = "";
     switch (who) {
       case "aegis":
+      case "Aegis I":
         prefix = "Aegis I said: ";
         break;
       case "orion":
+      case "Orion Vale":
         prefix = "Orion Vale said: ";
         break;
       case "echo":
+      case "Echo II":
         prefix = "Echo II said: ";
         break;
       case "user":
+      case "User":
         prefix = "User said: ";
         break;
       default:

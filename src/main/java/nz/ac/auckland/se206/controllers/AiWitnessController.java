@@ -17,7 +17,9 @@ import javafx.scene.input.Dragboard;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.TransferMode;
 import javafx.util.Duration;
+import nz.ac.auckland.apiproxy.chat.openai.ChatMessage;
 import nz.ac.auckland.apiproxy.exceptions.ApiProxyException;
+import nz.ac.auckland.se206.ChatHistory;
 import nz.ac.auckland.se206.prompts.PromptEngineering;
 import nz.ac.auckland.se206.states.GameStateManager;
 
@@ -29,6 +31,7 @@ public class AiWitnessController extends ChatController {
   private List<Image> images = new ArrayList<>();
   private int currentImageIndex = 0;
   private boolean chatVisible = true; // Track chat visibility state
+  private String lastTimelineAction = ""; // Track the last timeline action for AI context
   
   // Drag and drop variables
   private String[] slotContents = new String[3]; // Track what's in each slot
@@ -306,6 +309,7 @@ public class AiWitnessController extends ChatController {
         }
         
         success = true;
+        displayEventPlacementMessage(eventId, slotIndex);
         checkWinCondition();
       }
       
@@ -363,6 +367,40 @@ public class AiWitnessController extends ChatController {
   }
   
   /**
+   * Displays a message when an event is placed in a slot.
+   */
+  private void displayEventPlacementMessage(String eventId, int slotIndex) {
+    String message = "";
+    
+    // Only show message if the event is placed in the correct slot
+    if ((eventId.equals("event1") && slotIndex == 0) ||
+        (eventId.equals("event2") && slotIndex == 1) ||
+        (eventId.equals("event3") && slotIndex == 2)) {
+      
+      switch (eventId) {
+        case "event1":
+          message = "\"Cassian made various statistic changes to the Project Starlight Logs.\"";
+          lastTimelineAction = "Logs Altered event placed correctly";
+          break;
+        case "event2":
+          message = "\"Aegis often takes immediate, extreme action. Such as a counter-threat\"";
+          lastTimelineAction = "Counter-Threat event placed correctly";
+          break;
+        case "event3":
+          message = "\"O. Vale, Mission Lead, received an overflow of messages.\"";
+          lastTimelineAction = "Outrage event placed correctly";
+          break;
+      }
+      
+      if (!message.isEmpty()) {
+        // Echo speaks the message (assistant role)
+        ChatMessage eventMessage = new ChatMessage("assistant", message);
+        appendChatMessage(eventMessage);
+      }
+    }
+  }
+
+  /**
    * Checks if the events are in the correct order and handles win condition.
    */
   private void checkWinCondition() {
@@ -381,20 +419,36 @@ public class AiWitnessController extends ChatController {
   
   /**
    * Handles when events are placed in the correct order.
-   * TODO: Implement the logic for what happens when the puzzle is solved correctly.
    */
   private void handleCorrectOrder() {
     System.out.println("Events are in the correct order!");
     
+    // Add a 1 second delay before showing success message
+    Platform.runLater(() -> {
+      new Thread(() -> {
+        try {
+          Thread.sleep(1000); // Wait 1 second
+          Platform.runLater(() -> {
+            // Echo speaks the success message (assistant role)
+            ChatMessage successMessage = new ChatMessage("assistant", "Timeline successfully loaded⏳✔️");
+            appendChatMessage(successMessage);
+            
+            // Add context for AI understanding
+            addContextToChat("system", "Player has successfully completed Echo II's timeline memory puzzle. All events were placed in correct chronological order: " +
+                "1st - Logs Altered (Cassian made various statistic changes to the Project Starlight Logs), " +
+                "2nd - Counter-Threat (Aegis often takes immediate, extreme action. Such as a counter-threat), " +
+                "3rd - Outrage (O. Vale, Mission Lead, received an overflow of messages). " +
+                "This represents the correct sequence of events during the mission compromise.");
+            lastTimelineAction = "Timeline completed successfully";
+          });
+        } catch (InterruptedException e) {
+          e.printStackTrace();
+        }
+      }).start();
+    });
+    
     // Mark AI witness interaction as completed
     GameStateManager.getInstance().setInteractionFlag("EchoInt", true);
-    
-    // TODO: Add additional logic here for what happens when the events are in the right order
-    // This could be:
-    // - Show a success message
-    // - Unlock additional chat functionality
-    // - Trigger a special animation or scene
-    // - Progress the story
   }
   
   /**
@@ -402,6 +456,20 @@ public class AiWitnessController extends ChatController {
    */
   private void handleIncorrectOrder() {
     System.out.println("Events are not in the correct order. Try again!");
+    
+    // Echo speaks the error message (assistant role)
+    ChatMessage errorMessage = new ChatMessage("assistant", "ERROR: Incorrect timeline, try again. ❌");
+    appendChatMessage(errorMessage);
+    
+    // Add context for AI understanding
+    String currentOrder = getSlotContentsAsString();
+    addContextToChat("system", "Player attempted to complete the timeline but placed events in wrong order. Echo II provided error feedback. " +
+        "Current placement: " + currentOrder + ". " +
+        "The correct chronological order should be: 1st - Logs Altered (Cassian's data manipulation), " +
+        "2nd - Counter-Threat (Aegis's extreme response), 3rd - Outrage (O. Vale receiving overflow of messages). " +
+        "Player needs to rearrange the events to match this sequence.");
+    lastTimelineAction = "Timeline attempt failed - incorrect order";
+    
     // Optionally reset all events to original positions after a delay
     Platform.runLater(() -> {
       new Thread(() -> {
@@ -413,6 +481,63 @@ public class AiWitnessController extends ChatController {
         }
       }).start();
     });
+  }
+  
+  // Add context to chat history without displaying to user (for AI context)
+  private void addContextToChat(String role, String contextMessage) {
+    ChatMessage contextChatMessage = new ChatMessage(role, contextMessage);
+    ChatHistory.addMessage(contextChatMessage, "system");
+    // Note: This doesn't update the UI, only the chat history for AI context
+  }
+  
+  // Helper method to get current slot contents as a readable string
+  private String getSlotContentsAsString() {
+    StringBuilder order = new StringBuilder();
+    for (int i = 0; i < slotContents.length; i++) {
+      if (slotContents[i] != null) {
+        String eventName = "";
+        switch (slotContents[i]) {
+          case "event1":
+            eventName = "Logs Altered";
+            break;
+          case "event2":
+            eventName = "Counter-Threat";
+            break;
+          case "event3":
+            eventName = "Outrage";
+            break;
+        }
+        order.append("Slot ").append(i + 1).append(": ").append(eventName);
+        if (i < slotContents.length - 1 && slotContents[i + 1] != null) {
+          order.append(", ");
+        }
+      } else {
+        order.append("Slot ").append(i + 1).append(": empty");
+        if (i < slotContents.length - 1) {
+          order.append(", ");
+        }
+      }
+    }
+    return order.toString();
+  }
+  
+  /**
+   * Override runGpt to add context about the last timeline action.
+   */
+  @Override
+  protected ChatMessage runGpt(ChatMessage msg) throws ApiProxyException {
+    // If there's a recent timeline action, add context to help the AI understand
+    if (!lastTimelineAction.isEmpty()) {
+      ChatMessage contextMsg = new ChatMessage("system", 
+          "IMPORTANT CONTEXT: The user just interacted with Echo II's memory timeline puzzle. " +
+          "The last action was: '" + lastTimelineAction + "'. " +
+          "If they're asking about the puzzle, events, timeline, or their recent actions, " +
+          "they are referring to this timeline memory interaction.");
+      chatCompletionRequest.addMessage(contextMsg);
+    }
+    
+    // Call the parent runGpt method which now handles cleaning
+    return super.runGpt(msg);
   }
   
   /**
@@ -611,6 +736,9 @@ public class AiWitnessController extends ChatController {
     for (int i = 0; i < slotContents.length; i++) {
       slotContents[i] = null;
     }
+    
+    // Reset timeline context
+    lastTimelineAction = "";
     
     // Hide all drag and drop elements
     if (event1Image != null) {

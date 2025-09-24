@@ -15,7 +15,9 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
+import nz.ac.auckland.apiproxy.chat.openai.ChatMessage;
 import nz.ac.auckland.apiproxy.exceptions.ApiProxyException;
+import nz.ac.auckland.se206.ChatHistory;
 import nz.ac.auckland.se206.prompts.PromptEngineering;
 import nz.ac.auckland.se206.states.GameStateManager;
 
@@ -210,7 +212,66 @@ public class HumanWitnessController extends ChatController {
       txtaChat.setVisible(chatVisible);
       txtInput.setVisible(chatVisible);
       btnSend.setVisible(chatVisible);
+      
+      // Add context for phone unlock event
+      addContextToChat("system", "Player has successfully unlocked Orion Vale's phone through the slider mechanism. " +
+          "The phone was secured but the player used the interaction slider to bypass security. " +
+          "The phone contained crucial mission intelligence including details about Project Starlight compromise, " +
+          "evidence of Cassian's data manipulation activities, and information about Aegis I's extreme counter-threat protocols. " +
+          "This unlock reveals key evidence about the mission timeline and character motivations.");
+      addContextToChat("system", "Orion Vale now has access to critical information showing: " +
+          "1) Cassian's role in compromising mission data and statistics, " +
+          "2) Aegis I's tendency toward immediate and extreme retaliatory actions, " +
+          "3) The cascade of events that led to mission compromise and communication overflow. " +
+          "This phone contains evidence that connects all three main characters to the incident.");
+      
+
+      // Send phone unlock messages with timing
+      sendPhoneUnlockMessages();
     }
+  }
+  
+  // Send phone unlock messages with timing
+  private void sendPhoneUnlockMessages() {
+    // Immediately show phone unlock message
+    Platform.runLater(() -> {
+      displayMessage("Phone Unlocked 🔓");
+    });
+    
+    // Wait 1 second then show witness response in new thread
+    Thread messageThread = new Thread(() -> {
+      try {
+        Thread.sleep(1000); // 1 second delay
+        Platform.runLater(() -> {
+          displayMessage("So Cassian compromised the mission, which makes Aegis's reaction to protect it understandable. But its methods were EXTREME. Cassian could've been in action for good.");
+        });
+      } catch (InterruptedException e) {
+        Thread.currentThread().interrupt();
+      }
+    });
+    messageThread.setDaemon(true);
+    messageThread.start();
+  }
+  
+  // Display a message in the chat area
+  private void displayMessage(String message) {
+    // Create ChatMessage and use the parent class method for consistency
+    if (message.startsWith("Phone Unlocked")) {
+      // System message - use user role
+      ChatMessage chatMessage = new ChatMessage("user", message);
+      appendChatMessage(chatMessage);
+    } else {
+      // Witness message - use assistant role (ChatController will handle the display name)
+      ChatMessage chatMessage = new ChatMessage("assistant", message);
+      appendChatMessage(chatMessage);
+    }
+  }
+  
+  // Add context to chat history without displaying to user (for AI context)
+  private void addContextToChat(String role, String contextMessage) {
+    ChatMessage contextChatMessage = new ChatMessage(role, contextMessage);
+    ChatHistory.addMessage(contextChatMessage, "system");
+    // Note: This doesn't update the UI, only the chat history for AI context
   }
 
   // Toggle chat visibility with drop-up/down animation
