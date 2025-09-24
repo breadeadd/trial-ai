@@ -371,6 +371,7 @@ public class AiWitnessController extends ChatController {
    */
   private void displayEventPlacementMessage(String eventId, int slotIndex) {
     String message = "";
+    String contextMessage = "";
     
     // Only show message if the event is placed in the correct slot
     if ((eventId.equals("event1") && slotIndex == 0) ||
@@ -379,15 +380,24 @@ public class AiWitnessController extends ChatController {
       
       switch (eventId) {
         case "event1":
-          message = "\"Cassian made various statistic changes to the Project Starlight Logs.\"";
+          message = "Cassian made various statistic changes to the Project Starlight Logs.";
+          contextMessage = "Player correctly placed the first timeline event: Cassian's Log Alteration. " +
+              "This represents the initial compromise where Cassian manipulated Project Starlight data and statistics, " +
+              "setting the chain of events in motion. Echo II recognizes this as the root cause of the mission crisis.";
           lastTimelineAction = "Logs Altered event placed correctly";
           break;
         case "event2":
-          message = "\"Aegis often takes immediate, extreme action. Such as a counter-threat\"";
+          message = "Aegis often takes immediate, extreme action. Such as a counter-threat";
+          contextMessage = "Player correctly placed the second timeline event: Aegis I's Counter-Threat Response. " +
+              "This represents Aegis I's immediate and extreme reaction to detecting the security breach. " +
+              "Echo II understands this as the escalation phase where Aegis I's aggressive protocols triggered further complications.";
           lastTimelineAction = "Counter-Threat event placed correctly";
           break;
         case "event3":
-          message = "\"O. Vale, Mission Lead, received an overflow of messages.\"";
+          message = "O. Vale, Mission Lead, received an overflow of messages.";
+          contextMessage = "Player correctly placed the third timeline event: Orion Vale's Message Overflow Crisis. " +
+              "This represents the final cascade effect where communication systems became overwhelmed, " +
+              "paralyzing mission coordination. Echo II sees this as the culmination of the crisis sequence.";
           lastTimelineAction = "Outrage event placed correctly";
           break;
       }
@@ -396,7 +406,37 @@ public class AiWitnessController extends ChatController {
         // Echo speaks the message (assistant role)
         ChatMessage eventMessage = new ChatMessage("assistant", message);
         appendChatMessage(eventMessage);
+        
+        // Add detailed context for AI understanding
+        addContextToChat("system", contextMessage);
       }
+    } else {
+      // Event placed in wrong slot - add context about the mistake
+      String wrongPlacementContext = "Player placed " + getEventName(eventId) + " in slot " + (slotIndex + 1) + 
+          " but it belongs in slot " + getCorrectSlot(eventId) + ". " +
+          "Echo II is analyzing the incorrect placement and will provide guidance when timeline validation occurs.";
+      addContextToChat("system", wrongPlacementContext);
+      lastTimelineAction = "Incorrect event placement - " + getEventName(eventId) + " in wrong position";
+    }
+  }
+  
+  // Helper method to get event name from ID
+  private String getEventName(String eventId) {
+    switch (eventId) {
+      case "event1": return "Logs Altered";
+      case "event2": return "Counter-Threat";  
+      case "event3": return "Outrage";
+      default: return "Unknown Event";
+    }
+  }
+  
+  // Helper method to get correct slot number for an event (1-based)
+  private int getCorrectSlot(String eventId) {
+    switch (eventId) {
+      case "event1": return 1;
+      case "event2": return 2;
+      case "event3": return 3;
+      default: return 0;
     }
   }
 
@@ -488,6 +528,8 @@ public class AiWitnessController extends ChatController {
     ChatMessage contextChatMessage = new ChatMessage(role, contextMessage);
     ChatHistory.addMessage(contextChatMessage, "system");
     // Note: This doesn't update the UI, only the chat history for AI context
+    // This provides Echo II with comprehensive understanding of player timeline interactions
+    // including puzzle state, event sequence analysis, and memory reconstruction progress
   }
   
   // Helper method to get current slot contents as a readable string
@@ -521,6 +563,25 @@ public class AiWitnessController extends ChatController {
     return order.toString();
   }
   
+  // Helper method to get current timeline puzzle status for AI context
+  private String getTimelinePuzzleStatus() {
+    int filledSlots = 0;
+    for (String slot : slotContents) {
+      if (slot != null) filledSlots++;
+    }
+    
+    if (filledSlots == 0) {
+      return "No events placed yet - puzzle awaiting player interaction";
+    } else if (filledSlots < 3) {
+      return filledSlots + " of 3 events placed - " + getSlotContentsAsString();
+    } else {
+      boolean isCorrect = "event1".equals(slotContents[0]) && 
+                         "event2".equals(slotContents[1]) && 
+                         "event3".equals(slotContents[2]);
+      return "All 3 events placed - " + (isCorrect ? "CORRECT timeline sequence" : "INCORRECT sequence: " + getSlotContentsAsString());
+    }
+  }
+  
   /**
    * Override runGpt to add context about the last timeline action.
    */
@@ -529,10 +590,13 @@ public class AiWitnessController extends ChatController {
     // If there's a recent timeline action, add context to help the AI understand
     if (!lastTimelineAction.isEmpty()) {
       ChatMessage contextMsg = new ChatMessage("system", 
-          "IMPORTANT CONTEXT: The user just interacted with Echo II's memory timeline puzzle. " +
+          "IMPORTANT CONTEXT: The user just interacted with Echo II's memory timeline puzzle system. " +
+          "Echo II is an AI witness with advanced memory reconstruction capabilities. " +
           "The last action was: '" + lastTimelineAction + "'. " +
-          "If they're asking about the puzzle, events, timeline, or their recent actions, " +
-          "they are referring to this timeline memory interaction.");
+          "Current timeline puzzle state: " + getTimelinePuzzleStatus() + ". " +
+          "If they're asking about the puzzle, events, timeline, mission sequence, or their recent actions, " +
+          "they are referring to this timeline memory interaction. Echo II can provide detailed analysis " +
+          "of the Project Starlight mission events and their chronological significance.");
       chatCompletionRequest.addMessage(contextMsg);
     }
     
