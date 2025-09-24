@@ -38,7 +38,7 @@ public class DefendantController extends ChatController {
   @FXML private ImageView btn3img;
   @FXML private ImageView btn4img;
   @FXML private Button backBtn;
-  @FXML private Button dropUpArrow; // New button for chat visibility toggle.
+  @FXML private Button dropUpArrow;
 
   /**
    * Initializes the chat view.
@@ -47,7 +47,6 @@ public class DefendantController extends ChatController {
    */
   @FXML
   public void initialize() throws ApiProxyException {
-    // Any required initialization code can be placed here
     loadImages(null);
     initChat();
     initButtons();
@@ -76,7 +75,6 @@ public class DefendantController extends ChatController {
 
   // run flashback slideshow
   public void startFlashbackSlideshow() {
-    // Load images and start slideshow after loading
     if (images.isEmpty()) {
       loadImages(this::startFlashbackSlideshow);
       return;
@@ -100,7 +98,6 @@ public class DefendantController extends ChatController {
   private void loadImages(Runnable onLoaded) {
     new Thread(
             () -> {
-              // loading images for animation flashback
               List<Image> loadedImages = new ArrayList<>();
               loadedImages.add(
                   new Image(
@@ -116,10 +113,8 @@ public class DefendantController extends ChatController {
                           .getResourceAsStream("/images/flashbacks/defendant/defendant3F.png")));
               loadedImages.add(
                   new Image(getClass().getResourceAsStream("/images/memories/defendantMem.png")));
-              ;
               Platform.runLater(
                   () -> {
-                    // add all the images for viewing
                     images.clear();
                     images.addAll(loadedImages);
                     if (onLoaded != null) {
@@ -139,7 +134,6 @@ public class DefendantController extends ChatController {
       flashbackSlideshow.setOnMouseClicked(null);
     }
 
-    // flashback ends and chat begins
     if (currentImageIndex == 3) {
       nextButton.setVisible(false);
       backBtn.setDisable(false);
@@ -153,8 +147,8 @@ public class DefendantController extends ChatController {
       button3.setVisible(true);
       button4.setVisible(true);
 
-      dropUpArrow.setVisible(true); // showing drop up arrow when chat appears
-      updateArrowToDropDown(); // set initial arrow to drop down arrow
+      dropUpArrow.setVisible(true);
+      updateArrowToDropDown();
     }
   }
 
@@ -216,7 +210,7 @@ public class DefendantController extends ChatController {
   @FXML
   private void toggleChatVisibility(ActionEvent event) {
     if (chatVisible) {
-      // Drop down
+      // Drop down (hide)
       animateTranslate(txtaChat, 150.0);
       animateTranslate(txtInput, 150.0);
       animateTranslate(btnSend, 150.0);
@@ -227,13 +221,8 @@ public class DefendantController extends ChatController {
       btnSend.setVisible(false);
       txtInput.setVisible(false);
       txtaChat.setVisible(false);
-
-      button1.setVisible(false);
-      button2.setVisible(false);
-      button3.setVisible(false);
-      button4.setVisible(false);
     } else {
-      // show drop up
+      // Drop up (show)
       animateTranslate(txtaChat, 0.0);
       animateTranslate(txtInput, 0.0);
       animateTranslate(btnSend, 0.0);
@@ -244,11 +233,6 @@ public class DefendantController extends ChatController {
       btnSend.setVisible(true);
       txtInput.setVisible(true);
       txtaChat.setVisible(true);
-
-      button1.setVisible(true);
-      button2.setVisible(true);
-      button3.setVisible(true);
-      button4.setVisible(true);
     }
   }
 
@@ -257,15 +241,14 @@ public class DefendantController extends ChatController {
     try {
       Image arrowImage = new Image(getClass().getResourceAsStream(imagePath));
       ImageView imageView = new ImageView(arrowImage);
-      imageView.setFitWidth(40); // Adjust size as needed
-      imageView.setFitHeight(40); // Adjust size as needed
+      imageView.setFitWidth(40);
+      imageView.setFitHeight(40);
       imageView.setPreserveRatio(true);
       dropUpArrow.setGraphic(imageView);
-      dropUpArrow.setText(""); // Remove any text
-      dropUpArrow.setStyle("-fx-background-color: transparent;"); // Make background transparent
+      dropUpArrow.setText("");
+      dropUpArrow.setStyle("-fx-background-color: transparent;");
     } catch (Exception e) {
       System.err.println("Could not load arrow image: " + imagePath);
-      // Fallback to text if image fails
       dropUpArrow.setGraphic(null);
       dropUpArrow.setText("▼");
     }
@@ -274,14 +257,14 @@ public class DefendantController extends ChatController {
   // Update arrow to dropDown shape and position above chatbox
   private void updateArrowToDropDown() {
     dropUpArrow.setLayoutX(14.0);
-    dropUpArrow.setLayoutY(400.0); // Adjust Y position above chatbox
+    dropUpArrow.setLayoutY(400.0);
     setArrowImage("/images/assets/chatDown.png");
   }
 
   // Update arrow to dropUp shape and original position
   private void updateArrowToDropUp() {
     dropUpArrow.setLayoutX(14.0);
-    dropUpArrow.setLayoutY(540.0); // Adjust Y position below chatbox when hidden
+    dropUpArrow.setLayoutY(540.0);
     setArrowImage("/images/assets/chatUp.png");
   }
 
@@ -292,58 +275,46 @@ public class DefendantController extends ChatController {
     transition.play();
   }
 
-  /**
-   * Resets the controller to its initial state for game restart.
-   */
+  /** Resets the controller to its initial state for game restart. */
   public void resetControllerState() {
-    Platform.runLater(() -> {
-      // Reset image index to beginning
-      currentImageIndex = 0;
-      
-      // Reset chat visibility to initial state (visible)
-      chatVisible = true;
-      
-      // Reset chat UI elements to initial positions
-      if (txtaChat != null) {
-        txtaChat.setTranslateY(0);
-        txtaChat.setVisible(false);
-      }
-      if (txtInput != null) {
-        txtInput.setTranslateY(0);
-        txtInput.setVisible(false);
-      }
-      if (btnSend != null) {
-        btnSend.setTranslateY(0);
-        btnSend.setVisible(false);
-      }
-      
-      // Reset dropdown arrow to bottom position and hide it
-      if (dropUpArrow != null) {
-        dropUpArrow.setVisible(false);
-        dropUpArrow.setLayoutX(14.0);
-        dropUpArrow.setLayoutY(540.0); // Bottom position
-      }
-      
-      // Show next button for flashbacks
-      if (nextButton != null) {
-        nextButton.setVisible(true);
-      }
-      
-      // Reset flashback slideshow to first image
-      if (flashbackSlideshow != null && !images.isEmpty()) {
-        flashbackSlideshow.setImage(images.get(0));
-      }
-      
-      // Reset memory button states
-      resetMemoryButtons();
-    });
+    Platform.runLater(
+        () -> {
+          currentImageIndex = 0;
+          chatVisible = true;
+
+          if (txtaChat != null) {
+            txtaChat.setTranslateY(0);
+            txtaChat.setVisible(false);
+          }
+          if (txtInput != null) {
+            txtInput.setTranslateY(0);
+            txtInput.setVisible(false);
+          }
+          if (btnSend != null) {
+            btnSend.setTranslateY(0);
+            btnSend.setVisible(false);
+          }
+
+          if (dropUpArrow != null) {
+            dropUpArrow.setVisible(false);
+            dropUpArrow.setLayoutX(14.0);
+            dropUpArrow.setLayoutY(540.0);
+          }
+
+          if (nextButton != null) {
+            nextButton.setVisible(true);
+          }
+
+          if (flashbackSlideshow != null && !images.isEmpty()) {
+            flashbackSlideshow.setImage(images.get(0));
+          }
+
+          resetMemoryButtons();
+        });
   }
 
-  /**
-   * Resets all memory buttons to their initial state.
-   */
+  /** Resets all memory buttons to their initial state. */
   private void resetMemoryButtons() {
-    // Hide all buttons and their images
     if (button1 != null) {
       button1.setVisible(false);
     }
