@@ -26,7 +26,7 @@ import nz.ac.auckland.se206.states.GameStateManager;
 public class HumanWitnessController extends ChatController {
   private List<Image> images = new ArrayList<>();
   private int currentImageIndex = 0;
-  private boolean chatVisible = true; // Track chat visibility state
+  private boolean chatVisible = true; // Track chat visibility state, default to visible
 
   @FXML private ImageView flashbackSlideshow;
   @FXML private Rectangle screenBox;
@@ -55,8 +55,6 @@ public class HumanWitnessController extends ChatController {
 
     unlockSlider.setVisible(false); // Slider is initially hidden
     dropUpArrow.setVisible(false); // Drop up arrow initially hidden
-    // Set initial upward arrow shape
-    setArrowImage("/images/arrow_up.png");
   }
 
   @Override
@@ -97,12 +95,11 @@ public class HumanWitnessController extends ChatController {
       currentImageIndex = 3; // Start at humanMem1.png
       flashbackSlideshow.setImage(images.get(currentImageIndex));
       unlockSlider.setVisible(true); // Show slider when on humanMem1.png
-      unlockSlider.setDisable(false); // Enabling slider
+      unlockSlider.setDisable(false);
       unlockSlider.setValue(0.0); // Resetting to starting pos
       dropUpArrow.setVisible(true); // Show arrow on humanMem1.png
-      // Set to dropDownArrow shape
+      // Set to dropUpArrow shape
       updateArrowToDropDown();
-      toggleChatVisibility(null);
     }
   }
 
@@ -147,34 +144,42 @@ public class HumanWitnessController extends ChatController {
     }
 
     // flashback ends and chat begins
-    if (currentImageIndex == 3) { // When reaching humanMem1.png
+    if (currentImageIndex == 3) {
       nextButton.setVisible(false);
       backBtn.setDisable(false);
 
       unlockSlider.setVisible(true);
       unlockSlider.setDisable(false);
       dropUpArrow.setVisible(true);
-      updateArrowToDropDown();
-      toggleChatVisibility(null);
+      updateArrowToDropDown(); // Arrow starts pointing down
 
-      btnSend.setVisible(true);
+      // Initialize chat as visible
+      chatVisible = true;
+      txtaChat.setTranslateY(0.0);
+      txtInput.setTranslateY(0.0);
+      btnSend.setTranslateY(0.0);
+      txtaChat.setVisible(true); // Ensure chat, text field, and send button is visible
       txtInput.setVisible(true);
-      txtaChat.setVisible(true);
+      btnSend.setVisible(true);
     } else if (currentImageIndex == 4) { // When reaching humanMem2.png
       unlockSlider.setVisible(false);
       dropUpArrow.setVisible(true);
 
-      // Force chat to be hidden and set to dropUpArrow
-      chatVisible = false;
-      animateTranslate(txtaChat, 150.0);
-      animateTranslate(txtInput, 150.0);
-      animateTranslate(btnSend, 150.0);
-      updateArrowToDropUp();
-      btnSend.setVisible(false);
-      txtInput.setVisible(false);
-      txtaChat.setVisible(false);
+      // Chat remains in current state, arrow set based on visibility
+      chatVisible = true;
+      txtaChat.setTranslateY(0.0);
+      txtInput.setTranslateY(0.0);
+      btnSend.setTranslateY(0.0);
+      if (chatVisible) {
+        updateArrowToDropDown();
+      } else {
+        updateArrowToDropUp();
+      }
+      txtaChat.setVisible(true);
+      txtInput.setVisible(true);
+      btnSend.setVisible(true);
     } else {
-      dropUpArrow.setVisible(false); // Hide drop-up arrow on other screens
+      dropUpArrow.setVisible(false); // Hide drop up arrow on other screens
       unlockSlider.setVisible(false);
       btnSend.setVisible(false);
       txtInput.setVisible(false);
@@ -193,15 +198,18 @@ public class HumanWitnessController extends ChatController {
       unlockSlider.setVisible(false);
       dropUpArrow.setVisible(true);
 
-      // Force chat to be hidden and set to dropUpArrow
-      chatVisible = false;
-      animateTranslate(txtaChat, 150.0);
-      animateTranslate(txtInput, 150.0);
-      animateTranslate(btnSend, 150.0);
-      updateArrowToDropUp();
-      btnSend.setVisible(false);
-      txtInput.setVisible(false);
-      txtaChat.setVisible(false);
+      // Chat remains in current state, arrow stays based on visibility
+      txtaChat.setTranslateY(chatVisible ? 0.0 : 150.0);
+      txtInput.setTranslateY(chatVisible ? 0.0 : 150.0);
+      btnSend.setTranslateY(chatVisible ? 0.0 : 150.0);
+      if (chatVisible) {
+        updateArrowToDropDown();
+      } else {
+        updateArrowToDropUp();
+      }
+      txtaChat.setVisible(chatVisible);
+      txtInput.setVisible(chatVisible);
+      btnSend.setVisible(chatVisible);
     }
   }
 
@@ -209,19 +217,19 @@ public class HumanWitnessController extends ChatController {
   @FXML
   private void toggleChatVisibility(ActionEvent event) {
     if (chatVisible) {
-      // Drop down (hide)
+      // Drop up (hide)
       animateTranslate(txtaChat, 150.0);
       animateTranslate(txtInput, 150.0);
       animateTranslate(btnSend, 150.0);
 
-      // Change to dropUpArrow shape and original position
+      // Change to dropUpArrow shape and move below
       updateArrowToDropUp();
       chatVisible = false;
       btnSend.setVisible(false);
       txtInput.setVisible(false);
       txtaChat.setVisible(false);
     } else {
-      // Drop up (show)
+      // Drop down
       animateTranslate(txtaChat, 0.0);
       animateTranslate(txtInput, 0.0);
       animateTranslate(btnSend, 0.0);
@@ -240,8 +248,8 @@ public class HumanWitnessController extends ChatController {
     try {
       Image arrowImage = new Image(getClass().getResourceAsStream(imagePath));
       ImageView imageView = new ImageView(arrowImage);
-      imageView.setFitWidth(40); // Adjust size as needed
-      imageView.setFitHeight(40); // Adjust size as needed
+      imageView.setFitWidth(40);
+      imageView.setFitHeight(40);
       imageView.setPreserveRatio(true);
       dropUpArrow.setGraphic(imageView);
       dropUpArrow.setText(""); // Remove any text
@@ -268,66 +276,65 @@ public class HumanWitnessController extends ChatController {
     setArrowImage("/images/assets/chatUp.png");
   }
 
-  // Animate the vertical transition
+  // Animate the transition
   private void animateTranslate(javafx.scene.Node node, double toY) {
     TranslateTransition transition = new TranslateTransition(Duration.millis(300), node);
     transition.setToY(toY);
     transition.play();
   }
 
-  /**
-   * Resets the controller to its initial state for game restart.
-   */
+  /** Resets the controller to its initial state for game restart. */
   public void resetControllerState() {
-    Platform.runLater(() -> {
-      // Reset image index to beginning
-      currentImageIndex = 0;
-      
-      // Reset chat visibility to initial state (visible)
-      chatVisible = true;
-      
-      // Reset chat UI elements to initial positions
-      if (txtaChat != null) {
-        txtaChat.setTranslateY(0);
-        txtaChat.setVisible(false);
-      }
-      if (txtInput != null) {
-        txtInput.setTranslateY(0);
-        txtInput.setVisible(false);
-      }
-      if (btnSend != null) {
-        btnSend.setTranslateY(0);
-        btnSend.setVisible(false);
-      }
-      
-      // Reset dropdown arrow to bottom position and hide it
-      if (dropUpArrow != null) {
-        dropUpArrow.setVisible(false);
-        dropUpArrow.setLayoutX(14.0);
-        dropUpArrow.setLayoutY(540.0); // Bottom position
-      }
-      
-      // Show next button for flashbacks
-      if (nextButton != null) {
-        nextButton.setVisible(true);
-      }
-      
-      // Reset back button
-      if (backBtn != null) {
-        backBtn.setDisable(true);
-      }
-      
-      // Reset slider
-      if (unlockSlider != null) {
-        unlockSlider.setVisible(false);
-        unlockSlider.setDisable(false);
-        unlockSlider.setValue(0.0);
-      }
-      
-      // Reset flashback slideshow to first image
-      if (flashbackSlideshow != null && !images.isEmpty()) {
-        flashbackSlideshow.setImage(images.get(0));
-      }
-    });
+    Platform.runLater(
+        () -> {
+          // Reset image index to beginning
+          currentImageIndex = 0;
+
+          // Reset chat visibility to visible
+          chatVisible = true;
+
+          // Reset chat UI elements to start positions
+          if (txtaChat != null) {
+            txtaChat.setTranslateY(0.0); // Start visible
+            txtaChat.setVisible(false);
+          }
+          if (txtInput != null) {
+            txtInput.setTranslateY(0.0);
+            txtInput.setVisible(false);
+          }
+          if (btnSend != null) {
+            btnSend.setTranslateY(0.0);
+            btnSend.setVisible(false);
+          }
+
+          // Reset dropdown arrow to bottom pos
+          if (dropUpArrow != null) {
+            dropUpArrow.setVisible(false);
+            dropUpArrow.setLayoutX(14.0);
+            dropUpArrow.setLayoutY(540.0);
+          }
+
+          // Show next button for flashbacks
+          if (nextButton != null) {
+            nextButton.setVisible(true);
+          }
+
+          // Reset back button
+          if (backBtn != null) {
+            backBtn.setDisable(true);
+          }
+
+          // Reset slider
+          if (unlockSlider != null) {
+            unlockSlider.setVisible(false);
+            unlockSlider.setDisable(false);
+            unlockSlider.setValue(0.0);
+          }
+
+          // Reset flashback slideshow to first image
+          if (flashbackSlideshow != null && !images.isEmpty()) {
+            flashbackSlideshow.setImage(images.get(0));
+          }
+        });
   }
 }
