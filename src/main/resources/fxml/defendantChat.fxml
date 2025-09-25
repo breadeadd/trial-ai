@@ -59,12 +59,12 @@
       <Button fx:id="dropUpArrow" layoutX="14.0" layoutY="540.0" mnemonicParsing="false" onAction="#toggleChatVisibility" prefHeight="30.0" prefWidth="30.0" style="-fx-background-color: #ffffff; -fx-shape: 'M 0 15 L 15 0 L 30 15 Z';" text="" visible="false" />
       <AnchorPane fx:id="popupPane" style="-fx-background-color: rgba(0,0,0,0.7);" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
-            <Label fx:id="instructionLabel" layoutX="194.0" layoutY="257.0" prefHeight="60.0" prefWidth="400.0" textAlignment="CENTER" textFill="WHITE" wrapText="true">
+            <Label fx:id="instructionLabel" alignment="CENTER" layoutX="194.0" layoutY="257.0" prefHeight="60.0" prefWidth="400.0" textAlignment="CENTER" textFill="WHITE" wrapText="true">
                <font>
                   <Font size="20.0" />
                </font>
             </Label>
-            <Label layoutX="310.0" layoutY="400.0" prefHeight="40.0" prefWidth="400.0" text="(click anywhere to exit)" textAlignment="CENTER" textFill="WHITE" wrapText="true">
+            <Label alignment="CENTER" layoutX="194.0" layoutY="350.0" prefHeight="40.0" prefWidth="400.0" text="(click anywhere to exit)" textAlignment="CENTER" textFill="WHITE" wrapText="true">
                <font>
                   <Font size="14.0" />
                </font>

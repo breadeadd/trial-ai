@@ -5,7 +5,7 @@
 
 .text-area {
   -fx-font-family: "VT323", monospace;
-  -fx-font-size: 22px;
+  -fx-font-size: 16px;
 
   -fx-background-color: #cee0dc;
   -fx-control-inner-background: #cee0dc;
@@ -22,6 +22,8 @@
   -fx-background-color: #cee0dc;
   -fx-border-color: #cee0dc;
   -fx-border-radius: 5px;
+  -fx-font-family: "VT323", monospace;
+  -fx-font-size: 16px;
 }
 
 .thumb {
