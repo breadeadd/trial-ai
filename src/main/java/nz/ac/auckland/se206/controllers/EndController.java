@@ -96,10 +96,10 @@ public class EndController extends ChatController {
         questionTxt.setText("You chose NOT GUILTY. This is correct!");
         break;
       case "timeout":
-        questionTxt.setText("TIME OUT! YOU HAVE RUN OUT OF TIME.");
+        questionTxt.setText("TIME OUT! YOUR RESPONSE HAS BEEN SUBMITTED AUTOMATICALLY.");
         break;
       default:
-        questionTxt.setText("TIME OUT! YOU HAVE RUN OUT OF TIME.");
+        questionTxt.setText("TIME OUT! YOUR RESPONSE HAS BEEN SUBMITTED AUTOMATICALLY.");
         break;
     }
   }
@@ -249,6 +249,31 @@ public class EndController extends ChatController {
   // show restart when visible
   public void setRestartVisible() {
     restartBtn.setVisible(true);
+  }
+
+  // send rationale on timeout
+  public void sentTimeoutRationale() {
+    Platform.runLater(
+        () -> {
+          // Set verdict to timeout if no verdict was selected
+          if (verdictPlayer == null) {
+            verdictPlayer = "timeout";
+          }
+
+          // Get whatever text is in the rationale box (empty or not)
+          String rationaleText = enterRationale.getText().trim();
+
+          // If no rationale was provided, set a default timeout message
+          if (rationaleText.isEmpty()) {
+            enterRationale.setText("Time ran out before I could provide my reasoning.");
+          }
+
+          try {
+            guessMade(null); // Call existing send method
+          } catch (IOException e) {
+            e.printStackTrace();
+          }
+        });
   }
 
   /**
