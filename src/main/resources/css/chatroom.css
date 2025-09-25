@@ -58,3 +58,19 @@ thumb:hover {
   -fx-padding: 10%;
   -fx-border-radius: 5px;
 }
+
+/* Slider for Human */
+.slider .track {
+  -fx-background-color: transparent;
+}
+
+.slider .thumb {
+  -fx-background-color: transparent;
+  -fx-background-image: url("../images/memories/assets/slider.png");
+  -fx-background-size: 100% 100%;
+  /* Scales the image to fit the thumb's dimensions */
+  -fx-background-repeat: no-repeat;
+  -fx-pref-width: 25px;
+  -fx-pref-height: 25px;
+  -fx-background-position: center;
+}

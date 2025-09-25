@@ -18,7 +18,7 @@
             <Image url="@../images/flashbacks/human/human1F.png" />
          </image>
       </ImageView>
-      <Slider fx:id="unlockSlider" disable="true" layoutX="580.0" layoutY="410.0" max="100.0" min="0.0" onMouseReleased="#onSliderReleased" prefWidth="100.0" rotate="5.0" showTickLabels="false" showTickMarks="false" style="-fx-background-color: transparent; -fx-track-color: #ffffff; -fx-thumb-color: #ffffff;" value="0.0" visible="false" />
+      <Slider fx:id="unlockSlider" disable="true" layoutX="561.0" layoutY="404.0" max="100.0" min="0.0" onMouseReleased="#onSliderReleased" prefHeight="27.0" prefWidth="138.0" rotate="5.0" showTickLabels="false" showTickMarks="false" style="-fx-background-color: transparent; -fx-track-color: #ffffff; -fx-thumb-color: #ffffff;" value="0.0" visible="false" />
       <TextArea fx:id="txtaChat" editable="false" layoutX="12.0" layoutY="449.0" opacity="0.9" prefHeight="121.0" prefWidth="769.0" wrapText="true" />
       <TextField fx:id="txtInput" layoutX="13.0" layoutY="579.0" onAction="#onSendMessage" onKeyPressed="#onKeyPressed" prefHeight="26.0" prefWidth="652.0" />
       <Button fx:id="btnSend" layoutX="671.0" layoutY="579.0" mnemonicParsing="false" onAction="#onSendMessage" prefHeight="25.0" prefWidth="109.0" style="-fx-background-color: #5f9ed9;" text="Send" />
@@ -37,7 +37,7 @@
                   <Font size="20.0" />
                </font>
             </Label>
-            <Label layoutX="310.0" layoutY="550.0" prefHeight="40.0" prefWidth="400.0" text="(click anywhere to exit)" textAlignment="CENTER" textFill="WHITE" wrapText="true">
+            <Label layoutX="310.0" layoutY="400.0" prefHeight="40.0" prefWidth="400.0" text="(click anywhere to exit)" textAlignment="CENTER" textFill="WHITE" wrapText="true">
                <font>
                   <Font size="14.0" />
                </font>
