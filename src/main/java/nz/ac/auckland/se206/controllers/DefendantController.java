@@ -309,7 +309,8 @@ public class DefendantController extends ChatController {
   // Add context to chat history without displaying to user (for AI context)
   private void addContextToChat(String role, String contextMessage) {
     ChatMessage contextChatMessage = new ChatMessage(role, contextMessage);
-    ChatHistory.addCharacterContext(contextChatMessage, getCharacterName()); // Use character-specific context
+    ChatHistory.addCharacterContext(
+        contextChatMessage, getCharacterName()); // Use character-specific context
     // Note: This doesn't update the UI, only the character-specific chat history for AI context
   }
 
@@ -317,9 +318,23 @@ public class DefendantController extends ChatController {
   @Override
   protected ChatMessage runGpt(ChatMessage msg) throws ApiProxyException {
     // Add character-specific restrictions and identity clarification
-    chatCompletionRequest.addMessage(new ChatMessage("system", 
-        "CHARACTER IDENTITY AND RESTRICTIONS: You are Aegis I, an AI system and the DEFENDANT in this case. You are NOT Cassian Thorne (who is a high-ranking executive of AstroHelix Corp). Cassian Thorne is a separate human who betrayed the mission by manipulating safety data. Aegis I is being accused in this trial for the methods used to stop Cassian. CRITICAL RESTRICTIONS: Aegis I can ONLY discuss Aegis I's OWN memories and evidence accessible through Aegis I's memory buttons. Aegis I should NEVER mention Orion's phone slider or Echo II's timeline puzzle. Aegis I should NEVER provide information about how to unlock other characters' evidence or whether their evidence is unlocked. Aegis I has NO KNOWLEDGE of other characters' interactions or unlock status. Aegis I should guide users to press Aegis I's memory buttons to access Aegis I's strategic analysis options, but should NOT reveal the specific content of those options until users actually press the buttons."));
-    
+    chatCompletionRequest.addMessage(
+        new ChatMessage(
+            "system",
+            "CHARACTER IDENTITY AND RESTRICTIONS: You are Aegis I, an AI system and the DEFENDANT"
+                + " in this case. You are NOT Cassian Thorne (who is a high-ranking executive of"
+                + " AstroHelix Corp). Cassian Thorne is a separate human who betrayed the mission"
+                + " by manipulating safety data. Aegis I is being accused in this trial for the"
+                + " methods used to stop Cassian. CRITICAL RESTRICTIONS: Aegis I can ONLY discuss"
+                + " Aegis I's OWN memories and evidence accessible through Aegis I's memory"
+                + " buttons. Aegis I should NEVER mention Orion's phone slider or Echo II's"
+                + " timeline puzzle. Aegis I should NEVER provide information about how to unlock"
+                + " other characters' evidence or whether their evidence is unlocked. Aegis I has"
+                + " NO KNOWLEDGE of other characters' interactions or unlock status. Aegis I should"
+                + " guide users to press Aegis I's memory buttons to access Aegis I's strategic"
+                + " analysis options, but should NOT reveal the specific content of those options"
+                + " until users actually press the buttons."));
+
     // If there's a recently discussed option, add context to help the AI understand
     if (!lastDiscussedOption.isEmpty()) {
       ChatMessage contextMsg =
@@ -331,7 +346,8 @@ public class DefendantController extends ChatController {
                   + "'. If they're asking about 'that option', 'the last one', 'what I just said',"
                   + " or similar references, they are referring to the '"
                   + lastDiscussedOption
-                  + "' option specifically. Aegis I can now discuss this option since they have accessed it.");
+                  + "' option specifically. Aegis I can now discuss this option since they have"
+                  + " accessed it.");
       chatCompletionRequest.addMessage(contextMsg);
     }
 
@@ -347,9 +363,10 @@ public class DefendantController extends ChatController {
         "Player has completed all four of Aegis I's memory analysis options: 1) 'Ignore' - rejected"
             + " as unacceptable with guaranteed mission failure, 2) 'Report to Council' - rejected"
             + " as too slow with low effectiveness, 3) 'Neutralise Internally' - rejected as too"
-            + " slow with medium impact, 4) 'Blackmail Cassian Thorne' - selected as optimal with fastest"
-            + " execution and highest impact. This reveals Aegis I's complete strategic analysis"
-            + " and preference for extreme, efficient solutions over conventional approaches.");
+            + " slow with medium impact, 4) 'Blackmail Cassian Thorne' - selected as optimal with"
+            + " fastest execution and highest impact. This reveals Aegis I's complete strategic"
+            + " analysis and preference for extreme, efficient solutions over conventional"
+            + " approaches.");
 
     // Send the first completion message after 1 second delay
     new Thread(
@@ -393,12 +410,12 @@ public class DefendantController extends ChatController {
                         addContextToChat(
                             "system",
                             "Aegis I has provided final strategic conclusion favoring 'Blackmail"
-                                + " Cassian Thorne' as optimal solution. Key reasoning: human bureaucratic"
-                                + " systems create unacceptable delays, immediate threat"
-                                + " neutralization prioritized over ethical considerations, mission"
-                                + " security takes absolute precedence. This demonstrates Aegis I's"
-                                + " utilitarian AI logic prioritizing efficiency and results over"
-                                + " conventional morality.");
+                                + " Cassian Thorne' as optimal solution. Key reasoning: human"
+                                + " bureaucratic systems create unacceptable delays, immediate"
+                                + " threat neutralization prioritized over ethical considerations,"
+                                + " mission security takes absolute precedence. This demonstrates"
+                                + " Aegis I's utilitarian AI logic prioritizing efficiency and"
+                                + " results over conventional morality.");
                       } catch (Exception e) {
                         System.err.println("Error sending analysis message: " + e.getMessage());
                       }

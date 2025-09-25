@@ -24,6 +24,16 @@
   -fx-border-radius: 5px;
 }
 
+.thumb {
+  -fx-background-color: #5f9ed9;
+  -fx-border-radius: 5px;
+}
+
+thumb:hover {
+  -fx-background-color: #dce8e6;
+  -fx-border-radius: 5px;
+}
+
 .progress-indicator {
   /* Set the size of the spinner */
   -fx-pref-width: 50px;
@@ -43,7 +53,8 @@
   -fx-font-weight: bold;
   -fx-background-color: #5f9ed9;
   -fx-text-fill: #f0f0f0;
-  -fx-border-color: #5f9ed9;
+  -fx-border-radius: 5px;
+
   -fx-padding: 10%;
   -fx-border-radius: 5px;
 }
