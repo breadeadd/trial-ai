@@ -149,9 +149,6 @@ public class EndController extends ChatController {
    * @param event the mouse event triggered by clicking a rectangle
    * @throws IOException if there is an I/O error
    */
-
-  // defendant clicked - switch scene
-
   @FXML
   private void yesPressed(MouseEvent event) throws IOException {
     Platform.runLater(
@@ -162,8 +159,6 @@ public class EndController extends ChatController {
           verdictPlayer = "GUILTY";
         });
   }
-
-  // human witness clicked
 
   @FXML
   private void noPressed(MouseEvent event) throws IOException {
@@ -235,6 +230,11 @@ public class EndController extends ChatController {
         });
   }
 
+  // show restart when visible
+  public void setRestartVisible() {
+    restartBtn.setVisible(true);
+  }
+
   /**
    * Handles the guess button click event.
    *
@@ -254,77 +254,80 @@ public class EndController extends ChatController {
    */
   @FXML
   private void restartGame(MouseEvent event) throws IOException {
-    Platform.runLater(() -> {
-      try {
-        // Reset all game state variables
-        resetGameState();
-        
-        // Initialize all character chats immediately after restart
-        initializeAllCharacterChats();
-        
-        // Switch back to room scene
-        App.setRoot("room");
-        
-        // Reset room controller state and update button state
-        RoomController roomController = (RoomController) App.getController("room");
-        if (roomController != null) {
-          roomController.resetRoomState();
-        }
-        
-        // Restart the timer
-        CountdownTimer.start();
-        
-      } catch (IOException e) {
-        e.printStackTrace();
-      }
-    });
-  }
+    Platform.runLater(
+        () -> {
+          try {
+            // Reset all game state variables
+            resetGameState();
 
-  /**
-   * Initializes chat for all character controllers immediately after restart.
-   */
-  private void initializeAllCharacterChats() {
-    // Small delay to ensure chat history has been cleared
-    new Thread(() -> {
-      try {
-        Thread.sleep(500); // Short delay to ensure everything is reset
-        Platform.runLater(() -> {
-          // Reset and initialize DefendantController
-          DefendantController defendantController = (DefendantController) App.getController("defendantChat");
-          if (defendantController != null) {
-            defendantController.resetControllerState();
-            defendantController.initChat();
-          }
-          
-          // Reset and initialize HumanWitnessController
-          HumanWitnessController humanController = (HumanWitnessController) App.getController("witnessChat");
-          if (humanController != null) {
-            humanController.resetControllerState();
-            humanController.initChat();
-          }
-          
-          // Reset and initialize AiWitnessController
-          AiWitnessController aiController = (AiWitnessController) App.getController("aiChat");
-          if (aiController != null) {
-            aiController.resetControllerState();
-            aiController.initChat();
+            // Initialize all character chats immediately after restart
+            initializeAllCharacterChats();
+
+            // Switch back to room scene
+            App.setRoot("room");
+
+            // Reset room controller state and update button state
+            RoomController roomController = (RoomController) App.getController("room");
+            if (roomController != null) {
+              roomController.resetRoomState();
+            }
+
+            // Restart the timer
+            CountdownTimer.start();
+
+          } catch (IOException e) {
+            e.printStackTrace();
           }
         });
-      } catch (InterruptedException e) {
-        e.printStackTrace();
-      }
-    }).start();
   }
 
-  /**
-   * Resets all game state variables to initial values for a new game.
-   */
+  /** Initializes chat for all character controllers immediately after restart. */
+  private void initializeAllCharacterChats() {
+    // Small delay to ensure chat history has been cleared
+    new Thread(
+            () -> {
+              try {
+                Thread.sleep(500); // Short delay to ensure everything is reset
+                Platform.runLater(
+                    () -> {
+                      // Reset and initialize DefendantController
+                      DefendantController defendantController =
+                          (DefendantController) App.getController("defendantChat");
+                      if (defendantController != null) {
+                        defendantController.resetControllerState();
+                        defendantController.initChat();
+                      }
+
+                      // Reset and initialize HumanWitnessController
+                      HumanWitnessController humanController =
+                          (HumanWitnessController) App.getController("witnessChat");
+                      if (humanController != null) {
+                        humanController.resetControllerState();
+                        humanController.initChat();
+                      }
+
+                      // Reset and initialize AiWitnessController
+                      AiWitnessController aiController =
+                          (AiWitnessController) App.getController("aiChat");
+                      if (aiController != null) {
+                        aiController.resetControllerState();
+                        aiController.initChat();
+                      }
+                    });
+              } catch (InterruptedException e) {
+                e.printStackTrace();
+              }
+            })
+        .start();
+  }
+
+  /** Resets all game state variables to initial values for a new game. */
   private void resetGameState() {
     System.out.println("Starting game state reset...");
-    
+
     // Reset EndController state
     verdictPlayer = null;
-    
+
     // Reset button visibility and states
     yesBtn.setVisible(true);
     yesBtn.setDisable(false);
@@ -339,45 +342,43 @@ public class EndController extends ChatController {
     restartBtn.setVisible(false);
     txtaChat.setVisible(false);
     txtaChat.clear();
-    
+
     // Reset timer to initial 5 minutes and reset guessed flag
     CountdownTimer.reset();
     System.out.println("Timer reset to 5 minutes");
-    
+
     // Clear chat history using reflection since there's no public clear method
     clearChatHistory();
     System.out.println("Chat history cleared");
-    
+
     // Clear all chat controller UIs
     clearAllChatControllerUIs();
     System.out.println("All chat UIs cleared");
-    
+
     // Reset chat completion requests
     resetChatCompletionRequests();
     System.out.println("Chat completion requests reset");
-    
+
     // Reset GameStateManager
     resetGameStateManager();
     System.out.println("GameStateManager reset");
-    
+
     // Reset RoomController first-time flags
     resetRoomControllerFlags();
     System.out.println("RoomController flags reset - flashbacks will trigger again");
-    
+
     // Reset flashback states in all character controllers
     resetFlashbackStates();
     System.out.println("Flashback states reset in all character controllers");
-    
+
     // Create new game context for new game
     context = new GameStateContext();
     System.out.println("New GameStateContext created");
-    
+
     System.out.println("Game state reset complete! Ready for fresh game with flashbacks.");
   }
 
-  /**
-   * Clears the chat history using reflection.
-   */
+  /** Clears the chat history using reflection. */
   private void clearChatHistory() {
     try {
       java.lang.reflect.Field historyField = ChatHistory.class.getDeclaredField("history");
@@ -389,13 +390,12 @@ public class EndController extends ChatController {
     }
   }
 
-  /**
-   * Clears all chat controller UI text areas to remove displayed messages.
-   */
+  /** Clears all chat controller UI text areas to remove displayed messages. */
   private void clearAllChatControllerUIs() {
     // Clear defendant chat UI
     try {
-      DefendantController defendantController = (DefendantController) App.getController("defendantChat");
+      DefendantController defendantController =
+          (DefendantController) App.getController("defendantChat");
       if (defendantController != null) {
         clearChatControllerUI(defendantController);
       }
@@ -405,7 +405,8 @@ public class EndController extends ChatController {
 
     // Clear human witness chat UI
     try {
-      HumanWitnessController humanController = (HumanWitnessController) App.getController("witnessChat");
+      HumanWitnessController humanController =
+          (HumanWitnessController) App.getController("witnessChat");
       if (humanController != null) {
         clearChatControllerUI(humanController);
       }
@@ -424,14 +425,13 @@ public class EndController extends ChatController {
     }
   }
 
-  /**
-   * Clears a specific chat controller's UI using reflection.
-   */
+  /** Clears a specific chat controller's UI using reflection. */
   private void clearChatControllerUI(ChatController controller) {
     try {
       java.lang.reflect.Field txtaChatField = ChatController.class.getDeclaredField("txtaChat");
       txtaChatField.setAccessible(true);
-      javafx.scene.control.TextArea txtaChat = (javafx.scene.control.TextArea) txtaChatField.get(controller);
+      javafx.scene.control.TextArea txtaChat =
+          (javafx.scene.control.TextArea) txtaChatField.get(controller);
       if (txtaChat != null) {
         Platform.runLater(() -> txtaChat.clear());
       }
@@ -440,13 +440,12 @@ public class EndController extends ChatController {
     }
   }
 
-  /**
-   * Resets the ChatCompletionRequest objects in all chat controllers to start fresh.
-   */
+  /** Resets the ChatCompletionRequest objects in all chat controllers to start fresh. */
   private void resetChatCompletionRequests() {
     // Reset defendant chat request
     try {
-      DefendantController defendantController = (DefendantController) App.getController("defendantChat");
+      DefendantController defendantController =
+          (DefendantController) App.getController("defendantChat");
       if (defendantController != null) {
         resetChatCompletionRequest(defendantController);
       }
@@ -456,7 +455,8 @@ public class EndController extends ChatController {
 
     // Reset human witness chat request
     try {
-      HumanWitnessController humanController = (HumanWitnessController) App.getController("witnessChat");
+      HumanWitnessController humanController =
+          (HumanWitnessController) App.getController("witnessChat");
       if (humanController != null) {
         resetChatCompletionRequest(humanController);
       }
@@ -475,12 +475,11 @@ public class EndController extends ChatController {
     }
   }
 
-  /**
-   * Resets a specific chat controller's ChatCompletionRequest using reflection.
-   */
+  /** Resets a specific chat controller's ChatCompletionRequest using reflection. */
   private void resetChatCompletionRequest(ChatController controller) {
     try {
-      java.lang.reflect.Field requestField = ChatController.class.getDeclaredField("chatCompletionRequest");
+      java.lang.reflect.Field requestField =
+          ChatController.class.getDeclaredField("chatCompletionRequest");
       requestField.setAccessible(true);
       requestField.set(controller, null);
     } catch (Exception e) {
@@ -488,52 +487,54 @@ public class EndController extends ChatController {
     }
   }
 
-  /**
-   * Resets the GameStateManager by reinitializing character states.
-   */
+  /** Resets the GameStateManager by reinitializing character states. */
   private void resetGameStateManager() {
     try {
-      java.lang.reflect.Field charactersField = GameStateManager.class.getDeclaredField("charactersTalkedTo");
+      java.lang.reflect.Field charactersField =
+          GameStateManager.class.getDeclaredField("charactersTalkedTo");
       charactersField.setAccessible(true);
       @SuppressWarnings("unchecked")
-      java.util.Map<String, Boolean> characters = (java.util.Map<String, Boolean>) charactersField.get(GameStateManager.getInstance());
+      java.util.Map<String, Boolean> characters =
+          (java.util.Map<String, Boolean>) charactersField.get(GameStateManager.getInstance());
       characters.replaceAll((k, v) -> false);
-      
+
       java.lang.reflect.Field flagsField = GameStateManager.class.getDeclaredField("gameFlags");
       flagsField.setAccessible(true);
       @SuppressWarnings("unchecked")
-      java.util.Map<String, Boolean> flags = (java.util.Map<String, Boolean>) flagsField.get(GameStateManager.getInstance());
+      java.util.Map<String, Boolean> flags =
+          (java.util.Map<String, Boolean>) flagsField.get(GameStateManager.getInstance());
       flags.clear();
     } catch (Exception e) {
       System.err.println("Warning: Could not reset GameStateManager: " + e.getMessage());
     }
   }
 
-  /**
-   * Resets the first-time interaction flags in RoomController.
-   */
+  /** Resets the first-time interaction flags in RoomController. */
   private void resetRoomControllerFlags() {
     try {
       RoomController roomController = (RoomController) App.getController("room");
       if (roomController != null) {
         // Use reflection to reset private boolean fields
-        java.lang.reflect.Field firstDefendantField = RoomController.class.getDeclaredField("firstDefendant");
+        java.lang.reflect.Field firstDefendantField =
+            RoomController.class.getDeclaredField("firstDefendant");
         firstDefendantField.setAccessible(true);
         firstDefendantField.set(roomController, false);
-        
-        java.lang.reflect.Field firstHumanField = RoomController.class.getDeclaredField("firstHuman");
+
+        java.lang.reflect.Field firstHumanField =
+            RoomController.class.getDeclaredField("firstHuman");
         firstHumanField.setAccessible(true);
         firstHumanField.set(roomController, false);
-        
+
         java.lang.reflect.Field firstAiField = RoomController.class.getDeclaredField("firstAi");
         firstAiField.setAccessible(true);
         firstAiField.set(roomController, false);
-        
+
         // Reset the static isFirstTimeInit flag so opening audio plays again
-        java.lang.reflect.Field isFirstTimeInitField = RoomController.class.getDeclaredField("isFirstTimeInit");
+        java.lang.reflect.Field isFirstTimeInitField =
+            RoomController.class.getDeclaredField("isFirstTimeInit");
         isFirstTimeInitField.setAccessible(true);
         isFirstTimeInitField.set(null, true);
-        
+
         System.out.println("Successfully reset RoomController flags for flashback restart");
       }
     } catch (Exception e) {
@@ -542,178 +543,201 @@ public class EndController extends ChatController {
     }
   }
 
-  /**
-   * Resets the flashback states in all character controllers.
-   */
+  /** Resets the flashback states in all character controllers. */
   private void resetFlashbackStates() {
     // Reset DefendantController flashback state
     try {
-      DefendantController defendantController = (DefendantController) App.getController("defendantChat");
+      DefendantController defendantController =
+          (DefendantController) App.getController("defendantChat");
       if (defendantController != null) {
-        java.lang.reflect.Field currentImageIndexField = DefendantController.class.getDeclaredField("currentImageIndex");
+        java.lang.reflect.Field currentImageIndexField =
+            DefendantController.class.getDeclaredField("currentImageIndex");
         currentImageIndexField.setAccessible(true);
         currentImageIndexField.set(defendantController, 0);
-        
+
         // Reset UI elements to initial state
         resetDefendantUI(defendantController);
-        
+
         System.out.println("Reset DefendantController currentImageIndex to 0 and UI elements");
       }
     } catch (Exception e) {
-      System.err.println("Warning: Could not reset DefendantController flashback state: " + e.getMessage());
+      System.err.println(
+          "Warning: Could not reset DefendantController flashback state: " + e.getMessage());
     }
 
-    // Reset HumanWitnessController flashback state  
+    // Reset HumanWitnessController flashback state
     try {
-      HumanWitnessController humanController = (HumanWitnessController) App.getController("witnessChat");
+      HumanWitnessController humanController =
+          (HumanWitnessController) App.getController("witnessChat");
       if (humanController != null) {
-        java.lang.reflect.Field currentImageIndexField = HumanWitnessController.class.getDeclaredField("currentImageIndex");
+        java.lang.reflect.Field currentImageIndexField =
+            HumanWitnessController.class.getDeclaredField("currentImageIndex");
         currentImageIndexField.setAccessible(true);
         currentImageIndexField.set(humanController, 0);
-        
+
         // Also reset chatVisible state for HumanWitnessController
-        java.lang.reflect.Field chatVisibleField = HumanWitnessController.class.getDeclaredField("chatVisible");
+        java.lang.reflect.Field chatVisibleField =
+            HumanWitnessController.class.getDeclaredField("chatVisible");
         chatVisibleField.setAccessible(true);
         chatVisibleField.set(humanController, true);
-        
+
         // Reset UI elements to initial state
         resetHumanWitnessUI(humanController);
-        
-        System.out.println("Reset HumanWitnessController currentImageIndex to 0, chatVisible to true, and UI elements");
+
+        System.out.println(
+            "Reset HumanWitnessController currentImageIndex to 0, chatVisible to true, and UI"
+                + " elements");
       }
     } catch (Exception e) {
-      System.err.println("Warning: Could not reset HumanWitnessController flashback state: " + e.getMessage());
+      System.err.println(
+          "Warning: Could not reset HumanWitnessController flashback state: " + e.getMessage());
     }
 
     // Reset AiWitnessController flashback state
     try {
       AiWitnessController aiController = (AiWitnessController) App.getController("aiChat");
       if (aiController != null) {
-        java.lang.reflect.Field currentImageIndexField = AiWitnessController.class.getDeclaredField("currentImageIndex");
+        java.lang.reflect.Field currentImageIndexField =
+            AiWitnessController.class.getDeclaredField("currentImageIndex");
         currentImageIndexField.setAccessible(true);
         currentImageIndexField.set(aiController, 0);
-        
+
         // Reset UI elements to initial state
         resetAiWitnessUI(aiController);
-        
+
         System.out.println("Reset AiWitnessController currentImageIndex to 0 and UI elements");
       }
     } catch (Exception e) {
-      System.err.println("Warning: Could not reset AiWitnessController flashback state: " + e.getMessage());
+      System.err.println(
+          "Warning: Could not reset AiWitnessController flashback state: " + e.getMessage());
     }
   }
 
-  /**
-   * Resets DefendantController UI elements to initial state.
-   */
+  /** Resets DefendantController UI elements to initial state. */
   private void resetDefendantUI(DefendantController controller) {
     try {
       // Reset button visibility
       java.lang.reflect.Field btnSendField = ChatController.class.getDeclaredField("btnSend");
       btnSendField.setAccessible(true);
-      javafx.scene.control.Button btnSend = (javafx.scene.control.Button) btnSendField.get(controller);
+      javafx.scene.control.Button btnSend =
+          (javafx.scene.control.Button) btnSendField.get(controller);
       if (btnSend != null) btnSend.setVisible(false);
-      
+
       java.lang.reflect.Field txtInputField = ChatController.class.getDeclaredField("txtInput");
       txtInputField.setAccessible(true);
-      javafx.scene.control.TextField txtInput = (javafx.scene.control.TextField) txtInputField.get(controller);
+      javafx.scene.control.TextField txtInput =
+          (javafx.scene.control.TextField) txtInputField.get(controller);
       if (txtInput != null) txtInput.setVisible(false);
-      
+
       java.lang.reflect.Field txtaChatField = ChatController.class.getDeclaredField("txtaChat");
       txtaChatField.setAccessible(true);
-      javafx.scene.control.TextArea txtaChat = (javafx.scene.control.TextArea) txtaChatField.get(controller);
+      javafx.scene.control.TextArea txtaChat =
+          (javafx.scene.control.TextArea) txtaChatField.get(controller);
       if (txtaChat != null) txtaChat.setVisible(false);
-      
+
       // Reset nextButton visibility
-      java.lang.reflect.Field nextButtonField = DefendantController.class.getDeclaredField("nextButton");
+      java.lang.reflect.Field nextButtonField =
+          DefendantController.class.getDeclaredField("nextButton");
       nextButtonField.setAccessible(true);
-      javafx.scene.control.Button nextButton = (javafx.scene.control.Button) nextButtonField.get(controller);
+      javafx.scene.control.Button nextButton =
+          (javafx.scene.control.Button) nextButtonField.get(controller);
       if (nextButton != null) nextButton.setVisible(true);
-      
+
       System.out.println("Reset DefendantController UI elements");
     } catch (Exception e) {
       System.err.println("Warning: Could not reset DefendantController UI: " + e.getMessage());
     }
   }
 
-  /**
-   * Resets HumanWitnessController UI elements to initial state.
-   */
+  /** Resets HumanWitnessController UI elements to initial state. */
   private void resetHumanWitnessUI(HumanWitnessController controller) {
     try {
       // Reset button visibility
       java.lang.reflect.Field btnSendField = ChatController.class.getDeclaredField("btnSend");
       btnSendField.setAccessible(true);
-      javafx.scene.control.Button btnSend = (javafx.scene.control.Button) btnSendField.get(controller);
+      javafx.scene.control.Button btnSend =
+          (javafx.scene.control.Button) btnSendField.get(controller);
       if (btnSend != null) btnSend.setVisible(false);
-      
+
       java.lang.reflect.Field txtInputField = ChatController.class.getDeclaredField("txtInput");
       txtInputField.setAccessible(true);
-      javafx.scene.control.TextField txtInput = (javafx.scene.control.TextField) txtInputField.get(controller);
+      javafx.scene.control.TextField txtInput =
+          (javafx.scene.control.TextField) txtInputField.get(controller);
       if (txtInput != null) txtInput.setVisible(false);
-      
+
       java.lang.reflect.Field txtaChatField = ChatController.class.getDeclaredField("txtaChat");
       txtaChatField.setAccessible(true);
-      javafx.scene.control.TextArea txtaChat = (javafx.scene.control.TextArea) txtaChatField.get(controller);
+      javafx.scene.control.TextArea txtaChat =
+          (javafx.scene.control.TextArea) txtaChatField.get(controller);
       if (txtaChat != null) txtaChat.setVisible(false);
-      
+
       // Reset nextButton visibility
-      java.lang.reflect.Field nextButtonField = HumanWitnessController.class.getDeclaredField("nextButton");
+      java.lang.reflect.Field nextButtonField =
+          HumanWitnessController.class.getDeclaredField("nextButton");
       nextButtonField.setAccessible(true);
-      javafx.scene.control.Button nextButton = (javafx.scene.control.Button) nextButtonField.get(controller);
+      javafx.scene.control.Button nextButton =
+          (javafx.scene.control.Button) nextButtonField.get(controller);
       if (nextButton != null) nextButton.setVisible(true);
-      
+
       // Reset HumanWitness-specific UI elements
-      java.lang.reflect.Field unlockSliderField = HumanWitnessController.class.getDeclaredField("unlockSlider");
+      java.lang.reflect.Field unlockSliderField =
+          HumanWitnessController.class.getDeclaredField("unlockSlider");
       unlockSliderField.setAccessible(true);
-      javafx.scene.control.Slider unlockSlider = (javafx.scene.control.Slider) unlockSliderField.get(controller);
+      javafx.scene.control.Slider unlockSlider =
+          (javafx.scene.control.Slider) unlockSliderField.get(controller);
       if (unlockSlider != null) {
         unlockSlider.setVisible(false);
         unlockSlider.setValue(0.0);
         unlockSlider.setDisable(false);
       }
-      
-      java.lang.reflect.Field dropUpArrowField = HumanWitnessController.class.getDeclaredField("dropUpArrow");
+
+      java.lang.reflect.Field dropUpArrowField =
+          HumanWitnessController.class.getDeclaredField("dropUpArrow");
       dropUpArrowField.setAccessible(true);
-      javafx.scene.control.Button dropUpArrow = (javafx.scene.control.Button) dropUpArrowField.get(controller);
+      javafx.scene.control.Button dropUpArrow =
+          (javafx.scene.control.Button) dropUpArrowField.get(controller);
       if (dropUpArrow != null) {
         dropUpArrow.setVisible(false);
-        dropUpArrow.setStyle("-fx-background-color: #ffffff; -fx-shape: 'M 0 15 L 15 0 L 30 15 Z';");
+        dropUpArrow.setStyle(
+            "-fx-background-color: #ffffff; -fx-shape: 'M 0 15 L 15 0 L 30 15 Z';");
       }
-      
+
       System.out.println("Reset HumanWitnessController UI elements");
     } catch (Exception e) {
       System.err.println("Warning: Could not reset HumanWitnessController UI: " + e.getMessage());
     }
   }
 
-  /**
-   * Resets AiWitnessController UI elements to initial state.
-   */
+  /** Resets AiWitnessController UI elements to initial state. */
   private void resetAiWitnessUI(AiWitnessController controller) {
     try {
       // Reset button visibility
       java.lang.reflect.Field btnSendField = ChatController.class.getDeclaredField("btnSend");
       btnSendField.setAccessible(true);
-      javafx.scene.control.Button btnSend = (javafx.scene.control.Button) btnSendField.get(controller);
+      javafx.scene.control.Button btnSend =
+          (javafx.scene.control.Button) btnSendField.get(controller);
       if (btnSend != null) btnSend.setVisible(false);
-      
+
       java.lang.reflect.Field txtInputField = ChatController.class.getDeclaredField("txtInput");
       txtInputField.setAccessible(true);
-      javafx.scene.control.TextField txtInput = (javafx.scene.control.TextField) txtInputField.get(controller);
+      javafx.scene.control.TextField txtInput =
+          (javafx.scene.control.TextField) txtInputField.get(controller);
       if (txtInput != null) txtInput.setVisible(false);
-      
+
       java.lang.reflect.Field txtaChatField = ChatController.class.getDeclaredField("txtaChat");
       txtaChatField.setAccessible(true);
-      javafx.scene.control.TextArea txtaChat = (javafx.scene.control.TextArea) txtaChatField.get(controller);
+      javafx.scene.control.TextArea txtaChat =
+          (javafx.scene.control.TextArea) txtaChatField.get(controller);
       if (txtaChat != null) txtaChat.setVisible(false);
-      
+
       // Reset nextButton visibility
-      java.lang.reflect.Field nextButtonField = AiWitnessController.class.getDeclaredField("nextButton");
+      java.lang.reflect.Field nextButtonField =
+          AiWitnessController.class.getDeclaredField("nextButton");
       nextButtonField.setAccessible(true);
-      javafx.scene.control.Button nextButton = (javafx.scene.control.Button) nextButtonField.get(controller);
+      javafx.scene.control.Button nextButton =
+          (javafx.scene.control.Button) nextButtonField.get(controller);
       if (nextButton != null) nextButton.setVisible(true);
-      
+
       System.out.println("Reset AiWitnessController UI elements");
     } catch (Exception e) {
       System.err.println("Warning: Could not reset AiWitnessController UI: " + e.getMessage());

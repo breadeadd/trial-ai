@@ -59,6 +59,7 @@ public class CountdownTimer {
       if (secondsRemaining.get() == 0) {
         nz.ac.auckland.se206.controllers.EndController.instance.setMessage("timeout");
         nz.ac.auckland.se206.controllers.EndController.instance.setVisible();
+        nz.ac.auckland.se206.controllers.EndController.instance.setRestartVisible();
       }
     }
     start();
@@ -79,9 +80,7 @@ public class CountdownTimer {
     secondsRemaining.set(0);
   }
 
-  /**
-   * Resets the timer for a new game.
-   */
+  /** Resets the timer for a new game. */
   public static void reset() {
     countdownTimer.pause();
     secondsRemaining.set(300);
