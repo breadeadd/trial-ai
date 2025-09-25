@@ -93,7 +93,7 @@ public class EndController extends ChatController {
         questionTxt.setText("You chose GUILTY. You are correct!");
         break;
       case "NOT GUILTY":
-        questionTxt.setText("You chose NOT GUILTY. This is correct!");
+        questionTxt.setText("You chose NOT GUILTY. You are incorrect.");
         break;
       case "timeout":
         questionTxt.setText("TIME OUT! YOUR RESPONSE HAS BEEN SUBMITTED AUTOMATICALLY.");
