@@ -11,14 +11,14 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="614.0" prefWidth="789.0" style="-fx-background-color: #000000;" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="nz.ac.auckland.se206.controllers.HumanWitnessController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="614.0" prefWidth="789.0" style="-fx-background-color: #000000;" stylesheets="@../css/chatroom.css" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="nz.ac.auckland.se206.controllers.HumanWitnessController">
   <children>
       <ImageView fx:id="flashbackSlideshow" fitHeight="666.0" fitWidth="789.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../images/flashbacks/human/human1F.png" />
          </image>
       </ImageView>
-      <Slider fx:id="unlockSlider" disable="true" layoutX="580.0" layoutY="410.0" max="100.0" min="0.0" onMouseReleased="#onSliderReleased" prefWidth="100.0" rotate="5.0" showTickLabels="false" showTickMarks="false" style="-fx-background-color: transparent; -fx-track-color: #ffffff; -fx-thumb-color: #ffffff;" value="0.0" visible="false" />
+      <Slider fx:id="unlockSlider" disable="true" layoutX="561.0" layoutY="404.0" max="100.0" min="0.0" onMouseReleased="#onSliderReleased" prefHeight="27.0" prefWidth="138.0" rotate="5.0" showTickLabels="false" showTickMarks="false" style="-fx-background-color: transparent; -fx-track-color: #ffffff; -fx-thumb-color: #ffffff;" value="0.0" visible="false" />
       <TextArea fx:id="txtaChat" editable="false" layoutX="12.0" layoutY="449.0" opacity="0.9" prefHeight="121.0" prefWidth="769.0" wrapText="true" />
       <TextField fx:id="txtInput" layoutX="13.0" layoutY="579.0" onAction="#onSendMessage" onKeyPressed="#onKeyPressed" prefHeight="26.0" prefWidth="652.0" />
       <Button fx:id="btnSend" layoutX="671.0" layoutY="579.0" mnemonicParsing="false" onAction="#onSendMessage" prefHeight="25.0" prefWidth="109.0" style="-fx-background-color: #5f9ed9;" text="Send" />
@@ -30,14 +30,14 @@
          </font>
       </Button>
       <Button fx:id="dropUpArrow" layoutX="14.0" layoutY="540.0" mnemonicParsing="false" onAction="#toggleChatVisibility" prefHeight="30.0" prefWidth="30.0" style="-fx-background-color: #ffffff; -fx-shape: 'M 0 15 L 15 0 L 30 15 Z';" text="" visible="false" />
-      <AnchorPane fx:id="popupPane" visible="false" style="-fx-background-color: rgba(0,0,0,0.7);" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <AnchorPane fx:id="popupPane" style="-fx-background-color: rgba(0,0,0,0.7);" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
-            <Label fx:id="instructionLabel" layoutX="194.0" layoutY="257.0" prefHeight="60.0" prefWidth="400.0" textAlignment="CENTER" textFill="WHITE" wrapText="true">
+            <Label fx:id="instructionLabel" alignment="CENTER" layoutX="194.0" layoutY="257.0" prefHeight="60.0" prefWidth="400.0" textAlignment="CENTER" textFill="WHITE" wrapText="true">
                <font>
                   <Font size="20.0" />
                </font>
             </Label>
-            <Label layoutX="310.0" layoutY="550.0" prefHeight="40.0" prefWidth="400.0" text="(click anywhere to exit)" textAlignment="CENTER" textFill="WHITE" wrapText="true">
+            <Label alignment="CENTER" layoutX="194.0" layoutY="350.0" prefHeight="40.0" prefWidth="400.0" text="(click anywhere to exit)" textAlignment="CENTER" textFill="WHITE" wrapText="true">
                <font>
                   <Font size="14.0" />
                </font>
