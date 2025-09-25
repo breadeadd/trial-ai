@@ -1,0 +1,49 @@
+@font-face {
+  font-family: "VT323";
+  src: url("fonts/VT323-Regular.ttf");
+}
+
+.text-area {
+  -fx-font-family: "VT323", monospace;
+  -fx-font-size: 22px;
+
+  -fx-background-color: #cee0dc;
+  -fx-control-inner-background: #cee0dc;
+  -fx-border-color: #cee0dc;
+  -fx-border-radius: 5px;
+}
+
+.text {
+  -fx-font-family: "VT323", monospace;
+  -fx-font-size: 26px;
+}
+
+.text-field {
+  -fx-background-color: #cee0dc;
+  -fx-border-color: #cee0dc;
+  -fx-border-radius: 5px;
+}
+
+.progress-indicator {
+  /* Set the size of the spinner */
+  -fx-pref-width: 50px;
+  -fx-pref-height: 50px;
+
+  /* Change the color of the spinning arc */
+  -fx-progress-color: rgb(101, 143, 192);
+  /* A nice blue */
+
+  /* Change the background of the indicator */
+  -fx-background-color: transparent;
+  /* Makes the background transparent */
+}
+
+.button {
+  -fx-font-size: 21px;
+  -fx-font-weight: bold;
+  -fx-background-color: #5f9ed9;
+  -fx-text-fill: #f0f0f0;
+  -fx-border-color: #5f9ed9;
+  -fx-padding: 10%;
+  -fx-border-radius: 5px;
+}
