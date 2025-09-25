@@ -8,11 +8,13 @@ import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
 import nz.ac.auckland.apiproxy.chat.openai.ChatMessage;
@@ -40,6 +42,9 @@ public class HumanWitnessController extends ChatController {
   @FXML private Button btnSend;
   @FXML private Button backBtn;
 
+  @FXML private AnchorPane popupPane;
+  @FXML private Label instructionLabel;
+
   /**
    * Initializes the chat view.
    *
@@ -47,6 +52,9 @@ public class HumanWitnessController extends ChatController {
    */
   @FXML
   public void initialize() throws ApiProxyException {
+    popupPane.setVisible(false);
+    popupPane.setOnMouseClicked(e -> popupPane.setVisible(false));
+    instructionLabel.setText("Investigate to find Cassian Thorne's messages.");
     loadImages(null);
     initChat();
 
@@ -147,6 +155,7 @@ public class HumanWitnessController extends ChatController {
 
     // flashback ends and chat begins
     if (currentImageIndex == 3) {
+      popupPane.setVisible(true);
       nextButton.setVisible(false);
       backBtn.setDisable(false);
 
@@ -212,47 +221,58 @@ public class HumanWitnessController extends ChatController {
       txtaChat.setVisible(chatVisible);
       txtInput.setVisible(chatVisible);
       btnSend.setVisible(chatVisible);
-      
+
       // Add context for phone unlock event
-      addContextToChat("system", "Player has successfully unlocked Orion Vale's phone through the slider mechanism. " +
-          "The phone was secured but the player used the interaction slider to bypass security. " +
-          "The phone contained crucial mission intelligence including details about Project Starlight compromise, " +
-          "evidence of Cassian's data manipulation activities, and information about Aegis I's extreme counter-threat protocols. " +
-          "This unlock reveals key evidence about the mission timeline and character motivations.");
-      addContextToChat("system", "Orion Vale now has access to critical information showing: " +
-          "1) Cassian's role in compromising mission data and statistics, " +
-          "2) Aegis I's tendency toward immediate and extreme retaliatory actions, " +
-          "3) The cascade of events that led to mission compromise and communication overflow. " +
-          "This phone contains evidence that connects all three main characters to the incident.");
-      
+      addContextToChat(
+          "system",
+          "Player has successfully unlocked Orion Vale's phone through the slider mechanism. The"
+              + " phone was secured but the player used the interaction slider to bypass security."
+              + " The phone contained crucial mission intelligence including details about Project"
+              + " Starlight compromise, evidence of Cassian's data manipulation activities, and"
+              + " information about Aegis I's extreme counter-threat protocols. This unlock reveals"
+              + " key evidence about the mission timeline and character motivations.");
+      addContextToChat(
+          "system",
+          "Orion Vale now has access to critical information showing: 1) Cassian's role in"
+              + " compromising mission data and statistics, 2) Aegis I's tendency toward immediate"
+              + " and extreme retaliatory actions, 3) The cascade of events that led to mission"
+              + " compromise and communication overflow. This phone contains evidence that connects"
+              + " all three main characters to the incident.");
 
       // Send phone unlock messages with timing
       sendPhoneUnlockMessages();
     }
   }
-  
+
   // Send phone unlock messages with timing
   private void sendPhoneUnlockMessages() {
     // Immediately show phone unlock message
-    Platform.runLater(() -> {
-      displayMessage("Phone Unlocked 🔓");
-    });
-    
-    // Wait 1 second then show witness response in new thread
-    Thread messageThread = new Thread(() -> {
-      try {
-        Thread.sleep(1000); // 1 second delay
-        Platform.runLater(() -> {
-          displayMessage("So Cassian compromised the mission, which makes Aegis's reaction to protect it understandable. But its methods were EXTREME. Cassian could've been in action for good.");
+    Platform.runLater(
+        () -> {
+          displayMessage("Phone Unlocked 🔓");
         });
-      } catch (InterruptedException e) {
-        Thread.currentThread().interrupt();
-      }
-    });
+
+    // Wait 1 second then show witness response in new thread
+    Thread messageThread =
+        new Thread(
+            () -> {
+              try {
+                Thread.sleep(1000); // 1 second delay
+                Platform.runLater(
+                    () -> {
+                      displayMessage(
+                          "So Cassian compromised the mission, which makes Aegis's reaction to"
+                              + " protect it understandable. But its methods were EXTREME. Cassian"
+                              + " could've been in action for good.");
+                    });
+              } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+              }
+            });
     messageThread.setDaemon(true);
     messageThread.start();
   }
-  
+
   // Display a message in the chat area
   private void displayMessage(String message) {
     // Create ChatMessage and use the parent class method for consistency
@@ -266,7 +286,7 @@ public class HumanWitnessController extends ChatController {
       appendChatMessage(chatMessage);
     }
   }
-  
+
   // Add context to chat history without displaying to user (for AI context)
   private void addContextToChat(String role, String contextMessage) {
     ChatMessage contextChatMessage = new ChatMessage(role, contextMessage);
@@ -346,6 +366,7 @@ public class HumanWitnessController extends ChatController {
 
   /** Resets the controller to its initial state for game restart. */
   public void resetControllerState() {
+    popupPane.setVisible(false);
     Platform.runLater(
         () -> {
           // Reset image index to beginning
