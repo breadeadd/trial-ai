@@ -51,17 +51,22 @@ public class CountdownTimer {
         playEndTtsAudio();
         secondsRemaining.set(60);
         guessed = true;
+        start(); // Restart timer for final answer phase
       } catch (Exception e) {
         e.printStackTrace();
       }
     } else {
-      // Always show timeout message when timer reaches 0
+      // Final timeout - time ran out in answer scene
       if (secondsRemaining.get() == 0) {
         nz.ac.auckland.se206.controllers.EndController.instance.setMessage("timeout");
         nz.ac.auckland.se206.controllers.EndController.instance.setVisible();
+        nz.ac.auckland.se206.controllers.EndController.instance.setRestartVisible();
+        nz.ac.auckland.se206.controllers.EndController.instance.sentTimeoutRationale();
+        // Don't restart timer after final timeout
+        return;
       }
+      start();
     }
-    start();
   }
 
   private static void playEndTtsAudio() {
@@ -79,9 +84,7 @@ public class CountdownTimer {
     secondsRemaining.set(0);
   }
 
-  /**
-   * Resets the timer for a new game.
-   */
+  /** Resets the timer for a new game. */
   public static void reset() {
     countdownTimer.pause();
     secondsRemaining.set(300);

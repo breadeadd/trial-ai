@@ -101,10 +101,10 @@ public abstract class ChatController {
     // Display the message
     displayChatMessage(msg);
   }
-  
+
   /**
-   * Displays a chat message in the text area without adding to ChatHistory.
-   * Used when the message has already been added to ChatHistory separately.
+   * Displays a chat message in the text area without adding to ChatHistory. Used when the message
+   * has already been added to ChatHistory separately.
    *
    * @param msg the chat message to display
    */
@@ -137,11 +137,11 @@ public abstract class ChatController {
       ChatCompletionResult chatCompletionResult = chatCompletionRequest.execute();
       Choice result = chatCompletionResult.getChoices().iterator().next();
       ChatMessage responseMsg = result.getChatMessage();
-      
+
       // Clean the AI's response by removing character name prefix if present
       String cleanedContent = responseMsg.getContent();
       String characterName = getDisplayRole();
-      
+
       // Try multiple prefix patterns that the AI might use
       String[] possiblePrefixes = {
         characterName + " said: ",
@@ -149,27 +149,29 @@ public abstract class ChatController {
         characterName + " said:",
         characterName + ":"
       };
-      
+
       for (String prefix : possiblePrefixes) {
         if (cleanedContent.startsWith(prefix)) {
           cleanedContent = cleanedContent.substring(prefix.length());
           break;
         }
       }
-      
+
       // Create a new message with cleaned content for display
       ChatMessage cleanedResponse = new ChatMessage(responseMsg.getRole(), cleanedContent);
-      
+
       // Add the original response (with prefix) to the request for AI context
       chatCompletionRequest.addMessage(responseMsg);
-      
-      // Add the original response to ChatHistory for context (this will have "Character said:" prefix)
+
+      // Add the original response to ChatHistory for context (this will have "Character said:"
+      // prefix)
       String speaker = responseMsg.getRole().equals("assistant") ? getCharacterName() : "User";
       ChatHistory.addMessage(responseMsg, speaker);
-      
-      // Display only the cleaned response (without calling appendChatMessage to avoid double ChatHistory entry)
+
+      // Display only the cleaned response (without calling appendChatMessage to avoid double
+      // ChatHistory entry)
       displayChatMessage(cleanedResponse);
-      
+
       return cleanedResponse;
     } catch (ApiProxyException e) {
       e.printStackTrace();
