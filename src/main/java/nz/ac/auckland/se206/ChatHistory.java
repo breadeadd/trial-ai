@@ -2,11 +2,14 @@ package nz.ac.auckland.se206;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import nz.ac.auckland.apiproxy.chat.openai.ChatMessage;
 
 public class ChatHistory {
   private static final List<ChatMessage> history = new ArrayList<>();
+  private static final Map<String, List<ChatMessage>> characterContexts = new HashMap<>();
 
   public static void addMessage(ChatMessage msg, String who) {
     String prefix = "";
@@ -35,7 +38,20 @@ public class ChatHistory {
     history.add(contextualMsg);
   }
 
+  public static void addCharacterContext(ChatMessage msg, String characterName) {
+    characterContexts.computeIfAbsent(characterName, k -> new ArrayList<>()).add(msg);
+  }
+
   public static List<ChatMessage> getHistory() {
     return Collections.unmodifiableList(history);
+  }
+
+  public static List<ChatMessage> getHistoryWithCharacterContext(String characterName) {
+    List<ChatMessage> combined = new ArrayList<>(history);
+    List<ChatMessage> characterContext = characterContexts.get(characterName);
+    if (characterContext != null) {
+      combined.addAll(characterContext);
+    }
+    return combined;
   }
 }

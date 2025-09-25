@@ -77,7 +77,7 @@ public abstract class ChatController {
                         .setModel(Model.GPT_4_1_MINI)
                         .setMaxTokens(100);
                 newRequest.addMessage(new ChatMessage("system", getSystemPrompt()));
-                for (ChatMessage msg : ChatHistory.getHistory()) {
+                for (ChatMessage msg : ChatHistory.getHistoryWithCharacterContext(getCharacterName())) {
                   newRequest.addMessage(msg);
                 }
                 Platform.runLater(() -> chatCompletionRequest = newRequest);

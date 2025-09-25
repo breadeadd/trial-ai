@@ -11,7 +11,7 @@ import javafx.util.Duration;
 public class CountdownTimer {
   private static final int secondDuration = 1;
   private static Timeline countdownTimer;
-  private static final IntegerProperty secondsRemaining = new SimpleIntegerProperty(5);
+  private static final IntegerProperty secondsRemaining = new SimpleIntegerProperty(300);
   private static boolean guessed = false;
 
   static {
@@ -51,22 +51,17 @@ public class CountdownTimer {
         playEndTtsAudio();
         secondsRemaining.set(60);
         guessed = true;
-        start(); // Restart timer for final answer phase
       } catch (Exception e) {
         e.printStackTrace();
       }
     } else {
-      // Final timeout - time ran out in answer scene
+      // Always show timeout message when timer reaches 0
       if (secondsRemaining.get() == 0) {
         nz.ac.auckland.se206.controllers.EndController.instance.setMessage("timeout");
         nz.ac.auckland.se206.controllers.EndController.instance.setVisible();
-        nz.ac.auckland.se206.controllers.EndController.instance.setRestartVisible();
-        nz.ac.auckland.se206.controllers.EndController.instance.sentTimeoutRationale();
-        // Don't restart timer after final timeout
-        return;
       }
-      start();
     }
+    start();
   }
 
   private static void playEndTtsAudio() {
