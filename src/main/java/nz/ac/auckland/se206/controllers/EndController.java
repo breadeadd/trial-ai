@@ -443,7 +443,7 @@ public class EndController extends ChatController {
 
     // Reset timer to initial 5 minutes and reset guessed flag
     CountdownTimer.reset();
-    System.out.println("Timer reset to 5 minutes");
+    System.out.println("Timer has been reset to 5 minutes");
 
     // Clear chat history using reflection since there's no public clear method
     clearChatHistory();
