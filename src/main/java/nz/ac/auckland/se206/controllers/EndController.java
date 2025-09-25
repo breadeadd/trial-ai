@@ -8,6 +8,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
+import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.media.Media;
@@ -131,6 +132,21 @@ public class EndController extends ChatController {
   @FXML
   public void onKeyPressed(KeyEvent event) {
     System.out.println("Key " + event.getCode() + " pressed");
+    if (event.getCode() == KeyCode.ENTER) {
+      // Check if text box is not empty and a verdict has been selected
+      String rationaleText = enterRationale.getText().trim();
+      if (!rationaleText.isEmpty() && verdictPlayer != null) {
+        try {
+          guessMade(null); // Call existing send method
+        } catch (IOException e) {
+          e.printStackTrace();
+        }
+      } else {
+        System.out.println(
+            "Cannot send: "
+                + (rationaleText.isEmpty() ? "No rationale entered" : "No verdict selected"));
+      }
+    }
   }
 
   /**

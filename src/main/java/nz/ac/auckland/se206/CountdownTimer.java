@@ -11,7 +11,7 @@ import javafx.util.Duration;
 public class CountdownTimer {
   private static final int secondDuration = 1;
   private static Timeline countdownTimer;
-  private static final IntegerProperty secondsRemaining = new SimpleIntegerProperty(300);
+  private static final IntegerProperty secondsRemaining = new SimpleIntegerProperty(10);
   private static boolean guessed = false;
 
   static {
