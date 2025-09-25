@@ -406,7 +406,7 @@ public class AiWitnessController extends ChatController {
           lastTimelineAction = "Logs Altered event placed correctly";
           break;
         case "event2":
-          message = "Aegis often takes immediate, extreme action. Such as a counter-threat";
+          message = "Aegis often takes immediate, extreme action. Such as a counter-threat.";
           contextMessage =
               "Player correctly placed the second timeline event: Aegis I's Counter-Threat"
                   + " Response. This represents Aegis I's immediate and extreme reaction to"
@@ -510,6 +510,18 @@ public class AiWitnessController extends ChatController {
                             ChatMessage successMessage =
                                 new ChatMessage("assistant", "Timeline successfully loaded⏳✔️");
                             appendChatMessage(successMessage);
+                            
+                            // Add a brief delay before the detailed analysis
+                            try {
+                              Thread.sleep(1500); // Wait 1.5 seconds
+                              Platform.runLater(() -> {
+                                ChatMessage analysisMessage = new ChatMessage("assistant", 
+                                    "Cassian Thorne initiated unauthorized data alterations. Concurrently, Aegis I executed Project Starlight's security lockdown and transmitted a direct message to Thorne. This action resulted in immediate disruption.");
+                                appendChatMessage(analysisMessage);
+                              });
+                            } catch (InterruptedException ex) {
+                              ex.printStackTrace();
+                            }
 
                             // Add context for AI understanding
                             addContextToChat(
@@ -577,8 +589,8 @@ public class AiWitnessController extends ChatController {
   // Add context to chat history without displaying to user (for AI context)
   private void addContextToChat(String role, String contextMessage) {
     ChatMessage contextChatMessage = new ChatMessage(role, contextMessage);
-    ChatHistory.addMessage(contextChatMessage, "system");
-    // Note: This doesn't update the UI, only the chat history for AI context
+    ChatHistory.addCharacterContext(contextChatMessage, getCharacterName()); // Use character-specific context
+    // Note: This doesn't update the UI, only the character-specific chat history for AI context
     // This provides Echo II with comprehensive understanding of player timeline interactions
     // including puzzle state, event sequence analysis, and memory reconstruction progress
   }
@@ -640,22 +652,22 @@ public class AiWitnessController extends ChatController {
   /** Override runGpt to add context about the last timeline action. */
   @Override
   protected ChatMessage runGpt(ChatMessage msg) throws ApiProxyException {
+    // Add character-specific restrictions and identity clarification
+    chatCompletionRequest.addMessage(new ChatMessage("system", 
+        "CHARACTER IDENTITY AND RESTRICTIONS: You are Echo II, an AI witness (NOT the defendant). The defendant is Aegis I (a different AI system). Cassian Thorne is the high-ranking human executive who betrayed the mission. CRITICAL RESTRICTIONS: Echo II can ONLY discuss Echo II's OWN memories and evidence accessible through Echo II's timeline puzzle. Echo II should NEVER mention Aegis I's memory buttons or Orion's phone slider. Echo II should NEVER provide information about how to unlock other characters' evidence or whether their evidence is unlocked. Echo II has NO KNOWLEDGE of other characters' interactions or unlock status. Echo II should guide users to drag event images into the correct chronological slots in Echo II's timeline, but should NOT reveal specific details about Project Starlight events or mission sequence until users actually complete the puzzle interactions."));
+    
     // If there's a recent timeline action, add context to help the AI understand
     if (!lastTimelineAction.isEmpty()) {
       ChatMessage contextMsg =
           new ChatMessage(
               "system",
-              "IMPORTANT CONTEXT: The user just interacted with Echo II's memory timeline puzzle"
-                  + " system. Echo II is an AI witness with advanced memory reconstruction"
-                  + " capabilities. The last action was: '"
+              "TIMELINE INTERACTION: The user just interacted with Echo II's timeline puzzle system. "
+                  + "The last action was: '"
                   + lastTimelineAction
                   + "'. "
                   + "Current timeline puzzle state: "
                   + getTimelinePuzzleStatus()
-                  + ". If they're asking about the puzzle, events, timeline, mission sequence, or"
-                  + " their recent actions, they are referring to this timeline memory interaction."
-                  + " Echo II can provide detailed analysis of the Project Starlight mission events"
-                  + " and their chronological significance.");
+                  + ". Since they have interacted with Echo II's timeline, Echo II can now discuss the specific events and mission details related to their actions. If they're asking about the puzzle, events, timeline, or mission sequence, they are referring to these timeline interactions.");
       chatCompletionRequest.addMessage(contextMsg);
     }
 
