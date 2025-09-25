@@ -128,6 +128,9 @@ public class EndController extends ChatController {
       case "timeout":
         questionTxt.setText("TIME OUT! YOUR RESPONSE HAS BEEN SUBMITTED AUTOMATICALLY.");
         break;
+      case "incomplete_interactions":
+        questionTxt.setText("GAME OVER! You did not talk to all three characters before time ran out.");
+        break;
       default:
         questionTxt.setText("TIME OUT! YOUR RESPONSE HAS BEEN SUBMITTED AUTOMATICALLY.");
         break;
@@ -224,6 +227,14 @@ public class EndController extends ChatController {
           this.setMessage(verdictPlayer);
           this.setVisible();
 
+          // Handle incomplete interactions case - no GPT processing needed
+          if ("incomplete_interactions".equals(verdictPlayer)) {
+            guessBtn.setVisible(false);
+            restartBtn.setVisible(true);
+            CountdownTimer.stop();
+            return;
+          }
+
           // Get the rationale text and send to GPT without showing user input
           String rationaleText = enterRationale.getText().trim();
 
@@ -279,6 +290,22 @@ public class EndController extends ChatController {
   // show restart when visible
   public void setRestartVisible() {
     restartBtn.setVisible(true);
+  }
+
+  // Set rationale for incomplete interactions
+  public void setIncompleteInteractionsRationale() {
+    Platform.runLater(() -> {
+      enterRationale.setText("You have not talked to all three characters.");
+      verdictPlayer = "incomplete_interactions";
+      
+      // Hide verdict buttons and guess button since game is over
+      yesBtn.setVisible(false);
+      noBtn.setVisible(false);
+      guessBtn.setVisible(false);
+      
+      // Show the result immediately
+      txtaChat.setVisible(true);
+    });
   }
 
   // send rationale on timeout
@@ -416,7 +443,7 @@ public class EndController extends ChatController {
 
     // Reset timer to initial 5 minutes and reset guessed flag
     CountdownTimer.reset();
-    System.out.println("Timer reset to 5 minutes");
+    System.out.println("Timer has been reset to 5 minutes");
 
     // Clear chat history using reflection since there's no public clear method
     clearChatHistory();

@@ -43,6 +43,19 @@ public class CountdownTimer {
   public static void guess() throws IOException {
     countdownTimer.pause();
     if (!guessed) {
+      // Check if player has talked to all characters when initial timer expires
+      if (!nz.ac.auckland.se206.states.GameStateManager.getInstance().hasSpokenToAllCharacters()) {
+        // Player loses immediately for not talking to all characters
+        App.setRoot("answer");
+        if (nz.ac.auckland.se206.controllers.EndController.instance != null) {
+          nz.ac.auckland.se206.controllers.EndController.instance.setMessage("incomplete_interactions");
+          nz.ac.auckland.se206.controllers.EndController.instance.setVisible();
+          nz.ac.auckland.se206.controllers.EndController.instance.setRestartVisible();
+          nz.ac.auckland.se206.controllers.EndController.instance.setIncompleteInteractionsRationale();
+        }
+        return; // Don't continue with normal timeout flow
+      }
+      
       // only run when 120 times out
       App.setRoot("answer");
 
