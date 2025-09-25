@@ -43,6 +43,7 @@ public class AiWitnessController extends ChatController {
   @FXML private ImageView flashbackSlideshow;
   @FXML private ImageView aiFlashback;
   @FXML private Button nextButton;
+  @FXML private Button backBtn;
   @FXML private Button dropUpArrow;
 
   // Event images (draggable)
@@ -66,6 +67,8 @@ public class AiWitnessController extends ChatController {
   @FXML
   public void initialize() throws ApiProxyException {
 
+    backBtn.setDisable(true);
+    
     popupPane.setVisible(false);
     popupPane.setOnMouseClicked(e -> popupPane.setVisible(false));
     instructionLabel.setText("Arrange the events to reconstruct Echo II's memory.");
@@ -726,6 +729,7 @@ public class AiWitnessController extends ChatController {
     if (currentImageIndex == 3) {
       popupPane.setVisible(true);
       nextButton.setVisible(false);
+      backBtn.setDisable(false);
 
       btnSend.setVisible(true);
       txtInput.setVisible(true);
