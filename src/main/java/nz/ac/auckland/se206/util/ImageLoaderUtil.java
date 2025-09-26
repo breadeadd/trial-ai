@@ -26,8 +26,11 @@ public class ImageLoaderUtil {
 
               // Load character-specific flashback images
               for (int i = 1; i <= 3; i++) {
-                String path =
-                    String.format("/images/flashbacks/%s/%s%dF.png", characterName, characterName, i);
+                String path = String.format(
+                    "/images/flashbacks/%s/%s%dF.png", 
+                    characterName, 
+                    characterName, 
+                    i);
                 loadedImages.add(new Image(ImageLoaderUtil.class.getResourceAsStream(path)));
               }
 
@@ -87,10 +90,12 @@ public class ImageLoaderUtil {
               }
 
               // Add both memory images for human witness
-              loadedImages.add(
-                  new Image(ImageLoaderUtil.class.getResourceAsStream("/images/memories/humanMem1.png")));
-              loadedImages.add(
-                  new Image(ImageLoaderUtil.class.getResourceAsStream("/images/memories/humanMem2.png")));
+              // Load first human memory image
+              loadedImages.add(new Image(
+                  ImageLoaderUtil.class.getResourceAsStream("/images/memories/humanMem1.png")));
+              // Load second human memory image
+              loadedImages.add(new Image(
+                  ImageLoaderUtil.class.getResourceAsStream("/images/memories/humanMem2.png")));
 
               // Update image list on UI thread
               Platform.runLater(

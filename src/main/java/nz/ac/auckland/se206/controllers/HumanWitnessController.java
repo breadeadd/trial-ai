@@ -128,7 +128,7 @@ public class HumanWitnessController extends ChatController {
 
     // flashback ends and chat begins
     if (currentImageIndex == 3) {
-      showMemoryScreenUI(popupPane, nextButton, backBtn);
+      showMemoryScreenUserInterface(popupPane, nextButton, backBtn);
 
       unlockSlider.setVisible(true);
       unlockSlider.setDisable(false);
