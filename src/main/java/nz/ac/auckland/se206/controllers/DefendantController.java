@@ -398,54 +398,15 @@ public class DefendantController extends ChatController {
    * experience when the player begins a new game session.
    */
   public void resetControllerState() {
-    // Hide popup overlay immediately
-    popupPane.setVisible(false);
+    // Use shared common reset functionality
+    performCommonControllerReset(popupPane, dropUpArrow, nextButton, flashbackSlideshow, 
+        images, () -> currentImageIndex = 0, () -> chatVisible = true);
     
-    // Execute UI reset operations on JavaFX Application Thread
-    Platform.runLater(
-        () -> {
-          // Reset slideshow to beginning
-          currentImageIndex = 0;
-          
-          // Set chat to visible state (default)
-          chatVisible = true;
-
-          // Use shared method to reset chat UI elements
-          resetChatUiElements(false); // Initially hidden
-          
-          // Reset dropdown arrow to bottom position and hide it
-          if (dropUpArrow != null) {
-            dropUpArrow.setVisible(false);
-            dropUpArrow.setLayoutX(14.0);
-            dropUpArrow.setLayoutY(540.0); // Bottom position
-          }
-
-          // Show next button for flashbacks
-          if (nextButton != null) {
-            nextButton.setVisible(true);
-          }
-
-          // Reset flashback slideshow to first image
-          if (flashbackSlideshow != null && !images.isEmpty()) {
-            flashbackSlideshow.setImage(images.get(0));
-            flashbackSlideshow.setVisible(true); // Ensure main slideshow is visible
-          }
-
-          // Reset dropdown arrow to initial position and hide it
-          if (dropUpArrow != null) {
-            dropUpArrow.setVisible(false);
-            dropUpArrow.setLayoutX(14.0);
-            dropUpArrow.setLayoutY(540.0);
-          }
-
-          // Show next button for flashbacks
-          if (nextButton != null) {
-            nextButton.setVisible(true);
-          }
-
-          // Reset memory buttons to initial state
-          resetMemoryButtons();
-        });
+    // Handle defendant-specific reset operations
+    Platform.runLater(() -> {
+      // Reset memory buttons to initial state
+      resetMemoryButtons();
+    });
   }
 
   /** Resets all memory buttons to their initial state. */
