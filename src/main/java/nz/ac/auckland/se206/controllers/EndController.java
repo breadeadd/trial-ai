@@ -772,42 +772,14 @@ public class EndController extends ChatController {
   }
 
   /** Resets DefendantController UI elements to initial state. */
+  /** Resets DefendantController UI elements to initial state. */
   private void resetDefendantUi(DefendantController controller) {
     try {
-      // Reset button visibility
-      java.lang.reflect.Field btnSendField = ChatController.class.getDeclaredField("btnSend");
-      btnSendField.setAccessible(true);
-      Button btnSend =
-          (Button) btnSendField.get(controller);
-      if (btnSend != null) {
-        btnSend.setVisible(false);
-      }
-
-      java.lang.reflect.Field txtInputField = ChatController.class.getDeclaredField("txtInput");
-      txtInputField.setAccessible(true);
-      TextField txtInput =
-          (TextField) txtInputField.get(controller);
-      if (txtInput != null) {
-        txtInput.setVisible(false);
-      }
-
-      java.lang.reflect.Field txtaChatField = ChatController.class.getDeclaredField("txtaChat");
-      txtaChatField.setAccessible(true);
-      TextArea txtaChat =
-          (TextArea) txtaChatField.get(controller);
-      if (txtaChat != null) {
-        txtaChat.setVisible(false);
-      }
+      // Reset common chat elements
+      resetCommonChatUi(controller);
 
       // Reset nextButton visibility
-      java.lang.reflect.Field nextButtonField =
-          DefendantController.class.getDeclaredField("nextButton");
-      nextButtonField.setAccessible(true);
-      Button nextButton =
-          (Button) nextButtonField.get(controller);
-      if (nextButton != null) {
-        nextButton.setVisible(true);
-      }
+      setControlVisibility(controller, "nextButton", true);
 
       System.out.println("Reset DefendantController UI elements");
     } catch (Exception e) {
@@ -818,62 +790,40 @@ public class EndController extends ChatController {
   /** Resets HumanWitnessController UI elements to initial state. */
   private void resetHumanWitnessUi(HumanWitnessController controller) {
     try {
-      // Reset button visibility
-      java.lang.reflect.Field btnSendField = ChatController.class.getDeclaredField("btnSend");
-      btnSendField.setAccessible(true);
-      Button btnSend =
-          (Button) btnSendField.get(controller);
-      if (btnSend != null) {
-        btnSend.setVisible(false);
-      }
-
-      java.lang.reflect.Field txtInputField = ChatController.class.getDeclaredField("txtInput");
-      txtInputField.setAccessible(true);
-      TextField txtInput =
-          (TextField) txtInputField.get(controller);
-      if (txtInput != null) {
-        txtInput.setVisible(false);
-      }
-
-      java.lang.reflect.Field txtaChatField = ChatController.class.getDeclaredField("txtaChat");
-      txtaChatField.setAccessible(true);
-      TextArea txtaChat =
-          (TextArea) txtaChatField.get(controller);
-      if (txtaChat != null) {
-        txtaChat.setVisible(false);
-      }
+      // Reset common chat elements
+      resetCommonChatUi(controller);
 
       // Reset nextButton visibility
-      java.lang.reflect.Field nextButtonField =
-          HumanWitnessController.class.getDeclaredField("nextButton");
-      nextButtonField.setAccessible(true);
-      Button nextButton =
-          (Button) nextButtonField.get(controller);
-      if (nextButton != null) {
-        nextButton.setVisible(true);
+      setControlVisibility(controller, "nextButton", true);
+
+      // Reset unlock slider
+      setControlVisibility(controller, "unlockSlider", false);
+      try {
+        java.lang.reflect.Field unlockSliderField =
+            HumanWitnessController.class.getDeclaredField("unlockSlider");
+        unlockSliderField.setAccessible(true);
+        Slider unlockSlider = (Slider) unlockSliderField.get(controller);
+        if (unlockSlider != null) {
+          unlockSlider.setValue(0.0);
+          unlockSlider.setDisable(false);
+        }
+      } catch (Exception e) {
+        // Ignore slider-specific errors
       }
 
-      // Reset HumanWitness-specific UI elements
-      java.lang.reflect.Field unlockSliderField =
-          HumanWitnessController.class.getDeclaredField("unlockSlider");
-      unlockSliderField.setAccessible(true);
-      Slider unlockSlider =
-          (Slider) unlockSliderField.get(controller);
-      if (unlockSlider != null) {
-        unlockSlider.setVisible(false);
-        unlockSlider.setValue(0.0);
-        unlockSlider.setDisable(false);
-      }
-
-      java.lang.reflect.Field dropUpArrowField =
-          HumanWitnessController.class.getDeclaredField("dropUpArrow");
-      dropUpArrowField.setAccessible(true);
-      Button dropUpArrow =
-          (Button) dropUpArrowField.get(controller);
-      if (dropUpArrow != null) {
-        dropUpArrow.setVisible(false);
-        dropUpArrow.setStyle(
-            "-fx-background-color: #ffffff; -fx-shape: 'M 0 15 L 15 0 L 30 15 Z';");
+      // Reset dropUpArrow
+      setControlVisibility(controller, "dropUpArrow", false);
+      try {
+        java.lang.reflect.Field dropUpArrowField =
+            HumanWitnessController.class.getDeclaredField("dropUpArrow");
+        dropUpArrowField.setAccessible(true);
+        Button dropUpArrow = (Button) dropUpArrowField.get(controller);
+        if (dropUpArrow != null) {
+          dropUpArrow.setStyle(
+              "-fx-background-color: #ffffff; -fx-shape: 'M 0 15 L 15 0 L 30 15 Z';");
+        }
+      } catch (Exception e) {
+        // Ignore arrow-specific errors
       }
 
       System.out.println("Reset HumanWitnessController UI elements");
@@ -885,45 +835,68 @@ public class EndController extends ChatController {
   /** Resets AiWitnessController UI elements to initial state. */
   private void resetAiWitnessUi(AiWitnessController controller) {
     try {
-      // Reset button visibility
-      java.lang.reflect.Field btnSendField = ChatController.class.getDeclaredField("btnSend");
-      btnSendField.setAccessible(true);
-      Button btnSend =
-          (Button) btnSendField.get(controller);
-      if (btnSend != null) {
-        btnSend.setVisible(false);
-      }
-
-      java.lang.reflect.Field txtInputField = ChatController.class.getDeclaredField("txtInput");
-      txtInputField.setAccessible(true);
-      TextField txtInput =
-          (TextField) txtInputField.get(controller);
-      if (txtInput != null) {
-        txtInput.setVisible(false);
-      }
-
-      java.lang.reflect.Field txtaChatField = ChatController.class.getDeclaredField("txtaChat");
-      txtaChatField.setAccessible(true);
-      TextArea txtaChat =
-          (TextArea) txtaChatField.get(controller);
-      if (txtaChat != null) {
-        txtaChat.setVisible(false);
-      }
+      // Reset common chat elements
+      resetCommonChatUi(controller);
 
       // Reset nextButton visibility
-      java.lang.reflect.Field nextButtonField =
-          AiWitnessController.class.getDeclaredField("nextButton");
-      nextButtonField.setAccessible(true);
-      Button nextButton =
-          (Button) nextButtonField.get(controller);
-      if (nextButton != null) {
-        nextButton.setVisible(true);
-      }
+      setControlVisibility(controller, "nextButton", true);
 
       System.out.println("Reset AiWitnessController UI elements");
     } catch (Exception e) {
       System.err.println("Warning: Could not reset AiWitnessController UI: " + e.getMessage());
     }
+  }
+
+  /**
+   * Sets the visibility of a UI control using reflection.
+   *
+   * @param controller the controller object containing the field
+   * @param fieldName the name of the field to modify
+   * @param visible the visibility state to set
+   */
+  private void setControlVisibility(Object controller, String fieldName, boolean visible) {
+    try {
+      java.lang.reflect.Field field = controller.getClass().getDeclaredField(fieldName);
+      field.setAccessible(true);
+      Object control = field.get(controller);
+      if (control instanceof javafx.scene.Node) {
+        ((javafx.scene.Node) control).setVisible(visible);
+      }
+    } catch (Exception e) {
+      // Silently fail - field might not exist in all controllers
+    }
+  }
+
+  /**
+   * Sets the visibility of a UI control from parent class using reflection.
+   *
+   * @param controller the controller object containing the field
+   * @param parentClass the parent class containing the field
+   * @param fieldName the name of the field to modify
+   * @param visible the visibility state to set
+   */
+  private void setParentControlVisibility(Object controller, Class<?> parentClass, String fieldName, boolean visible) {
+    try {
+      java.lang.reflect.Field field = parentClass.getDeclaredField(fieldName);
+      field.setAccessible(true);
+      Object control = field.get(controller);
+      if (control instanceof javafx.scene.Node) {
+        ((javafx.scene.Node) control).setVisible(visible);
+      }
+    } catch (Exception e) {
+      // Silently fail - field might not exist in all controllers
+    }
+  }
+
+  /**
+   * Resets common chat UI elements (btnSend, txtInput, txtaChat) to invisible.
+   *
+   * @param controller the chat controller to reset
+   */
+  private void resetCommonChatUi(Object controller) {
+    setParentControlVisibility(controller, ChatController.class, "btnSend", false);
+    setParentControlVisibility(controller, ChatController.class, "txtInput", false);
+    setParentControlVisibility(controller, ChatController.class, "txtaChat", false);
   }
 
   /**

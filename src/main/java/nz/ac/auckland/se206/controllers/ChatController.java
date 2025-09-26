@@ -242,6 +242,73 @@ public abstract class ChatController {
   }
 
   /**
+   * Common utility method for advancing flashback slideshow to next image.
+   *
+   * @param currentIndex current image index
+   * @param images list of images
+   * @param flashbackSlideshow the ImageView displaying the slideshow
+   * @return new current image index
+   */
+  protected int advanceFlashbackSlideshow(int currentIndex, java.util.List<javafx.scene.image.Image> images, javafx.scene.image.ImageView flashbackSlideshow) {
+    currentIndex++;
+    if (currentIndex < images.size()) {
+      flashbackSlideshow.setImage(images.get(currentIndex));
+    } else {
+      flashbackSlideshow.setOnMouseClicked(null);
+    }
+    return currentIndex;
+  }
+
+  /**
+   * Common utility method for showing memory screen UI elements.
+   *
+   * @param popupPane the popup pane to show
+   * @param nextButton the next button to hide
+   * @param backBtn the back button to enable
+   */
+  protected void showMemoryScreenUI(javafx.scene.layout.Pane popupPane, javafx.scene.control.Button nextButton, javafx.scene.control.Button backBtn) {
+    popupPane.setVisible(true);
+    nextButton.setVisible(false);
+    backBtn.setDisable(false);
+
+    btnSend.setVisible(true);
+    txtInput.setVisible(true);
+    txtaChat.setVisible(true);
+  }
+
+  /**
+   * Common utility method for toggling chat visibility with animations.
+   * Subclasses should call this method and handle arrow updates separately.
+   *
+   * @param chatVisible current chat visibility state
+   * @param animateTranslateMethod method reference for animation
+   * @return new chat visibility state
+   */
+  protected boolean toggleChatVisibility(boolean chatVisible, java.util.function.BiConsumer<javafx.scene.Node, Double> animateTranslateMethod) {
+    if (chatVisible) {
+      // Drop down (hide)
+      animateTranslateMethod.accept(txtaChat, 150.0);
+      animateTranslateMethod.accept(txtInput, 150.0);
+      animateTranslateMethod.accept(btnSend, 150.0);
+
+      btnSend.setVisible(false);
+      txtInput.setVisible(false);
+      txtaChat.setVisible(false);
+      return false;
+    } else {
+      // Drop up (show)
+      animateTranslateMethod.accept(txtaChat, 0.0);
+      animateTranslateMethod.accept(txtInput, 0.0);
+      animateTranslateMethod.accept(btnSend, 0.0);
+
+      btnSend.setVisible(true);
+      txtInput.setVisible(true);
+      txtaChat.setVisible(true);
+      return true;
+    }
+  }
+
+  /**
    * Navigates back to the previous view.
    *
    * @param event the action event triggered by the go back button

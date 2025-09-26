@@ -24,6 +24,7 @@ import nz.ac.auckland.apiproxy.exceptions.ApiProxyException;
 import nz.ac.auckland.se206.ChatHistory;
 import nz.ac.auckland.se206.prompts.PromptEngineering;
 import nz.ac.auckland.se206.states.GameStateManager;
+import nz.ac.auckland.se206.util.ImageLoaderUtil;
 
 /**
  * Controller class for the chat view. Handles user interactions and communication with the GPT
@@ -747,50 +748,16 @@ public class AiWitnessController extends ChatController {
 
   // loading images for flashback
   private void loadImages(Runnable onLoaded) {
-    new Thread(
-            () -> {
-              // loading images for animation flashback
-              List<Image> loadedImages = new ArrayList<>();
-              loadedImages.add(
-                  new Image(getClass().getResourceAsStream("/images/flashbacks/ai/ai1F.png")));
-              loadedImages.add(
-                  new Image(getClass().getResourceAsStream("/images/flashbacks/ai/ai2F.png")));
-              loadedImages.add(
-                  new Image(getClass().getResourceAsStream("/images/flashbacks/ai/ai3F.png")));
-              loadedImages.add(
-                  new Image(getClass().getResourceAsStream("/images/memories/aiMem.png")));
-              ;
-              Platform.runLater(
-                  () -> {
-                    // add all the images for viewing
-                    images.clear();
-                    images.addAll(loadedImages);
-                    if (onLoaded != null) {
-                      onLoaded.run();
-                    }
-                  });
-            })
-        .start();
+    ImageLoaderUtil.loadCharacterImages("ai", images, onLoaded);
   }
 
   // Change to screen image
   @FXML
   protected void onNextPressed(ActionEvent event) throws ApiProxyException, IOException {
-    currentImageIndex++;
-    if (currentImageIndex < images.size()) {
-      flashbackSlideshow.setImage(images.get(currentImageIndex));
-    } else {
-      flashbackSlideshow.setOnMouseClicked(null);
-    }
+    currentImageIndex = advanceFlashbackSlideshow(currentImageIndex, images, flashbackSlideshow);
 
     if (currentImageIndex == 3) {
-      popupPane.setVisible(true);
-      nextButton.setVisible(false);
-      backBtn.setDisable(false);
-
-      btnSend.setVisible(true);
-      txtInput.setVisible(true);
-      txtaChat.setVisible(true);
+      showMemoryScreenUI(popupPane, nextButton, backBtn);
 
       dropUpArrow.setVisible(true); // Show drop up arrow when chat appears
       updateArrowToDropDown(); // Set initial arrow to drop down arrow
@@ -803,30 +770,14 @@ public class AiWitnessController extends ChatController {
   // Toggle chat visibility with drop-up/down animation
   @FXML
   private void onToggleChat(ActionEvent event) {
+    chatVisible = toggleChatVisibility(chatVisible, this::animateTranslate);
+    
     if (chatVisible) {
-      // Drop down (hide)
-      animateTranslate(txtaChat, 150.0);
-      animateTranslate(txtInput, 150.0);
-      animateTranslate(btnSend, 150.0);
-
-      // Change to dropUpArrow shape and original position
-      updateArrowToDropUp();
-      chatVisible = false;
-      btnSend.setVisible(false);
-      txtInput.setVisible(false);
-      txtaChat.setVisible(false);
-    } else {
-      // Drop up (show)
-      animateTranslate(txtaChat, 0.0);
-      animateTranslate(txtInput, 0.0);
-      animateTranslate(btnSend, 0.0);
-
       // Change to dropDownArrow shape and position above chatbox
       updateArrowToDropDown();
-      chatVisible = true;
-      btnSend.setVisible(true);
-      txtInput.setVisible(true);
-      txtaChat.setVisible(true);
+    } else {
+      // Change to dropUpArrow shape and original position
+      updateArrowToDropUp();
     }
   }
 

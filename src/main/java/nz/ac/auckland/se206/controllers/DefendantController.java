@@ -20,6 +20,7 @@ import nz.ac.auckland.apiproxy.exceptions.ApiProxyException;
 import nz.ac.auckland.se206.ChatHistory;
 import nz.ac.auckland.se206.prompts.PromptEngineering;
 import nz.ac.auckland.se206.states.GameStateManager;
+import nz.ac.auckland.se206.util.ImageLoaderUtil;
 
 /**
  * Controller class for the chat view. Handles user interactions and communication with the GPT
@@ -114,61 +115,19 @@ public class DefendantController extends ChatController {
 
   // Preloads flashback and memory images in background thread
   private void loadImages(Runnable onLoaded) {
-    new Thread(
-            () -> {
-              // Load all defendant flashback sequence images
-              List<Image> loadedImages = new ArrayList<>();
-              loadedImages.add(
-                  new Image(
-                      getClass()
-                          .getResourceAsStream("/images/flashbacks/defendant/defendant1F.png")));
-              loadedImages.add(
-                  new Image(
-                      getClass()
-                          .getResourceAsStream("/images/flashbacks/defendant/defendant2F.png")));
-              loadedImages.add(
-                  new Image(
-                      getClass()
-                          .getResourceAsStream("/images/flashbacks/defendant/defendant3F.png")));
-              // Add final memory image
-              loadedImages.add(
-                  new Image(getClass().getResourceAsStream("/images/memories/defendantMem.png")));
-              // Update image list on UI thread
-              Platform.runLater(
-                  () -> {
-                    images.clear();
-                    images.addAll(loadedImages);
-                    // Execute callback when loading complete
-                    if (onLoaded != null) {
-                      onLoaded.run();
-                    }
-                  });
-            })
-        .start();
+    ImageLoaderUtil.loadCharacterImages("defendant", images, onLoaded);
   }
 
   // Advances to next flashback image and handles end-of-sequence logic
   @FXML
   protected void onNextPressed(ActionEvent event) throws ApiProxyException, IOException {
-    currentImageIndex++;
-    // Display next image if available
-    if (currentImageIndex < images.size()) {
-      flashbackSlideshow.setImage(images.get(currentImageIndex));
-    } else {
-      // Disable click handler when sequence ends
-      flashbackSlideshow.setOnMouseClicked(null);
-    }
+    currentImageIndex = advanceFlashbackSlideshow(currentImageIndex, images, flashbackSlideshow);
 
     // Show calculation popup at final memory image
     if (currentImageIndex == 3) {
-      popupPane.setVisible(true);
-      nextButton.setVisible(false);
-      backBtn.setDisable(false);
+      showMemoryScreenUI(popupPane, nextButton, backBtn);
 
-      // set visible
-      btnSend.setVisible(true);
-      txtInput.setVisible(true);
-      txtaChat.setVisible(true);
+      // set visible for defendant-specific elements
 
       button1.setVisible(true);
       button2.setVisible(true);
@@ -445,30 +404,14 @@ public class DefendantController extends ChatController {
   // toggle chat visibility with drop up/down animation
   @FXML
   private void onToggleChat(ActionEvent event) {
+    chatVisible = toggleChatVisibility(chatVisible, this::animateTranslate);
+    
     if (chatVisible) {
-      // Drop down (hide)
-      animateTranslate(txtaChat, 150.0);
-      animateTranslate(txtInput, 150.0);
-      animateTranslate(btnSend, 150.0);
-
-      // Change to dropUpArrow shape and position
-      updateArrowToDropUp();
-      chatVisible = false;
-      btnSend.setVisible(false);
-      txtInput.setVisible(false);
-      txtaChat.setVisible(false);
-    } else {
-      // Drop up (show)
-      animateTranslate(txtaChat, 0.0);
-      animateTranslate(txtInput, 0.0);
-      animateTranslate(btnSend, 0.0);
-
       // Change to dropDownArrow shape
       updateArrowToDropDown();
-      chatVisible = true;
-      btnSend.setVisible(true);
-      txtInput.setVisible(true);
-      txtaChat.setVisible(true);
+    } else {
+      // Change to dropUpArrow shape and position
+      updateArrowToDropUp();
     }
   }
 
