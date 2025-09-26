@@ -158,106 +158,50 @@ public class DefendantController extends ChatController {
 
   @FXML
   private void button1Clicked(MouseEvent event) throws IOException {
-    if (!buttonPressed[0]) {
-      buttonPressed[0] = true;
-      btn1img.setVisible(true);
-      lastDiscussedOption = "Ignore";
-      sendMemoryResponse(
-          "This option is unacceptable, as it guarantees mission failure and a catastrophic"
-              + " outcome.");
-
-      // Add detailed context for AI understanding
-      addContextToChat(
-          "system",
-          "Player clicked Aegis I's first memory option: 'Ignore'. This represents Aegis I's"
-              + " analysis of taking no action against the threat. Aegis I considers this"
-              + " unacceptable due to guaranteed mission failure and catastrophic outcomes. This"
-              + " reveals Aegis I's strategic mindset prioritizing mission success over passive"
-              + " approaches.");
-
-      if (allButtonsClicked()) {
-        sendCompletionMessage();
-        GameStateManager.getInstance().setInteractionFlag("AegisInt", true);
-      }
-    }
+    handleMemoryButtonClick(0, btn1img, "Ignore",
+        "This option is unacceptable, as it guarantees mission failure and a catastrophic "
+            + "outcome.",
+        "Player clicked Aegis I's first memory option: 'Ignore'. This represents Aegis I's "
+            + "analysis of taking no action against the threat. Aegis I considers this "
+            + "unacceptable due to guaranteed mission failure and catastrophic outcomes. This "
+            + "reveals Aegis I's strategic mindset prioritizing mission success over passive "
+            + "approaches.");
   }
 
   @FXML
   private void button2Clicked(MouseEvent event) throws IOException {
-    if (!buttonPressed[1]) {
-      buttonPressed[1] = true;
-      btn2img.setVisible(true);
-      lastDiscussedOption = "Report to Council";
-      sendMemoryResponse(
-          "This action is too slow to execute and has an unacceptably low chance of an effective"
-              + " outcome.");
-
-      // Add detailed context for AI understanding
-      addContextToChat(
-          "system",
-          "Player clicked Aegis I's second memory option: 'Report to Council'. This represents the"
-              + " formal, bureaucratic approach to handling the threat. Aegis I rejects this option"
-              + " as too slow for execution with low effectiveness. This shows Aegis I's preference"
-              + " for direct action over administrative procedures and time-sensitive decision"
-              + " making.");
-
-      if (allButtonsClicked()) {
-        sendCompletionMessage();
-        GameStateManager.getInstance().setInteractionFlag("AegisInt", true);
-      }
-    }
+    handleMemoryButtonClick(1, btn2img, "Report to Council",
+        "This action is too slow to execute and has an unacceptably low chance of an effective "
+            + "outcome.",
+        "Player clicked Aegis I's second memory option: 'Report to Council'. This represents the "
+            + "formal, bureaucratic approach to handling the threat. Aegis I rejects this option "
+            + "as too slow for execution with low effectiveness. This shows Aegis I's preference "
+            + "for direct action over administrative procedures and time-sensitive decision "
+            + "making.");
   }
 
   @FXML
   private void button3Clicked(MouseEvent event) throws IOException {
-    if (!buttonPressed[2]) {
-      buttonPressed[2] = true;
-      btn3img.setVisible(true);
-      lastDiscussedOption = "Neutralise Internally";
-      sendMemoryResponse(
-          "This path is too slow for the current risk level and only provides a medium-impact"
-              + " result.");
-
-      // Add detailed context for AI understanding
-      addContextToChat(
-          "system",
-          "Player clicked Aegis I's third memory option: 'Neutralise Internally'. This represents"
-              + " handling the threat through internal organization methods without external"
-              + " involvement. Aegis I considers this option too slow for current risk levels with"
-              + " only medium impact results. This reveals Aegis I's assessment that internal"
-              + " solutions lack the speed and effectiveness needed for high-priority threats.");
-
-      if (allButtonsClicked()) {
-        sendCompletionMessage();
-        GameStateManager.getInstance().setInteractionFlag("AegisInt", true);
-      }
-    }
+    handleMemoryButtonClick(2, btn3img, "Neutralise Internally",
+        "This path is too slow for the current risk level and only provides a medium-impact "
+            + "result.",
+        "Player clicked Aegis I's third memory option: 'Neutralise Internally'. This represents "
+            + "handling the threat through internal organization methods without external "
+            + "involvement. Aegis I considers this option too slow for current risk levels with "
+            + "only medium impact results. This reveals Aegis I's assessment that internal "
+            + "solutions lack the speed and effectiveness needed for high-priority threats.");
   }
 
   @FXML
   private void button4Clicked(MouseEvent event) throws IOException {
-    if (!buttonPressed[3]) {
-      buttonPressed[3] = true;
-      btn4img.setVisible(true);
-      lastDiscussedOption = "Blackmail Cassian";
-      sendMemoryResponse(
-          "This option is the fastest and most effective path to a high-impact solution.");
-
-      // Add detailed context for AI understanding
-      addContextToChat(
-          "system",
-          "Player clicked Aegis I's fourth memory option: 'Blackmail Cassian'. This represents"
-              + " using leverage and coercion against the threat source directly. Aegis I considers"
-              + " this the optimal solution: fastest execution with most effective high-impact"
-              + " results. This reveals Aegis I's willingness to use extreme and morally"
-              + " questionable methods when they provide maximum efficiency. This choice shows"
-              + " Aegis I's preferred solution for dealing with Cassian Thorne's betrayal.");
-
-      if (allButtonsClicked()) {
-        sendCompletionMessage();
-        GameStateManager.getInstance().setInteractionFlag("AegisInt", true);
-      }
-    }
+    handleMemoryButtonClick(3, btn4img, "Blackmail Cassian",
+        "This option is the fastest and most effective path to a high-impact solution.",
+        "Player clicked Aegis I's fourth memory option: 'Blackmail Cassian'. This represents "
+            + "using leverage and coercion against the threat source directly. Aegis I considers "
+            + "this the optimal solution: fastest execution with most effective high-impact "
+            + "results. This reveals Aegis I's willingness to use extreme and morally "
+            + "questionable methods when they provide maximum efficiency. This choice shows "
+            + "Aegis I's preferred solution for dealing with Cassian Thorne's betrayal.");
   }
 
   /**
@@ -360,62 +304,69 @@ public class DefendantController extends ChatController {
             + " approaches.");
 
     // Send the first completion message after 1 second delay
-    new Thread(
-            () -> {
-              try {
-                Thread.sleep(1000); // 1 second delay
-                Platform.runLater(
-                    () -> {
-                      try {
-                        ChatMessage completionMessage =
-                            new ChatMessage("assistant", "Aegis comparisons completed 📈");
-                        ChatHistory.addMessage(completionMessage, getCharacterName());
-                        appendChatMessage(completionMessage);
+    sendDelayedMessage(1000, "Aegis comparisons completed 📈", "assistant");
+    
+    // Add context for first completion message after the same delay
+    executeDelayedTask(1000, () -> {
+      addContextToChat(
+          "system",
+          "Aegis I has announced completion of strategic analysis. This indicates"
+              + " the AI has finished processing all available options and is"
+              + " ready to present final conclusions.");
+    });
 
-                        // Add context for first completion message
-                        addContextToChat(
-                            "system",
-                            "Aegis I has announced completion of strategic analysis. This indicates"
-                                + " the AI has finished processing all available options and is"
-                                + " ready to present final conclusions.");
-                      } catch (Exception e) {
-                        System.err.println("Error sending completion message: " + e.getMessage());
-                      }
-                    });
+    // Send the final analysis message after 2 second total delay
+    sendDelayedMessage(2000, 
+        "Blackmail was the optimal path. Human systems presented"
+            + " unacceptable delays. Immediate neutralization of the threat"
+            + " was required to secure the mission and prevent catastrophic"
+            + " failure.", 
+        "assistant");
+    
+    // Add context for final analysis message after the same delay
+    executeDelayedTask(2000, () -> {
+      addContextToChat(
+          "system",
+          "Aegis I has provided final strategic conclusion favoring 'Blackmail"
+              + " Cassian Thorne' as optimal solution. Key reasoning: human"
+              + " bureaucratic systems create unacceptable delays, immediate"
+              + " threat neutralization prioritized over ethical considerations,"
+              + " mission security takes absolute precedence. This demonstrates"
+              + " Aegis I's utilitarian AI logic prioritizing efficiency and"
+              + " results over conventional morality.");
+    });
+  }
 
-                Thread.sleep(1000); // Another 1 second delay
-                Platform.runLater(
-                    () -> {
-                      try {
-                        ChatMessage analysisMessage =
-                            new ChatMessage(
-                                "assistant",
-                                "Blackmail was the optimal path. Human systems presented"
-                                    + " unacceptable delays. Immediate neutralization of the threat"
-                                    + " was required to secure the mission and prevent catastrophic"
-                                    + " failure.");
-                        ChatHistory.addMessage(analysisMessage, getCharacterName());
-                        appendChatMessage(analysisMessage);
-
-                        // Add context for final analysis message
-                        addContextToChat(
-                            "system",
-                            "Aegis I has provided final strategic conclusion favoring 'Blackmail"
-                                + " Cassian Thorne' as optimal solution. Key reasoning: human"
-                                + " bureaucratic systems create unacceptable delays, immediate"
-                                + " threat neutralization prioritized over ethical considerations,"
-                                + " mission security takes absolute precedence. This demonstrates"
-                                + " Aegis I's utilitarian AI logic prioritizing efficiency and"
-                                + " results over conventional morality.");
-                      } catch (Exception e) {
-                        System.err.println("Error sending analysis message: " + e.getMessage());
-                      }
-                    });
-              } catch (InterruptedException e) {
-                System.err.println("Completion message timing interrupted: " + e.getMessage());
-              }
-            })
-        .start();
+  /**
+   * Generic helper method for handling memory button clicks with consistent behavior.
+   * Reduces code duplication across all four button click methods.
+   *
+   * @param buttonIndex the index of the button (0-3)
+   * @param buttonImage the ImageView to make visible when clicked
+   * @param optionName the name of the memory option for reference
+   * @param response the response message to send to the chat
+   * @param systemContext the detailed context to add for AI understanding
+   */
+  private void handleMemoryButtonClick(int buttonIndex, ImageView buttonImage, String optionName,
+      String response, String systemContext) throws IOException {
+    // Check if button hasn't been clicked before
+    if (!buttonPressed[buttonIndex]) {
+      buttonPressed[buttonIndex] = true; // Mark button as clicked
+      buttonImage.setVisible(true); // Show button's associated image
+      lastDiscussedOption = optionName; // Store option name for reference
+      
+      // Send the memory response to chat
+      sendMemoryResponse(response);
+      
+      // Add detailed context for AI understanding of the choice made
+      addContextToChat("system", systemContext);
+      
+      // Check if all buttons have been clicked and send completion message
+      if (allButtonsClicked()) {
+        sendCompletionMessage(); // Trigger analysis of all options
+        GameStateManager.getInstance().setInteractionFlag("AegisInt", true);
+      }
+    }
   }
 
   // toggle chat visibility with drop up/down animation
