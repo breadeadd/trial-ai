@@ -512,15 +512,15 @@ public class EndController extends ChatController {
     resetChatCompletionRequests();
     System.out.println("Chat completion requests reset");
 
-    // Reset GameStateManager
+    // Clear game state tracking variables
     resetGameStateManager();
     System.out.println("GameStateManager reset");
 
-    // Reset RoomController first-time flags
+    // Initialize room controller visit tracking
     resetRoomControllerFlags();
     System.out.println("RoomController flags reset - flashbacks will trigger again");
 
-    // Reset flashback states in all character controllers
+    // Restore character controllers to initial state
     resetFlashbackStates();
     System.out.println("Flashback states reset in all character controllers");
 

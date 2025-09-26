@@ -466,7 +466,14 @@ public class DefendantController extends ChatController {
     setArrowImage("/images/assets/chatUp.png");
   }
 
-  // Creates smooth vertical slide animation for UI elements
+  /**
+   * Creates smooth vertical slide animation for UI elements during chat toggle operations.
+   * This method provides a consistent animation experience when showing or hiding chat
+   * interface components, enhancing the user experience with fluid visual transitions.
+   *
+   * @param node the UI node to animate (typically chat area, input field, or send button)
+   * @param toY the target Y translation value for the animation endpoint
+   */
   private void animateTranslate(javafx.scene.Node node, double toY) {
     // Configure and start translation animation
     TranslateTransition transition = new TranslateTransition(Duration.millis(300), node);

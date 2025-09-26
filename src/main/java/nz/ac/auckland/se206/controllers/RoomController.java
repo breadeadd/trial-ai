@@ -139,9 +139,12 @@ public class RoomController {
     HumanWitnessController controller = (HumanWitnessController) App.getController("witnessChat");
     controller.syncChatHistoryAsync();
 
+    // Track first visit and manage conversation flow appropriately
     if (!firstHuman) {
+      // First visit - run full flashback sequence
       firstHuman = true;
     } else {
+      // Return visit - skip to appropriate interaction state
       controller.runAfterFirst();
     }
   }
@@ -195,12 +198,12 @@ public class RoomController {
 
   /** Resets the room controller state for game restart. */
   public void resetRoomState() {
-    // Reset first-time visit flags so flashbacks play again
+    // Initialize all character visit tracking to allow flashback sequences
     firstDefendant = false;
     firstHuman = false;
     firstAi = false;
 
-    // Update button state
+    // Refresh button accessibility state
     updateButtonState();
   }
 

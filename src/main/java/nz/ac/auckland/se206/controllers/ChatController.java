@@ -252,18 +252,18 @@ public abstract class ChatController {
    *
    * @param currentIndex current image index
    * @param images list of images
-   * @param flashbackSlideshow the ImageView displaying the slideshow
+   * @param flashbackImageView the ImageView displaying the slideshow
    * @return new current image index
    */
   protected int advanceFlashbackSlideshow(
       int currentIndex, 
       List<Image> images, 
-      ImageView flashbackSlideshow) {
+      ImageView flashbackImageView) {
     currentIndex++;
     if (currentIndex < images.size()) {
-      flashbackSlideshow.setImage(images.get(currentIndex));
+      flashbackImageView.setImage(images.get(currentIndex));
     } else {
-      flashbackSlideshow.setOnMouseClicked(null);
+      flashbackImageView.setOnMouseClicked(null);
     }
     return currentIndex;
   }
