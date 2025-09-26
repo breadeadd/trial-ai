@@ -529,48 +529,32 @@ public class AiWitnessController extends ChatController {
   private void handleCorrectOrder() {
     System.out.println("Events are in the correct order!");
 
-    // Using a single thread approach similar to the other controllers
-    Thread messageThread = new Thread(() -> {
-      try {
-        // Wait 1 second before showing the success message
-        Thread.sleep(1000);
-        
-        // Echo speaks the success message (assistant role)
-        Platform.runLater(() -> {
-          ChatMessage successMessage = new ChatMessage("assistant", 
-              "Timeline successfully loaded⏳✔️");
-          appendChatMessage(successMessage);
-        });
+    // Send success message after 1 second delay
+    sendDelayedMessage(1000, "Timeline successfully loaded⏳✔️", "assistant");
 
-        // Add a brief delay before the detailed analysis
-        Thread.sleep(1000);
-        
-        // Show the analysis message
-        Platform.runLater(() -> {
-          ChatMessage analysisMessage = new ChatMessage(
-              "assistant",
-              "Cassian Thorne initiated unauthorized data alterations. Concurrently, Aegis I executed"
-                  + " Project Starlight's security lockdown and transmitted a direct message to Thorne. This"
-                  + " action resulted in immediate disruption.");
-          appendChatMessage(analysisMessage);
-          
-          // Add context for AI understanding
-          addContextToChat(
-              "system",
-              "Player has successfully completed Echo II's timeline memory puzzle. All events were"
-                  + " placed in correct chronological order: 1st - Logs Altered (Cassian made various"
-                  + " statistic changes to the Project Starlight Logs), 2nd - Counter-Threat (Aegis"
-                  + " often takes immediate, extreme action. Such as a counter-threat), 3rd - Outrage"
-                  + " (O. Vale, Mission Lead, received an overflow of messages). This represents the"
-                  + " correct sequence of events during the mission compromise.");
-          lastTimelineAction = "Timeline completed successfully";
-        });
-      } catch (InterruptedException e) {
-        e.printStackTrace();
-      }
+    // Send detailed analysis message after 2 second total delay
+    sendDelayedMessage(2000, 
+        "Cassian Thorne initiated unauthorized data alterations. "
+            + "Concurrently, Aegis I executed Project Starlight's security lockdown "
+            + "and transmitted a direct message to Thorne. "
+            + "This action resulted in immediate disruption.", 
+        "assistant");
+    
+    // Add context for AI understanding after the same delay
+    executeDelayedTask(2000, () -> {
+      addContextToChat(
+          "system",
+              "Player has successfully completed Echo II's timeline memory puzzle. "
+                  + "All events were placed in correct chronological order: "
+                  + "1st - Logs Altered (Cassian made various statistic changes "
+              + "to the Project Starlight Logs), "
+              + "2nd - Counter-Threat (Aegis often takes immediate, extreme action. "
+              + "Such as a counter-threat), "
+              + "3rd - Outrage (O. Vale, Mission Lead, received an overflow of messages). "
+              + "This represents the correct sequence of events "
+              + "during the mission compromise.");
+      lastTimelineAction = "Timeline completed successfully";
     });
-    messageThread.setDaemon(true);
-    messageThread.start();
 
     // Mark AI witness interaction as completed
     GameStateManager.getInstance().setInteractionFlag("EchoInt", true);
@@ -633,8 +617,10 @@ public class AiWitnessController extends ChatController {
    */
   private String getSlotContentsAsString() {
     StringBuilder order = new StringBuilder();
+    // Iterate through all timeline slots to build status string
     for (int i = 0; i < slotContents.length; i++) {
       if (slotContents[i] != null) {
+        // Map event IDs to human-readable names
         String eventName = "";
         switch (slotContents[i]) {
           case "event1":
@@ -647,14 +633,16 @@ public class AiWitnessController extends ChatController {
             eventName = "Outrage";
             break;
         }
+        // Append slot number and event name to the order string
         order.append("Slot ").append(i + 1).append(": ").append(eventName);
         if (i < slotContents.length - 1 && slotContents[i + 1] != null) {
-          order.append(", ");
+          order.append(", "); // Add comma separator between filled slots
         }
       } else {
+        // Show empty slots in the status string
         order.append("Slot ").append(i + 1).append(": empty");
         if (i < slotContents.length - 1) {
-          order.append(", ");
+          order.append(", "); // Add comma separator
         }
       }
     }
@@ -670,16 +658,19 @@ public class AiWitnessController extends ChatController {
    * @return a descriptive status string indicating puzzle progress and correctness
    */
   private String getTimelinePuzzleStatus() {
+    // Count how many timeline slots are currently filled with events
     int filledSlots = 0;
     for (String slot : slotContents) {
       if (slot != null) {
-        filledSlots++;
+        filledSlots++; // Increment counter for each non-empty slot
       }
     }
 
+    // Return appropriate status message based on puzzle completion
     if (filledSlots == 0) {
       return "No events placed yet - puzzle awaiting player interaction";
     } else if (filledSlots < 3) {
+      // Show partial progress with current slot contents
       return filledSlots + " of 3 events placed - " + getSlotContentsAsString();
     } else {
       boolean isCorrect =
@@ -847,30 +838,18 @@ public class AiWitnessController extends ChatController {
     // Reset timeline context
     lastTimelineAction = "";
 
-    // Hide all drag and drop elements
+    // Hide all drag and drop elements and reset their properties
     if (event1Image != null) {
       event1Image.setVisible(false);
-      event1Image.setOpacity(1.0);
-      event1Image.setScaleX(1.0);
-      event1Image.setScaleY(1.0);
-      event1Image.setTranslateX(0);
-      event1Image.setTranslateY(0);
+      resetImageProperties(event1Image);
     }
     if (event2Image != null) {
       event2Image.setVisible(false);
-      event2Image.setOpacity(1.0);
-      event2Image.setScaleX(1.0);
-      event2Image.setScaleY(1.0);
-      event2Image.setTranslateX(0);
-      event2Image.setTranslateY(0);
+      resetImageProperties(event2Image);
     }
     if (event3Image != null) {
       event3Image.setVisible(false);
-      event3Image.setOpacity(1.0);
-      event3Image.setScaleX(1.0);
-      event3Image.setScaleY(1.0);
-      event3Image.setTranslateX(0);
-      event3Image.setTranslateY(0);
+      resetImageProperties(event3Image);
     }
 
     // Hide drop slots

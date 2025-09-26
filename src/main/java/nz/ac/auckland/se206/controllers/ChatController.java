@@ -1,6 +1,7 @@
 package nz.ac.auckland.se206.controllers;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.function.BiConsumer;
 import javafx.animation.TranslateTransition;
@@ -15,9 +16,9 @@ import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
-import javafx.util.Duration;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
+import javafx.util.Duration;
 import nz.ac.auckland.apiproxy.chat.openai.ChatCompletionRequest;
 import nz.ac.auckland.apiproxy.chat.openai.ChatCompletionRequest.Model;
 import nz.ac.auckland.apiproxy.chat.openai.ChatCompletionResult;
@@ -298,9 +299,7 @@ public abstract class ChatController {
     backBtn.setDisable(false);
 
     // Make all chat interface elements visible for user interaction
-    btnSend.setVisible(true);
-    txtInput.setVisible(true);
-    txtaChat.setVisible(true);
+    setChatUiVisibility(true);
   }
 
   /**
@@ -320,9 +319,7 @@ public abstract class ChatController {
       animateTranslateMethod.accept(txtInput, 150.0);
       animateTranslateMethod.accept(btnSend, 150.0);
 
-      btnSend.setVisible(false);
-      txtInput.setVisible(false);
-      txtaChat.setVisible(false);
+      setChatUiVisibility(false);
       return false;
     } else {
       // Drop up (show)
@@ -330,9 +327,7 @@ public abstract class ChatController {
       animateTranslateMethod.accept(txtInput, 0.0);
       animateTranslateMethod.accept(btnSend, 0.0);
 
-      btnSend.setVisible(true);
-      txtInput.setVisible(true);
-      txtaChat.setVisible(true);
+      setChatUiVisibility(true);
       return true;
     }
   }
@@ -416,10 +411,120 @@ public abstract class ChatController {
    * @param node the UI node to animate (typically chat area, input field, or send button)
    * @param toY the target Y position for the animation (vertical offset)
    */
-  protected void animateTranslate(javafx.scene.Node node, double toY) {
+  protected void animateTranslate(Node node, double toY) {
     // Configure and start translation animation with 300ms duration
     TranslateTransition transition = new TranslateTransition(Duration.millis(300), node);
     transition.setToY(toY);
     transition.play();
+  }
+
+  /**
+   * Loads a list of images from specified paths in a background thread.
+   * This method provides consistent image loading behavior across all chat controllers.
+   *
+   * @param imagePaths array of image resource paths to load
+   * @param onLoaded callback to execute when all images are loaded
+   * @return list of loaded Image objects
+   */
+  protected List<Image> loadImagesInBackground(String[] imagePaths, Runnable onLoaded) {
+    List<Image> images = new ArrayList<>();
+    // Load images in background thread to avoid blocking UI
+    new Thread(() -> {
+      try {
+        for (String path : imagePaths) {
+          Image image = new Image(getClass().getResourceAsStream(path));
+          images.add(image);
+        }
+        // Execute callback on JavaFX thread when loading complete
+        Platform.runLater(onLoaded);
+      } catch (Exception e) {
+        System.err.println("Error loading images: " + e.getMessage());
+        Platform.runLater(onLoaded); // Still execute callback even if loading fails
+      }
+    }).start();
+    return images;
+  }
+
+  /**
+   * Clears the chat UI text area, removing all displayed messages.
+   * This method provides a standard way to reset chat interfaces.
+   */
+  public void clearChatUi() {
+    if (txtaChat != null) {
+      txtaChat.clear(); // Remove all text from chat display area
+    }
+  }
+
+  /**
+   * Resets an ImageView to its default visual state (opacity 1.0, scale 1.0, no translation).
+   * Common utility for resetting UI elements to their original appearance.
+   * 
+   * @param imageView the ImageView to reset, can be null (will be ignored)
+   */
+  protected void resetImageProperties(ImageView imageView) {
+    if (imageView != null) {
+      imageView.setOpacity(1.0);
+      imageView.setScaleX(1.0);
+      imageView.setScaleY(1.0);
+      imageView.setTranslateX(0);
+      imageView.setTranslateY(0);
+    }
+  }
+
+  /**
+   * Sets the visibility of the main chat UI elements (chat area, input field, send button).
+   * This is a common operation across controllers to show/hide chat interface.
+   * 
+   * @param visible true to show the chat UI elements, false to hide them
+   */
+  protected void setChatUiVisibility(boolean visible) {
+    if (txtaChat != null) {
+      txtaChat.setVisible(visible);
+    }
+    if (txtInput != null) {
+      txtInput.setVisible(visible);
+    }
+    if (btnSend != null) {
+      btnSend.setVisible(visible);
+    }
+  }
+
+  /**
+   * Executes a task after a specified delay on a background thread.
+   * This is a common pattern for timed message delivery and UI updates.
+   * 
+   * @param delayMs delay in milliseconds before executing the task
+   * @param task the task to execute after the delay
+   */
+  protected void executeDelayedTask(long delayMs, Runnable task) {
+    Thread delayedThread = new Thread(() -> {
+      try {
+        Thread.sleep(delayMs);
+        Platform.runLater(task);
+      } catch (InterruptedException e) {
+        Thread.currentThread().interrupt();
+      }
+    });
+    delayedThread.setDaemon(true);
+    delayedThread.start();
+  }
+
+  /**
+   * Sends a message to chat after a specified delay.
+   * Common pattern across controllers for timed message delivery.
+   * 
+   * @param delayMs delay in milliseconds before sending the message
+   * @param message the message content to send
+   * @param role the message role (usually "assistant")
+   */
+  protected void sendDelayedMessage(long delayMs, String message, String role) {
+    executeDelayedTask(delayMs, () -> {
+      ChatMessage delayedMessage = new ChatMessage(role, message);
+      // Add to chat history if this is from a character
+      if ("assistant".equals(role)) {
+        ChatHistory.addMessage(delayedMessage, getCharacterName());
+      }
+      appendChatMessage(delayedMessage);
+    });
   }
 }

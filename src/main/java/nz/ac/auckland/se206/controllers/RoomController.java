@@ -111,16 +111,19 @@ public class RoomController {
    */
   @FXML
   private void defendantClicked(MouseEvent event) throws IOException {
+    // Navigate to defendant chat interface
     App.setRoot("defendantChat");
 
+    // Get controller and sync chat history to maintain conversation continuity
     DefendantController controller = (DefendantController) App.getController("defendantChat");
     controller.syncChatHistoryAsync();
 
+    // Show flashback sequence on first visit, memory screen on subsequent visits
     if (!firstDefendant) {
-      controller.runFlashback();
+      controller.runFlashback(); // First visit - show flashback sequence
       firstDefendant = true;
     } else {
-      controller.runAfterFirst();
+      controller.runAfterFirst(); // Return visit - skip to memory screen
     }
   }
 
@@ -159,16 +162,19 @@ public class RoomController {
    */
   @FXML
   private void aiWitnessClicked(MouseEvent event) throws IOException {
+    // Navigate to AI witness chat interface
     App.setRoot("aiChat");
 
+    // Get controller and sync chat history for continuity
     AiWitnessController controller = (AiWitnessController) App.getController("aiChat");
     controller.syncChatHistoryAsync();
 
+    // Show flashback sequence on first visit, memory screen on subsequent visits
     if (!firstAi) {
-      controller.runFlashback();
+      controller.runFlashback(); // First visit - show flashback sequence
       firstAi = true;
     } else {
-      controller.runAfterFirst();
+      controller.runAfterFirst(); // Return visit - skip to memory screen
     }
   }
 

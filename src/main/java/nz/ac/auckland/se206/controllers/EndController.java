@@ -547,87 +547,41 @@ public class EndController extends ChatController {
 
   /** Clears all chat controller UI text areas to remove displayed messages. */
   private void clearAllChatControllerUis() {
-    // Clear defendant chat UI
-    try {
-      DefendantController defendantController =
-          (DefendantController) App.getController("defendantChat");
-      if (defendantController != null) {
-        clearChatControllerUi(defendantController);
+    // Array of controller names for systematic processing
+    String[] controllerNames = {"defendantChat", "witnessChat", "aiChat"};
+    String[] controllerTypes = {"defendant", "human witness", "AI witness"};
+    
+    // Clear each controller's UI systematically
+    for (int i = 0; i < controllerNames.length; i++) {
+      try {
+        ChatController controller = (ChatController) App.getController(controllerNames[i]);
+        if (controller != null) {
+          controller.clearChatUi(); // Use base class method
+        }
+      } catch (Exception e) {
+        System.err.println("Warning: Could not clear " + controllerTypes[i] 
+            + " chat UI: " + e.getMessage());
       }
-    } catch (Exception e) {
-      System.err.println("Warning: Could not clear defendant chat UI: " + e.getMessage());
-    }
-
-    // Clear human witness chat UI
-    try {
-      HumanWitnessController humanController =
-          (HumanWitnessController) App.getController("witnessChat");
-      if (humanController != null) {
-        clearChatControllerUi(humanController);
-      }
-    } catch (Exception e) {
-      System.err.println("Warning: Could not clear human witness chat UI: " + e.getMessage());
-    }
-
-    // Clear AI witness chat UI
-    try {
-      AiWitnessController aiController = (AiWitnessController) App.getController("aiChat");
-      if (aiController != null) {
-        clearChatControllerUi(aiController);
-      }
-    } catch (Exception e) {
-      System.err.println("Warning: Could not clear AI witness chat UI: " + e.getMessage());
-    }
-  }
-
-  /** Clears a specific chat controller's UI using reflection. */
-  private void clearChatControllerUi(ChatController controller) {
-    try {
-      // Access private chat text area field
-      java.lang.reflect.Field txtaChatField = ChatController.class.getDeclaredField("txtaChat");
-      txtaChatField.setAccessible(true);
-      TextArea txtaChat =
-          (TextArea) txtaChatField.get(controller);
-      if (txtaChat != null) {
-        Platform.runLater(() -> txtaChat.clear());
-      }
-    } catch (Exception e) {
-      System.err.println("Warning: Could not clear chat controller UI: " + e.getMessage());
     }
   }
 
   /** Resets the ChatCompletionRequest objects in all chat controllers to start fresh. */
   private void resetChatCompletionRequests() {
-    // Reset defendant chat request
-    try {
-      DefendantController defendantController =
-          (DefendantController) App.getController("defendantChat");
-      if (defendantController != null) {
-        resetChatCompletionRequest(defendantController);
+    // Array of controller names for systematic processing
+    String[] controllerNames = {"defendantChat", "witnessChat", "aiChat"};
+    String[] controllerTypes = {"defendant", "human witness", "AI witness"};
+    
+    // Reset each controller's chat completion request systematically
+    for (int i = 0; i < controllerNames.length; i++) {
+      try {
+        ChatController controller = (ChatController) App.getController(controllerNames[i]);
+        if (controller != null) {
+          resetChatCompletionRequest(controller); // Use existing reflection method
+        }
+      } catch (Exception e) {
+        System.err.println("Warning: Could not reset " + controllerTypes[i] 
+            + " chat request: " + e.getMessage());
       }
-    } catch (Exception e) {
-      System.err.println("Warning: Could not reset defendant chat request: " + e.getMessage());
-    }
-
-    // Reset human witness chat request
-    try {
-      HumanWitnessController humanController =
-          (HumanWitnessController) App.getController("witnessChat");
-      if (humanController != null) {
-        resetChatCompletionRequest(humanController);
-      }
-    } catch (Exception e) {
-      System.err.println("Warning: Could not reset human witness chat request: " + e.getMessage());
-    }
-
-    // Reset AI witness chat request
-    try {
-      AiWitnessController aiController = (AiWitnessController) App.getController("aiChat");
-      if (aiController != null) {
-        resetChatCompletionRequest(aiController);
-      }
-    } catch (Exception e) {
-      System.err.println("Warning: Could not reset AI witness chat request: " + e.getMessage());
     }
   }
 

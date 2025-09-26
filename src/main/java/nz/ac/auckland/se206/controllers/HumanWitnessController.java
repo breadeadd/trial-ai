@@ -57,9 +57,8 @@ public class HumanWitnessController extends ChatController {
     loadImages(null);
     initChat();
 
-    btnSend.setVisible(false);
-    txtInput.setVisible(false);
-    txtaChat.setVisible(false);
+    // Hide chat UI elements initially
+    setChatUiVisibility(false);
     backBtn.setDisable(true);
     loading.setProgress(-1);
 
@@ -155,15 +154,13 @@ public class HumanWitnessController extends ChatController {
       } else {
         updateArrowToDropUp(dropUpArrow);
       }
-      txtaChat.setVisible(true);
-      txtInput.setVisible(true);
-      btnSend.setVisible(true);
+      // Show chat UI elements
+      setChatUiVisibility(true);
     } else {
       dropUpArrow.setVisible(false); // Hide drop up arrow on other screens
       unlockSlider.setVisible(false);
-      btnSend.setVisible(false);
-      txtInput.setVisible(false);
-      txtaChat.setVisible(false);
+      // Hide chat UI elements
+      setChatUiVisibility(false);
     }
   }
 
@@ -221,30 +218,15 @@ public class HumanWitnessController extends ChatController {
   // Displays unlock notification then Orion's story revelation
   private void sendPhoneUnlockMessages() {
     // Immediately show phone unlock message
-    Platform.runLater(
-        () -> {
-          displayMessage("Phone Unlocked 🔓");
-        });
+    Platform.runLater(() -> displayMessage("Phone Unlocked 🔓"));
 
-    // Wait 1 second then show witness response in new thread
-    Thread messageThread =
-        new Thread(
-            () -> {
-              try {
-                Thread.sleep(1000); // 1 second delay
-                Platform.runLater(
-                    () -> {
-                      displayMessage(
-                          "So Cassian compromised the mission, which makes Aegis's reaction to"
-                              + " protect it understandable. But its methods were EXTREME. Cassian"
-                              + " could've been in action for good.");
-                    });
-              } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
-              }
-            });
-    messageThread.setDaemon(true);
-    messageThread.start();
+    // Send witness response after 1 second delay
+    executeDelayedTask(1000, () -> {
+      displayMessage(
+          "So Cassian compromised the mission, which makes Aegis's reaction to"
+              + " protect it understandable. But its methods were EXTREME. Cassian"
+              + " could've been in action for good.");
+    });
   }
 
   // Display a message in the chat area
