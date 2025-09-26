@@ -513,7 +513,12 @@ public class DefendantController extends ChatController {
     transition.play();
   }
 
-  /** Resets the controller to its initial state for game restart. */
+  /**
+   * Resets the controller to its initial state for game restart functionality.
+   * This comprehensive reset method restores all UI elements, chat states, memory buttons,
+   * and flashback components to their original configuration, ensuring a clean restart
+   * experience when the player begins a new game session.
+   */
   public void resetControllerState() {
     popupPane.setVisible(false);
     Platform.runLater(

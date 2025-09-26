@@ -502,7 +502,7 @@ public class EndController extends ChatController {
     clearChatHistory();
     System.out.println("Chat history cleared");
 
-    // Clear all chat controller UIs
+    // Remove all displayed messages and conversation history from character UI components
     clearAllChatControllerUis();
     System.out.println("All chat UIs cleared");
 

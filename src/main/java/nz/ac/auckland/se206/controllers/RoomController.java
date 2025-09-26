@@ -101,7 +101,14 @@ public class RoomController {
    * @throws IOException if there is an I/O error
    */
 
-  // defendant clicked - switch scene
+  /**
+   * Handles mouse click events on the defendant character to initiate conversation.
+   * Switches to the defendant chat scene, synchronizes chat history, and manages
+   * the flashback sequence based on whether this is the player's first visit.
+   * 
+   * @param event the mouse event triggered by clicking the defendant
+   * @throws IOException if there is an error loading the defendant chat scene
+   */
   @FXML
   private void defendantClicked(MouseEvent event) throws IOException {
     App.setRoot("defendantChat");
@@ -117,8 +124,14 @@ public class RoomController {
     }
   }
 
-  // human witness clicked
-
+  /**
+   * Handles mouse click events on the human witness character to initiate conversation.
+   * Switches to the human witness chat scene, synchronizes chat history, and tracks
+   * whether this is the first visit to manage appropriate conversation flow.
+   * 
+   * @param event the mouse event triggered by clicking the human witness
+   * @throws IOException if there is an error loading the witness chat scene
+   */
   @FXML
   private void humanWitnessClicked(MouseEvent event) throws IOException {
     App.setRoot("witnessChat");
@@ -133,8 +146,14 @@ public class RoomController {
     }
   }
 
-  // ai witness clicked
-
+  /**
+   * Handles mouse click events on the AI witness character to initiate conversation.
+   * Switches to the AI witness chat scene, synchronizes chat history, and manages
+   * the flashback sequence and timeline puzzle based on first-time visit status.
+   * 
+   * @param event the mouse event triggered by clicking the AI witness
+   * @throws IOException if there is an error loading the AI witness chat scene
+   */
   @FXML
   private void aiWitnessClicked(MouseEvent event) throws IOException {
     App.setRoot("aiChat");
@@ -162,7 +181,11 @@ public class RoomController {
     App.setRoot("answer");
   }
 
-  // In whatever controller has the button that should be locked
+  /**
+   * Updates the verdict button state based on whether the player has spoken to all characters.
+   * This method checks the game state and enables or disables the guess button accordingly,
+   * ensuring players can only proceed to the verdict phase after gathering all evidence.
+   */
   public void updateButtonState() {
     System.out.println("Updating button state..."); // Debug
     GameStateManager.getInstance().printStatus(); // Debug

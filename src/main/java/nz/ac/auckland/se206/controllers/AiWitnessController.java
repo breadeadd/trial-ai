@@ -458,7 +458,13 @@ public class AiWitnessController extends ChatController {
     }
   }
 
-  // Converts event ID to human-readable name for display
+  /**
+   * Converts an internal event ID to a human-readable name for display purposes.
+   * Used to show meaningful event names in the user interface and debug messages.
+   * 
+   * @param eventId the internal event identifier (e.g., "event1", "event2", "event3")
+   * @return the corresponding human-readable name, or "Unknown Event" if not recognized
+   */
   private String getEventName(String eventId) {
     switch (eventId) {
       case "event1":
@@ -472,8 +478,14 @@ public class AiWitnessController extends ChatController {
     }
   }
 
-  // Returns correct chronological position for each event (1-based indexing)
-  // Returns correct slot position for timeline event ordering
+  /**
+   * Determines the correct slot position for a given event in the chronological timeline.
+   * Used for puzzle validation to check if events are placed in the proper order.
+   * The correct sequence is: Logs Altered (slot 1), Counter-Threat (slot 2), Outrage (slot 3).
+   * 
+   * @param eventId the event identifier to check
+   * @return the correct slot position (1-based indexing), or 0 if event is unrecognized
+   */
   private int getCorrectSlot(String eventId) {
     switch (eventId) {
       case "event1":
@@ -612,8 +624,13 @@ public class AiWitnessController extends ChatController {
     // including puzzle state, event sequence analysis, and memory reconstruction progress
   }
 
-  // Helper method to get current slot contents as a readable string
-  // Builds formatted string showing each slot's current event placement
+  /**
+   * Generates a formatted string representation of the current slot contents.
+   * This method builds a readable description showing which events are placed in each slot,
+   * used for debugging, AI context, and user feedback about the current puzzle state.
+   * 
+   * @return a formatted string describing the contents of each timeline slot
+   */
   private String getSlotContentsAsString() {
     StringBuilder order = new StringBuilder();
     for (int i = 0; i < slotContents.length; i++) {
@@ -644,7 +661,14 @@ public class AiWitnessController extends ChatController {
     return order.toString();
   }
 
-  // Helper method to get current timeline puzzle status for AI context
+  /**
+   * Analyzes the current state of the timeline puzzle and generates a status description.
+   * This method evaluates how many events have been placed, their positions, and whether
+   * the puzzle is complete and correct. Used to provide contextual information to the AI
+   * system about the player's progress through the memory reconstruction challenge.
+   * 
+   * @return a descriptive status string indicating puzzle progress and correctness
+   */
   private String getTimelinePuzzleStatus() {
     int filledSlots = 0;
     for (String slot : slotContents) {
