@@ -5,6 +5,7 @@ import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
@@ -30,7 +31,7 @@ public abstract class ChatController {
   @FXML protected TextArea txtaChat;
   @FXML protected TextField txtInput;
   @FXML protected Button btnSend;
-  @FXML protected javafx.scene.control.ProgressIndicator loading;
+  @FXML protected ProgressIndicator loading;
 
   // Methods to get specific details:
   protected abstract String getSystemPrompt();

@@ -7,7 +7,9 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.Slider;
 import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
@@ -110,7 +112,7 @@ public class EndController extends ChatController {
         .append("/3\n\n");
 
     // Add guidance based on interaction completion
-    String guidanceMessage = "";
+    String guidanceMessage;
     if (interactionsCompleted == 3) {
       guidanceMessage =
           "The player has investigated all characters and explored their memories. They have"
@@ -584,8 +586,8 @@ public class EndController extends ChatController {
       // Access private chat text area field
       java.lang.reflect.Field txtaChatField = ChatController.class.getDeclaredField("txtaChat");
       txtaChatField.setAccessible(true);
-      javafx.scene.control.TextArea txtaChat =
-          (javafx.scene.control.TextArea) txtaChatField.get(controller);
+      TextArea txtaChat =
+          (TextArea) txtaChatField.get(controller);
       if (txtaChat != null) {
         Platform.runLater(() -> txtaChat.clear());
       }
@@ -775,24 +777,24 @@ public class EndController extends ChatController {
       // Reset button visibility
       java.lang.reflect.Field btnSendField = ChatController.class.getDeclaredField("btnSend");
       btnSendField.setAccessible(true);
-      javafx.scene.control.Button btnSend =
-          (javafx.scene.control.Button) btnSendField.get(controller);
+      Button btnSend =
+          (Button) btnSendField.get(controller);
       if (btnSend != null) {
         btnSend.setVisible(false);
       }
 
       java.lang.reflect.Field txtInputField = ChatController.class.getDeclaredField("txtInput");
       txtInputField.setAccessible(true);
-      javafx.scene.control.TextField txtInput =
-          (javafx.scene.control.TextField) txtInputField.get(controller);
+      TextField txtInput =
+          (TextField) txtInputField.get(controller);
       if (txtInput != null) {
         txtInput.setVisible(false);
       }
 
       java.lang.reflect.Field txtaChatField = ChatController.class.getDeclaredField("txtaChat");
       txtaChatField.setAccessible(true);
-      javafx.scene.control.TextArea txtaChat =
-          (javafx.scene.control.TextArea) txtaChatField.get(controller);
+      TextArea txtaChat =
+          (TextArea) txtaChatField.get(controller);
       if (txtaChat != null) {
         txtaChat.setVisible(false);
       }
@@ -801,8 +803,8 @@ public class EndController extends ChatController {
       java.lang.reflect.Field nextButtonField =
           DefendantController.class.getDeclaredField("nextButton");
       nextButtonField.setAccessible(true);
-      javafx.scene.control.Button nextButton =
-          (javafx.scene.control.Button) nextButtonField.get(controller);
+      Button nextButton =
+          (Button) nextButtonField.get(controller);
       if (nextButton != null) {
         nextButton.setVisible(true);
       }
@@ -819,24 +821,24 @@ public class EndController extends ChatController {
       // Reset button visibility
       java.lang.reflect.Field btnSendField = ChatController.class.getDeclaredField("btnSend");
       btnSendField.setAccessible(true);
-      javafx.scene.control.Button btnSend =
-          (javafx.scene.control.Button) btnSendField.get(controller);
+      Button btnSend =
+          (Button) btnSendField.get(controller);
       if (btnSend != null) {
         btnSend.setVisible(false);
       }
 
       java.lang.reflect.Field txtInputField = ChatController.class.getDeclaredField("txtInput");
       txtInputField.setAccessible(true);
-      javafx.scene.control.TextField txtInput =
-          (javafx.scene.control.TextField) txtInputField.get(controller);
+      TextField txtInput =
+          (TextField) txtInputField.get(controller);
       if (txtInput != null) {
         txtInput.setVisible(false);
       }
 
       java.lang.reflect.Field txtaChatField = ChatController.class.getDeclaredField("txtaChat");
       txtaChatField.setAccessible(true);
-      javafx.scene.control.TextArea txtaChat =
-          (javafx.scene.control.TextArea) txtaChatField.get(controller);
+      TextArea txtaChat =
+          (TextArea) txtaChatField.get(controller);
       if (txtaChat != null) {
         txtaChat.setVisible(false);
       }
@@ -845,8 +847,8 @@ public class EndController extends ChatController {
       java.lang.reflect.Field nextButtonField =
           HumanWitnessController.class.getDeclaredField("nextButton");
       nextButtonField.setAccessible(true);
-      javafx.scene.control.Button nextButton =
-          (javafx.scene.control.Button) nextButtonField.get(controller);
+      Button nextButton =
+          (Button) nextButtonField.get(controller);
       if (nextButton != null) {
         nextButton.setVisible(true);
       }
@@ -855,8 +857,8 @@ public class EndController extends ChatController {
       java.lang.reflect.Field unlockSliderField =
           HumanWitnessController.class.getDeclaredField("unlockSlider");
       unlockSliderField.setAccessible(true);
-      javafx.scene.control.Slider unlockSlider =
-          (javafx.scene.control.Slider) unlockSliderField.get(controller);
+      Slider unlockSlider =
+          (Slider) unlockSliderField.get(controller);
       if (unlockSlider != null) {
         unlockSlider.setVisible(false);
         unlockSlider.setValue(0.0);
@@ -866,8 +868,8 @@ public class EndController extends ChatController {
       java.lang.reflect.Field dropUpArrowField =
           HumanWitnessController.class.getDeclaredField("dropUpArrow");
       dropUpArrowField.setAccessible(true);
-      javafx.scene.control.Button dropUpArrow =
-          (javafx.scene.control.Button) dropUpArrowField.get(controller);
+      Button dropUpArrow =
+          (Button) dropUpArrowField.get(controller);
       if (dropUpArrow != null) {
         dropUpArrow.setVisible(false);
         dropUpArrow.setStyle(
@@ -886,24 +888,24 @@ public class EndController extends ChatController {
       // Reset button visibility
       java.lang.reflect.Field btnSendField = ChatController.class.getDeclaredField("btnSend");
       btnSendField.setAccessible(true);
-      javafx.scene.control.Button btnSend =
-          (javafx.scene.control.Button) btnSendField.get(controller);
+      Button btnSend =
+          (Button) btnSendField.get(controller);
       if (btnSend != null) {
         btnSend.setVisible(false);
       }
 
       java.lang.reflect.Field txtInputField = ChatController.class.getDeclaredField("txtInput");
       txtInputField.setAccessible(true);
-      javafx.scene.control.TextField txtInput =
-          (javafx.scene.control.TextField) txtInputField.get(controller);
+      TextField txtInput =
+          (TextField) txtInputField.get(controller);
       if (txtInput != null) {
         txtInput.setVisible(false);
       }
 
       java.lang.reflect.Field txtaChatField = ChatController.class.getDeclaredField("txtaChat");
       txtaChatField.setAccessible(true);
-      javafx.scene.control.TextArea txtaChat =
-          (javafx.scene.control.TextArea) txtaChatField.get(controller);
+      TextArea txtaChat =
+          (TextArea) txtaChatField.get(controller);
       if (txtaChat != null) {
         txtaChat.setVisible(false);
       }
@@ -912,8 +914,8 @@ public class EndController extends ChatController {
       java.lang.reflect.Field nextButtonField =
           AiWitnessController.class.getDeclaredField("nextButton");
       nextButtonField.setAccessible(true);
-      javafx.scene.control.Button nextButton =
-          (javafx.scene.control.Button) nextButtonField.get(controller);
+      Button nextButton =
+          (Button) nextButtonField.get(controller);
       if (nextButton != null) {
         nextButton.setVisible(true);
       }
