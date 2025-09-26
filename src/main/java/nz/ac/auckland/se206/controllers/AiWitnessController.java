@@ -362,6 +362,7 @@ public class AiWitnessController extends ChatController {
   }
 
   /** Gets the ImageView for a given event ID. */
+  // Maps event ID to corresponding ImageView component
   private ImageView getEventImageById(String eventId) {
     switch (eventId) {
       case "event1":
@@ -377,6 +378,7 @@ public class AiWitnessController extends ChatController {
 
   /** Gets the index for a given event ID. */
   private int getEventIndex(String eventId) {
+    // Convert event ID to array index for image loading
     switch (eventId) {
       case "event1":
         return 0;
@@ -468,7 +470,7 @@ public class AiWitnessController extends ChatController {
     }
   }
 
-  // Helper method to get correct slot number for an event (1-based)
+  // Returns correct chronological position for each event (1-based indexing)
   private int getCorrectSlot(String eventId) {
     switch (eventId) {
       case "event1":
@@ -484,7 +486,7 @@ public class AiWitnessController extends ChatController {
 
   /** Checks if the events are in the correct order and handles win condition. */
   private void checkWinCondition() {
-    // Check if all slots are filled
+    // Verify all timeline slots are populated
     if (slotContents[0] != null && slotContents[1] != null && slotContents[2] != null) {
       // Check if events are in correct order (event1, event2, event3)
       if ("event1".equals(slotContents[0])
@@ -642,7 +644,9 @@ public class AiWitnessController extends ChatController {
   private String getTimelinePuzzleStatus() {
     int filledSlots = 0;
     for (String slot : slotContents) {
-      if (slot != null) filledSlots++;
+      if (slot != null) {
+        filledSlots++;
+      }
     }
 
     if (filledSlots == 0) {
@@ -743,7 +747,7 @@ public class AiWitnessController extends ChatController {
 
   // Change to screen image
   @FXML
-  protected void nextScene(ActionEvent event) throws ApiProxyException, IOException {
+  protected void onNextScene(ActionEvent event) throws ApiProxyException, IOException {
     currentImageIndex++;
     if (currentImageIndex < images.size()) {
       flashbackSlideshow.setImage(images.get(currentImageIndex));
@@ -770,7 +774,7 @@ public class AiWitnessController extends ChatController {
 
   // Toggle chat visibility with drop-up/down animation
   @FXML
-  private void toggleChatVisibility(ActionEvent event) {
+  private void onToggleChat(ActionEvent event) {
     if (chatVisible) {
       // Drop down (hide)
       animateTranslate(txtaChat, 150.0);

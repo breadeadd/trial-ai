@@ -114,10 +114,11 @@ public class HumanWitnessController extends ChatController {
     }
   }
 
-  // Loading images for flashback
+  // Preloads human witness flashback sequence in background
   private void loadImages(Runnable onLoaded) {
     new Thread(
             () -> {
+              // Load human witness flashback and memory images
               List<Image> loadedImages = new ArrayList<>();
               loadedImages.add(
                   new Image(
@@ -128,14 +129,17 @@ public class HumanWitnessController extends ChatController {
               loadedImages.add(
                   new Image(
                       getClass().getResourceAsStream("/images/flashbacks/human/human3F.png")));
+              // Add memory images (locked and unlocked states)
               loadedImages.add(
                   new Image(getClass().getResourceAsStream("/images/memories/humanMem1.png")));
               loadedImages.add(
                   new Image(getClass().getResourceAsStream("/images/memories/humanMem2.png")));
+              // Update UI thread with loaded images
               Platform.runLater(
                   () -> {
                     images.clear();
                     images.addAll(loadedImages);
+                    // Execute completion callback
                     if (onLoaded != null) {
                       onLoaded.run();
                     }
@@ -146,7 +150,7 @@ public class HumanWitnessController extends ChatController {
 
   // Change to next scene
   @FXML
-  protected void nextScene(ActionEvent event) throws ApiProxyException, IOException {
+  protected void onNextScene(ActionEvent event) throws ApiProxyException, IOException {
     currentImageIndex++;
     if (currentImageIndex < images.size()) {
       flashbackSlideshow.setImage(images.get(currentImageIndex));
@@ -301,7 +305,7 @@ public class HumanWitnessController extends ChatController {
 
   // Toggle chat visibility with drop-up/down animation
   @FXML
-  private void toggleChatVisibility(ActionEvent event) {
+  private void onToggleChat(ActionEvent event) {
     if (chatVisible) {
       // Drop up (hide)
       animateTranslate(txtaChat, 150.0);

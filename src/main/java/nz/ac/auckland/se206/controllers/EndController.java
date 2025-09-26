@@ -152,6 +152,7 @@ public class EndController extends ChatController {
   }
 
   public void setMessage(String caseType) {
+    // Display appropriate verdict message based on player choice
     switch (caseType) {
       case "GUILTY":
         questionTxt.setText("You chose GUILTY. You are correct!");
@@ -171,14 +172,17 @@ public class EndController extends ChatController {
     }
   }
 
-  // Call this method where you want to play the audio
+  // Plays TTS audio for final verdict phase
   public void playEndTtsAudio() throws URISyntaxException {
     try {
+      // Load and configure audio file
       String audioPath = getClass().getResource("/audio/endTts.mp3").toURI().toString();
       Media media = new Media(audioPath);
       this.mediaPlayer = new MediaPlayer(media);
       mediaPlayer.setVolume(1.0);
+      // Auto-play when ready
       mediaPlayer.setOnReady(() -> mediaPlayer.play());
+      // Handle audio errors
       mediaPlayer.setOnError(
           () -> {
             if (mediaPlayer.getError() != null) {
@@ -245,8 +249,10 @@ public class EndController extends ChatController {
 
   @FXML
   private void noPressed(MouseEvent event) throws IOException {
+    // Handle "NOT GUILTY" verdict selection
     Platform.runLater(
         () -> {
+          // Update button states and store verdict choice
           yesBtn.setDisable(false);
           noBtn.setDisable(true);
           guessBtn.setDisable(false);
@@ -256,8 +262,10 @@ public class EndController extends ChatController {
 
   @FXML
   private void guessMade(MouseEvent event) throws IOException {
+    // Process verdict submission and get GPT feedback
     Platform.runLater(
         () -> {
+          // Display verdict result and transition UI
           this.setMessage(verdictPlayer);
           this.setVisible();
 
@@ -321,19 +329,20 @@ public class EndController extends ChatController {
         });
   }
 
-  // show restart when visible
+  // Shows restart button for game over scenarios
   public void setRestartVisible() {
     restartBtn.setVisible(true);
   }
 
-  // Set rationale for incomplete interactions
-  public void setIncompleteInteractionsRationale() {
+  // Handles case where player didn't interact with all characters
+  public void setIncompleteInteractions() {
     Platform.runLater(
         () -> {
+          // Set error message and mark as incomplete
           enterRationale.setText("You have not talked to all three characters.");
           verdictPlayer = "incomplete_interactions";
 
-          // Hide verdict buttons and guess button since game is over
+          // Hide verdict buttons since game is over
           yesBtn.setVisible(false);
           noBtn.setVisible(false);
           guessBtn.setVisible(false);
@@ -343,19 +352,19 @@ public class EndController extends ChatController {
         });
   }
 
-  // send rationale on timeout
+  // Handles automatic submission when timer expires
   public void sentTimeoutRationale() {
     Platform.runLater(
         () -> {
-          // Set verdict to timeout if no verdict was selected
+          // Set verdict to timeout if no choice was made
           if (verdictPlayer == null) {
             verdictPlayer = "timeout";
           }
 
-          // Get whatever text is in the rationale box (empty or not)
+          // Capture current rationale text or set default
           String rationaleText = enterRationale.getText().trim();
 
-          // If no rationale was provided, set a default timeout message
+          // Provide default message if no rationale entered
           if (rationaleText.isEmpty()) {
             enterRationale.setText("Time ran out before I could provide my reasoning.");
           }
@@ -485,7 +494,7 @@ public class EndController extends ChatController {
     System.out.println("Chat history cleared");
 
     // Clear all chat controller UIs
-    clearAllChatControllerUIs();
+    clearAllChatControllerUis();
     System.out.println("All chat UIs cleared");
 
     // Reset chat completion requests
@@ -524,13 +533,13 @@ public class EndController extends ChatController {
   }
 
   /** Clears all chat controller UI text areas to remove displayed messages. */
-  private void clearAllChatControllerUIs() {
+  private void clearAllChatControllerUis() {
     // Clear defendant chat UI
     try {
       DefendantController defendantController =
           (DefendantController) App.getController("defendantChat");
       if (defendantController != null) {
-        clearChatControllerUI(defendantController);
+        clearChatControllerUi(defendantController);
       }
     } catch (Exception e) {
       System.err.println("Warning: Could not clear defendant chat UI: " + e.getMessage());
@@ -541,7 +550,7 @@ public class EndController extends ChatController {
       HumanWitnessController humanController =
           (HumanWitnessController) App.getController("witnessChat");
       if (humanController != null) {
-        clearChatControllerUI(humanController);
+        clearChatControllerUi(humanController);
       }
     } catch (Exception e) {
       System.err.println("Warning: Could not clear human witness chat UI: " + e.getMessage());
@@ -551,7 +560,7 @@ public class EndController extends ChatController {
     try {
       AiWitnessController aiController = (AiWitnessController) App.getController("aiChat");
       if (aiController != null) {
-        clearChatControllerUI(aiController);
+        clearChatControllerUi(aiController);
       }
     } catch (Exception e) {
       System.err.println("Warning: Could not clear AI witness chat UI: " + e.getMessage());
@@ -559,7 +568,7 @@ public class EndController extends ChatController {
   }
 
   /** Clears a specific chat controller's UI using reflection. */
-  private void clearChatControllerUI(ChatController controller) {
+  private void clearChatControllerUi(ChatController controller) {
     try {
       java.lang.reflect.Field txtaChatField = ChatController.class.getDeclaredField("txtaChat");
       txtaChatField.setAccessible(true);
@@ -689,7 +698,7 @@ public class EndController extends ChatController {
         currentImageIndexField.set(defendantController, 0);
 
         // Reset UI elements to initial state
-        resetDefendantUI(defendantController);
+        resetDefendantUi(defendantController);
 
         System.out.println("Reset DefendantController currentImageIndex to 0 and UI elements");
       }
@@ -715,7 +724,7 @@ public class EndController extends ChatController {
         chatVisibleField.set(humanController, true);
 
         // Reset UI elements to initial state
-        resetHumanWitnessUI(humanController);
+        resetHumanWitnessUi(humanController);
 
         System.out.println(
             "Reset HumanWitnessController currentImageIndex to 0, chatVisible to true, and UI"
@@ -736,7 +745,7 @@ public class EndController extends ChatController {
         currentImageIndexField.set(aiController, 0);
 
         // Reset UI elements to initial state
-        resetAiWitnessUI(aiController);
+        resetAiWitnessUi(aiController);
 
         System.out.println("Reset AiWitnessController currentImageIndex to 0 and UI elements");
       }
@@ -747,26 +756,32 @@ public class EndController extends ChatController {
   }
 
   /** Resets DefendantController UI elements to initial state. */
-  private void resetDefendantUI(DefendantController controller) {
+  private void resetDefendantUi(DefendantController controller) {
     try {
       // Reset button visibility
       java.lang.reflect.Field btnSendField = ChatController.class.getDeclaredField("btnSend");
       btnSendField.setAccessible(true);
       javafx.scene.control.Button btnSend =
           (javafx.scene.control.Button) btnSendField.get(controller);
-      if (btnSend != null) btnSend.setVisible(false);
+      if (btnSend != null) {
+        btnSend.setVisible(false);
+      }
 
       java.lang.reflect.Field txtInputField = ChatController.class.getDeclaredField("txtInput");
       txtInputField.setAccessible(true);
       javafx.scene.control.TextField txtInput =
           (javafx.scene.control.TextField) txtInputField.get(controller);
-      if (txtInput != null) txtInput.setVisible(false);
+      if (txtInput != null) {
+        txtInput.setVisible(false);
+      }
 
       java.lang.reflect.Field txtaChatField = ChatController.class.getDeclaredField("txtaChat");
       txtaChatField.setAccessible(true);
       javafx.scene.control.TextArea txtaChat =
           (javafx.scene.control.TextArea) txtaChatField.get(controller);
-      if (txtaChat != null) txtaChat.setVisible(false);
+      if (txtaChat != null) {
+        txtaChat.setVisible(false);
+      }
 
       // Reset nextButton visibility
       java.lang.reflect.Field nextButtonField =
@@ -783,26 +798,32 @@ public class EndController extends ChatController {
   }
 
   /** Resets HumanWitnessController UI elements to initial state. */
-  private void resetHumanWitnessUI(HumanWitnessController controller) {
+  private void resetHumanWitnessUi(HumanWitnessController controller) {
     try {
       // Reset button visibility
       java.lang.reflect.Field btnSendField = ChatController.class.getDeclaredField("btnSend");
       btnSendField.setAccessible(true);
       javafx.scene.control.Button btnSend =
           (javafx.scene.control.Button) btnSendField.get(controller);
-      if (btnSend != null) btnSend.setVisible(false);
+      if (btnSend != null) {
+        btnSend.setVisible(false);
+      }
 
       java.lang.reflect.Field txtInputField = ChatController.class.getDeclaredField("txtInput");
       txtInputField.setAccessible(true);
       javafx.scene.control.TextField txtInput =
           (javafx.scene.control.TextField) txtInputField.get(controller);
-      if (txtInput != null) txtInput.setVisible(false);
+      if (txtInput != null) {
+        txtInput.setVisible(false);
+      }
 
       java.lang.reflect.Field txtaChatField = ChatController.class.getDeclaredField("txtaChat");
       txtaChatField.setAccessible(true);
       javafx.scene.control.TextArea txtaChat =
           (javafx.scene.control.TextArea) txtaChatField.get(controller);
-      if (txtaChat != null) txtaChat.setVisible(false);
+      if (txtaChat != null) {
+        txtaChat.setVisible(false);
+      }
 
       // Reset nextButton visibility
       java.lang.reflect.Field nextButtonField =
@@ -810,7 +831,9 @@ public class EndController extends ChatController {
       nextButtonField.setAccessible(true);
       javafx.scene.control.Button nextButton =
           (javafx.scene.control.Button) nextButtonField.get(controller);
-      if (nextButton != null) nextButton.setVisible(true);
+      if (nextButton != null) {
+        nextButton.setVisible(true);
+      }
 
       // Reset HumanWitness-specific UI elements
       java.lang.reflect.Field unlockSliderField =
@@ -842,26 +865,32 @@ public class EndController extends ChatController {
   }
 
   /** Resets AiWitnessController UI elements to initial state. */
-  private void resetAiWitnessUI(AiWitnessController controller) {
+  private void resetAiWitnessUi(AiWitnessController controller) {
     try {
       // Reset button visibility
       java.lang.reflect.Field btnSendField = ChatController.class.getDeclaredField("btnSend");
       btnSendField.setAccessible(true);
       javafx.scene.control.Button btnSend =
           (javafx.scene.control.Button) btnSendField.get(controller);
-      if (btnSend != null) btnSend.setVisible(false);
+      if (btnSend != null) {
+        btnSend.setVisible(false);
+      }
 
       java.lang.reflect.Field txtInputField = ChatController.class.getDeclaredField("txtInput");
       txtInputField.setAccessible(true);
       javafx.scene.control.TextField txtInput =
           (javafx.scene.control.TextField) txtInputField.get(controller);
-      if (txtInput != null) txtInput.setVisible(false);
+      if (txtInput != null) {
+        txtInput.setVisible(false);
+      }
 
       java.lang.reflect.Field txtaChatField = ChatController.class.getDeclaredField("txtaChat");
       txtaChatField.setAccessible(true);
       javafx.scene.control.TextArea txtaChat =
           (javafx.scene.control.TextArea) txtaChatField.get(controller);
-      if (txtaChat != null) txtaChat.setVisible(false);
+      if (txtaChat != null) {
+        txtaChat.setVisible(false);
+      }
 
       // Reset nextButton visibility
       java.lang.reflect.Field nextButtonField =
@@ -869,7 +898,9 @@ public class EndController extends ChatController {
       nextButtonField.setAccessible(true);
       javafx.scene.control.Button nextButton =
           (javafx.scene.control.Button) nextButtonField.get(controller);
-      if (nextButton != null) nextButton.setVisible(true);
+      if (nextButton != null) {
+        nextButton.setVisible(true);
+      }
 
       System.out.println("Reset AiWitnessController UI elements");
     } catch (Exception e) {

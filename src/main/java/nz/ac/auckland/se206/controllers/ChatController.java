@@ -43,10 +43,11 @@ public abstract class ChatController {
 
   /** Initializes the ChatCompletionRequest and starts the chat. */
   public void initChat() {
-
+    // Initialize chat in background thread to avoid UI blocking
     new Thread(
             () -> {
               try {
+                // Configure GPT chat parameters
                 ApiProxyConfig config = ApiProxyConfig.readConfig();
                 chatCompletionRequest =
                     new ChatCompletionRequest(config)
@@ -55,6 +56,7 @@ public abstract class ChatController {
                         .setTopP(0.5)
                         .setModel(Model.GPT_4_1_MINI)
                         .setMaxTokens(100);
+                // Send initial system prompt to establish character context
                 runGpt(new ChatMessage("system", getSystemPrompt()));
               } catch (ApiProxyException e) {
                 e.printStackTrace();
@@ -65,9 +67,11 @@ public abstract class ChatController {
 
   /** Syncs chat history for this character. */
   public void syncChatHistoryAsync() {
+    // Update character's context with shared conversation history
     new Thread(
             () -> {
               try {
+                // Create new request with updated history
                 ApiProxyConfig config = ApiProxyConfig.readConfig();
                 ChatCompletionRequest newRequest =
                     new ChatCompletionRequest(config)
@@ -76,10 +80,13 @@ public abstract class ChatController {
                         .setTopP(0.5)
                         .setModel(Model.GPT_4_1_MINI)
                         .setMaxTokens(100);
+                // Add system prompt and conversation history
                 newRequest.addMessage(new ChatMessage("system", getSystemPrompt()));
-                for (ChatMessage msg : ChatHistory.getHistoryWithCharacterContext(getCharacterName())) {
+                for (ChatMessage msg :
+                    ChatHistory.getHistoryWithCharacterContext(getCharacterName())) {
                   newRequest.addMessage(msg);
                 }
+                // Update request on UI thread
                 Platform.runLater(() -> chatCompletionRequest = newRequest);
               } catch (Exception e) {
                 e.printStackTrace();

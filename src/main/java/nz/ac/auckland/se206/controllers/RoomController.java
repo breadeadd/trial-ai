@@ -51,14 +51,17 @@ public class RoomController {
     Platform.runLater(() -> updateButtonState());
   }
 
-  // Call this method where you want to play the audio
+  // Plays opening TTS audio with game instructions
   private void playOpenTtsAudio() throws URISyntaxException {
     try {
+      // Load and configure opening audio
       String audioPath = getClass().getResource("/audio/openTts.mp3").toURI().toString();
       Media media = new Media(audioPath);
       this.mediaPlayer = new MediaPlayer(media);
       mediaPlayer.setVolume(1.0);
+      // Auto-play when audio is ready
       mediaPlayer.setOnReady(() -> mediaPlayer.play());
+      // Handle playback errors
       mediaPlayer.setOnError(
           () -> {
             if (mediaPlayer.getError() != null) {
@@ -173,15 +176,13 @@ public class RoomController {
     btnGuess.setDisable(!canProceed);
   }
 
-  /**
-   * Resets the room controller state for game restart.
-   */
+  /** Resets the room controller state for game restart. */
   public void resetRoomState() {
     // Reset first-time visit flags so flashbacks play again
     firstDefendant = false;
     firstHuman = false;
     firstAi = false;
-    
+
     // Update button state
     updateButtonState();
   }

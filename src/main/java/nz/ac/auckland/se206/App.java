@@ -82,25 +82,31 @@ public class App extends Application {
    * @param fxml the name of the FXML file (without extension) to preload
    */
   public static void preloadSceneAsync(String fxml, CountDownLatch latch) {
+    // Create background task for scene loading
     Task<Void> preloadTask =
         new Task<Void>() {
           @Override
           protected Void call() throws Exception {
             try {
+              // Load FXML file and create scene bundle
               FXMLLoader loader = new FXMLLoader(App.class.getResource("/fxml/" + fxml + ".fxml"));
               Parent loadedRoot = loader.load();
               Object loadedController = loader.getController();
               SceneBundle loadedBundle = new SceneBundle(loadedRoot, loadedController);
+              // Store in preloaded cache on UI thread
               Platform.runLater(() -> preloadedBundles.put(fxml, loadedBundle));
             } catch (IOException e) {
+              // Log preload failures
               System.err.println("Failed to preload scene: " + fxml);
               e.printStackTrace();
             } finally {
+              // Signal task completion
               latch.countDown();
             }
             return null;
           }
         };
+    // Start preload task in background thread
     new Thread(preloadTask).start();
   }
 
@@ -112,8 +118,10 @@ public class App extends Application {
    * @throws IOException if the FXML file is not found
    */
   public static void openChat(MouseEvent event, String bot) throws IOException {
+    // Get current stage from event source
     Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
     String fxml;
+    // Determine which chat scene to load based on character type
     switch (bot) {
       case "defendant":
         fxml = "defendantChat";
@@ -127,11 +135,13 @@ public class App extends Application {
       default:
         throw new IllegalArgumentException("Unknown bot type: " + bot);
     }
+    // Retrieve preloaded scene bundle
     SceneBundle bundle = preloadedBundles.get(fxml);
     if (bundle == null) {
       throw new IOException("Scene not preloaded: " + fxml);
     }
 
+    // Switch to the requested chat scene
     scene = new Scene(bundle.root);
     stage.setScene(scene);
     stage.show();
