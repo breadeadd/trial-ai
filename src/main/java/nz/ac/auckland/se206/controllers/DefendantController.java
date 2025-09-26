@@ -153,7 +153,8 @@ public class DefendantController extends ChatController {
 
   // check all buttons have been clicked
   private boolean allButtonsClicked() {
-    return btn1img.isVisible() && btn2img.isVisible() && btn3img.isVisible() && btn4img.isVisible();
+    return btn1img.isVisible() && btn2img.isVisible() 
+        && btn3img.isVisible() && btn4img.isVisible();
   }
 
   @FXML
@@ -187,7 +188,8 @@ public class DefendantController extends ChatController {
   @FXML
   private void button3Clicked(MouseEvent event) throws IOException {
     // Handle button click for "Neutralise Internally"
-    // This option represents handling the threat through internal organization methods without external
+    // This option represents handling the threat through internal 
+    // organization methods without external
     // involvement.
     handleMemoryButtonClick(2, btn3img, "Neutralise Internally",
         "This path is too slow for the current risk level and only provides a medium-impact "
@@ -361,8 +363,8 @@ public class DefendantController extends ChatController {
    * @param response the response message to send to the chat
    * @param systemContext the detailed context to add for AI understanding
    */
-  private void handleMemoryButtonClick(int buttonIndex, ImageView buttonImage, String optionName,
-      String response, String systemContext) throws IOException {
+  private void handleMemoryButtonClick(int buttonIndex, ImageView buttonImage, 
+      String optionName, String response, String systemContext) throws IOException {
     // Check if button hasn't been clicked before
     if (!buttonPressed[buttonIndex]) {
       buttonPressed[buttonIndex] = true; // Mark button as clicked
@@ -386,29 +388,8 @@ public class DefendantController extends ChatController {
   // toggle chat visibility with drop up/down animation
   @FXML
   private void onToggleChat(ActionEvent event) {
-    chatVisible = toggleChatVisibility(chatVisible, this::animateTranslate);
-    
-    if (chatVisible) {
-      // Change to dropDownArrow shape
-      updateArrowToDropDown(dropUpArrow);
-    } else {
-      // Change to dropUpArrow shape and position
-      updateArrowToDropUp(dropUpArrow);
-    }
+    chatVisible = handleToggleChatAction(chatVisible, dropUpArrow, this::animateTranslate);
   }
-
-
-
-
-
-  /**
-   * Creates smooth vertical slide animation for UI elements during chat toggle operations.
-   * This method provides a consistent animation experience when showing or hiding chat
-   * interface components, enhancing the user experience with fluid visual transitions.
-   *
-   * @param node the UI node to animate (typically chat area, input field, or send button)
-   * @param toY the target Y translation value for the animation endpoint
-   */
 
   /**
    * Resets the controller to its initial state for game restart functionality.
@@ -457,14 +438,12 @@ public class DefendantController extends ChatController {
             dropUpArrow.setLayoutY(540.0);
           }
 
+          // Show next button for flashbacks
           if (nextButton != null) {
             nextButton.setVisible(true);
           }
 
-          if (flashbackSlideshow != null && !images.isEmpty()) {
-            flashbackSlideshow.setImage(images.get(0));
-          }
-
+          // Reset memory buttons to initial state
           resetMemoryButtons();
         });
   }

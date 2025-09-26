@@ -544,7 +544,7 @@ public abstract class ChatController {
    * @return configured MediaPlayer instance ready for playback
    * @throws Exception if there is an error loading or configuring the audio
    */
-  protected MediaPlayer setupMediaPlayer(String audioResourcePath, double volume) throws Exception {
+  protected MediaPlayer arrangeMediaPlayer(String audioResourcePath, double volume) throws Exception {
     // Load and configure audio file using resource URI
     String audioPath = getClass().getResource(audioResourcePath).toURI().toString();
     Media media = new Media(audioPath);
@@ -614,5 +614,30 @@ public abstract class ChatController {
         btnSend.setVisible(chatVisible);
       }
     });
+  }
+  
+  /**
+   * Handles toggle chat action for controllers with drop up/down arrow functionality.
+   * This method provides consistent chat visibility toggling behavior across multiple
+   * controllers, managing arrow state changes and chat visibility animations.
+   *
+   * @param currentChatVisible the current chat visibility state
+   * @param dropUpArrow the arrow button UI element
+   * @param animateCallback callback method for animation (typically this::animateTranslate)
+   * @return the new chat visibility state after toggle
+   */
+  protected boolean handleToggleChatAction(boolean currentChatVisible, Button dropUpArrow, 
+      java.util.function.BiConsumer<javafx.scene.Node, Double> animateCallback) {
+    boolean newChatVisible = toggleChatVisibility(currentChatVisible, animateCallback);
+    
+    if (newChatVisible) {
+      // Change to dropDownArrow shape
+      updateArrowToDropDown(dropUpArrow);
+    } else {
+      // Change to dropUpArrow shape and position
+      updateArrowToDropUp(dropUpArrow);
+    }
+    
+    return newChatVisible;
   }
 }
