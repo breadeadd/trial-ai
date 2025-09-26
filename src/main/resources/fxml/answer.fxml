@@ -5,6 +5,7 @@
 <?import javafx.scene.control.ProgressIndicator?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.text.Font?>
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="614.0" prefWidth="789.0" style="-fx-background-color: e3f3ef;" styleClass="rationale_area" stylesheets="@../css/verdict.css" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="nz.ac.auckland.se206.controllers.EndController">
@@ -24,7 +25,6 @@
             <Font name="System Bold" size="21.0" />
          </font>
       </Button>
-      <ProgressIndicator fx:id="loading" layoutX="386.0" layoutY="275.0" prefHeight="295.0" prefWidth="128.0" progress="0.0" visible="false" />
       <TextArea fx:id="txtaChat" editable="false" layoutX="111.0" layoutY="137.0" opacity="0.9" prefHeight="304.0" prefWidth="565.0" style="-fx-font-size: 14px; -fx-background-color: e3f3ef;" styleClass="text_area" wrapText="true">
          <font>
             <Font size="16.0" />
@@ -45,5 +45,7 @@
             <Font name="System Bold" size="21.0" />
          </font>
       </Button>
+      <ProgressIndicator fx:id="loading" layoutX="386.0" layoutY="275.0" prefHeight="295.0" prefWidth="128.0" progress="0.0" visible="false" />
+      <BorderPane prefHeight="200.0" prefWidth="200.0" />
    </children>
 </AnchorPane>

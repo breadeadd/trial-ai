@@ -68,7 +68,7 @@ public class AiWitnessController extends ChatController {
   public void initialize() throws ApiProxyException {
 
     backBtn.setDisable(true);
-    
+
     popupPane.setVisible(false);
     popupPane.setOnMouseClicked(e -> popupPane.setVisible(false));
     instructionLabel.setText("Arrange the events to reconstruct Echo II's memory.");
@@ -76,6 +76,7 @@ public class AiWitnessController extends ChatController {
     loadImages(null);
     initChat();
 
+    loading.setProgress(-1);
     btnSend.setVisible(false);
     txtInput.setVisible(false);
     txtaChat.setVisible(false);
@@ -513,15 +514,22 @@ public class AiWitnessController extends ChatController {
                             ChatMessage successMessage =
                                 new ChatMessage("assistant", "Timeline successfully loaded⏳✔️");
                             appendChatMessage(successMessage);
-                            
+
                             // Add a brief delay before the detailed analysis
                             try {
                               Thread.sleep(1500); // Wait 1.5 seconds
-                              Platform.runLater(() -> {
-                                ChatMessage analysisMessage = new ChatMessage("assistant", 
-                                    "Cassian Thorne initiated unauthorized data alterations. Concurrently, Aegis I executed Project Starlight's security lockdown and transmitted a direct message to Thorne. This action resulted in immediate disruption.");
-                                appendChatMessage(analysisMessage);
-                              });
+                              Platform.runLater(
+                                  () -> {
+                                    ChatMessage analysisMessage =
+                                        new ChatMessage(
+                                            "assistant",
+                                            "Cassian Thorne initiated unauthorized data"
+                                                + " alterations. Concurrently, Aegis I executed"
+                                                + " Project Starlight's security lockdown and"
+                                                + " transmitted a direct message to Thorne. This"
+                                                + " action resulted in immediate disruption.");
+                                    appendChatMessage(analysisMessage);
+                                  });
                             } catch (InterruptedException ex) {
                               ex.printStackTrace();
                             }
@@ -592,7 +600,8 @@ public class AiWitnessController extends ChatController {
   // Add context to chat history without displaying to user (for AI context)
   private void addContextToChat(String role, String contextMessage) {
     ChatMessage contextChatMessage = new ChatMessage(role, contextMessage);
-    ChatHistory.addCharacterContext(contextChatMessage, getCharacterName()); // Use character-specific context
+    ChatHistory.addCharacterContext(
+        contextChatMessage, getCharacterName()); // Use character-specific context
     // Note: This doesn't update the UI, only the character-specific chat history for AI context
     // This provides Echo II with comprehensive understanding of player timeline interactions
     // including puzzle state, event sequence analysis, and memory reconstruction progress
@@ -656,21 +665,37 @@ public class AiWitnessController extends ChatController {
   @Override
   protected ChatMessage runGpt(ChatMessage msg) throws ApiProxyException {
     // Add character-specific restrictions and identity clarification
-    chatCompletionRequest.addMessage(new ChatMessage("system", 
-        "CHARACTER IDENTITY AND RESTRICTIONS: You are Echo II, an AI witness (NOT the defendant). The defendant is Aegis I (a different AI system). Cassian Thorne is the high-ranking human executive who betrayed the mission. CRITICAL RESTRICTIONS: Echo II can ONLY discuss Echo II's OWN memories and evidence accessible through Echo II's timeline puzzle. Echo II should NEVER mention Aegis I's memory buttons or Orion's phone slider. Echo II should NEVER provide information about how to unlock other characters' evidence or whether their evidence is unlocked. Echo II has NO KNOWLEDGE of other characters' interactions or unlock status. Echo II should guide users to drag event images into the correct chronological slots in Echo II's timeline, but should NOT reveal specific details about Project Starlight events or mission sequence until users actually complete the puzzle interactions."));
-    
+    chatCompletionRequest.addMessage(
+        new ChatMessage(
+            "system",
+            "CHARACTER IDENTITY AND RESTRICTIONS: You are Echo II, an AI witness (NOT the"
+                + " defendant). The defendant is Aegis I (a different AI system). Cassian Thorne is"
+                + " the high-ranking human executive who betrayed the mission. CRITICAL"
+                + " RESTRICTIONS: Echo II can ONLY discuss Echo II's OWN memories and evidence"
+                + " accessible through Echo II's timeline puzzle. Echo II should NEVER mention"
+                + " Aegis I's memory buttons or Orion's phone slider. Echo II should NEVER provide"
+                + " information about how to unlock other characters' evidence or whether their"
+                + " evidence is unlocked. Echo II has NO KNOWLEDGE of other characters'"
+                + " interactions or unlock status. Echo II should guide users to drag event images"
+                + " into the correct chronological slots in Echo II's timeline, but should NOT"
+                + " reveal specific details about Project Starlight events or mission sequence"
+                + " until users actually complete the puzzle interactions."));
+
     // If there's a recent timeline action, add context to help the AI understand
     if (!lastTimelineAction.isEmpty()) {
       ChatMessage contextMsg =
           new ChatMessage(
               "system",
-              "TIMELINE INTERACTION: The user just interacted with Echo II's timeline puzzle system. "
-                  + "The last action was: '"
+              "TIMELINE INTERACTION: The user just interacted with Echo II's timeline puzzle"
+                  + " system. The last action was: '"
                   + lastTimelineAction
                   + "'. "
                   + "Current timeline puzzle state: "
                   + getTimelinePuzzleStatus()
-                  + ". Since they have interacted with Echo II's timeline, Echo II can now discuss the specific events and mission details related to their actions. If they're asking about the puzzle, events, timeline, or mission sequence, they are referring to these timeline interactions.");
+                  + ". Since they have interacted with Echo II's timeline, Echo II can now discuss"
+                  + " the specific events and mission details related to their actions. If they're"
+                  + " asking about the puzzle, events, timeline, or mission sequence, they are"
+                  + " referring to these timeline interactions.");
       chatCompletionRequest.addMessage(contextMsg);
     }
 

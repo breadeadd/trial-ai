@@ -1,6 +1,6 @@
 @font-face {
   font-family: "VT323";
-  src: url("fonts/VT323-Regular.ttf");
+  src: url("../fonts/VT323-Regular.ttf");
 }
 
 .text-area {
@@ -44,10 +44,6 @@ thumb:hover {
   /* Change the color of the spinning arc */
   -fx-progress-color: rgb(101, 143, 192);
   /* A nice blue */
-
-  /* Change the background of the indicator */
-  -fx-background-color: transparent;
-  /* Makes the background transparent */
 }
 
 .button {
