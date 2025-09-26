@@ -115,6 +115,7 @@ public class HumanWitnessController extends ChatController {
   }
 
   // Preloads human witness flashback sequence in background
+  // Loads flashback and memory images in background thread
   private void loadImages(Runnable onLoaded) {
     new Thread(
             () -> {
@@ -150,7 +151,7 @@ public class HumanWitnessController extends ChatController {
 
   // Change to next scene
   @FXML
-  protected void onNextScene(ActionEvent event) throws ApiProxyException, IOException {
+  protected void onNextPressed(ActionEvent event) throws ApiProxyException, IOException {
     currentImageIndex++;
     if (currentImageIndex < images.size()) {
       flashbackSlideshow.setImage(images.get(currentImageIndex));
@@ -204,6 +205,7 @@ public class HumanWitnessController extends ChatController {
   }
 
   // Handle slider release to transition to humanMem2.png and hide slider
+  // Handles slider release for phone unlock mechanism
   @FXML
   protected void onSliderReleased() {
     if (currentImageIndex == 3 && unlockSlider.getValue() >= 100.0) {
@@ -253,6 +255,7 @@ public class HumanWitnessController extends ChatController {
   }
 
   // Send phone unlock messages with timing
+  // Displays unlock notification then Orion's story revelation
   private void sendPhoneUnlockMessages() {
     // Immediately show phone unlock message
     Platform.runLater(

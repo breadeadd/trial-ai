@@ -5,8 +5,6 @@ import java.util.Map;
 
 public class GameStateManager {
   private static GameStateManager instance;
-  private Map<String, Boolean> charactersTalkedTo;
-  private Map<String, Boolean> gameFlags;
 
   public static GameStateManager getInstance() {
     if (instance == null) {
@@ -14,6 +12,9 @@ public class GameStateManager {
     }
     return instance;
   }
+
+  private Map<String, Boolean> charactersTalkedTo;
+  private Map<String, Boolean> gameFlags;
 
   // Manage game state and character interactions
   private GameStateManager() {
@@ -59,18 +60,6 @@ public class GameStateManager {
     return gameFlags.getOrDefault(charInteract, false);
   }
 
-  /////////////////////////////////////////////////////////
-  // IMPLEMENT WHEN BOTHERED: FLASHBACK STATE TRACKING
-
-  // Set flashback visited true
-  // public void setCharacterFlashbackWatched(String characterName) {
-  //   gameFlags.put(characterName + "_flashback_watched", true);
-  // }
-
-  // public boolean hasWatchedFlashback(String characterName) {
-  //   return gameFlags.getOrDefault(characterName + "_flashback_watched", false);
-  // }
-
   // Generic flag system for future use
   public void setFlag(String flagName, boolean value) {
     gameFlags.put(flagName, value);
@@ -79,12 +68,6 @@ public class GameStateManager {
   public boolean getFlag(String flagName) {
     return gameFlags.getOrDefault(flagName, false);
   }
-
-  // // Reset for new game
-  // public void reset() {
-  //   charactersTalkedTo.replaceAll((k, v) -> false);
-  //   gameFlags.clear();
-  // }
 
   public void printStatus() {
     System.out.println("Characters talked to: " + charactersTalkedTo);

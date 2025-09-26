@@ -147,20 +147,25 @@ public class DefendantController extends ChatController {
         .start();
   }
 
+  // Advances to next flashback image and handles end-of-sequence logic
   @FXML
-  protected void onNextScene(ActionEvent event) throws ApiProxyException, IOException {
+  protected void onNextPressed(ActionEvent event) throws ApiProxyException, IOException {
     currentImageIndex++;
+    // Display next image if available
     if (currentImageIndex < images.size()) {
       flashbackSlideshow.setImage(images.get(currentImageIndex));
     } else {
+      // Disable click handler when sequence ends
       flashbackSlideshow.setOnMouseClicked(null);
     }
 
+    // Show calculation popup at final memory image
     if (currentImageIndex == 3) {
       popupPane.setVisible(true);
       nextButton.setVisible(false);
       backBtn.setDisable(false);
 
+      // set visible
       btnSend.setVisible(true);
       txtInput.setVisible(true);
       txtaChat.setVisible(true);
@@ -175,13 +180,14 @@ public class DefendantController extends ChatController {
     }
   }
 
-  // Memory elements
-  // button initialisation
+  // Hides all memory calculation buttons and images initially
   private void initButtons() {
+    // Hide calculation buttons
     button1.setVisible(false);
     button2.setVisible(false);
     button3.setVisible(false);
     button4.setVisible(false);
+    // Hide associated images
     btn1img.setVisible(false);
     btn2img.setVisible(false);
     btn3img.setVisible(false);
@@ -466,9 +472,10 @@ public class DefendantController extends ChatController {
     }
   }
 
-  // arrow image
+  // Loads and sets arrow image for dropdown button
   private void setArrowImage(String imagePath) {
     try {
+      // Load image from resources and configure size
       Image arrowImage = new Image(getClass().getResourceAsStream(imagePath));
       ImageView imageView = new ImageView(arrowImage);
       imageView.setFitWidth(40);
@@ -498,8 +505,9 @@ public class DefendantController extends ChatController {
     setArrowImage("/images/assets/chatUp.png");
   }
 
-  // Animate the vertical transition
+  // Creates smooth vertical slide animation for UI elements
   private void animateTranslate(javafx.scene.Node node, double toY) {
+    // Configure and start translation animation
     TranslateTransition transition = new TranslateTransition(Duration.millis(300), node);
     transition.setToY(toY);
     transition.play();
