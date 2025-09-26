@@ -115,8 +115,6 @@ public class RoomController {
     } else {
       controller.runAfterFirst();
     }
-
-    // GameStateManager.getInstance().setCharacterFlashbackWatched("Aegis I");
   }
 
   // human witness clicked
@@ -133,8 +131,6 @@ public class RoomController {
     } else {
       controller.runAfterFirst();
     }
-
-    // GameStateManager.getInstance().setCharacterFlashbackWatched("Orion Vale");
   }
 
   // ai witness clicked
@@ -152,8 +148,6 @@ public class RoomController {
     } else {
       controller.runAfterFirst();
     }
-
-    // GameStateManager.getInstance().setCharacterFlashbackWatched("Echo II");
   }
 
   /**

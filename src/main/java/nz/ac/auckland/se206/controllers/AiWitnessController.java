@@ -181,6 +181,7 @@ public class AiWitnessController extends ChatController {
   }
 
   /** Shows the draggable event images and drop slots for the memory puzzle. */
+  // Makes timeline puzzle elements visible for interaction
   private void showDragAndDropElements() {
     event1Image.setVisible(true);
     event2Image.setVisible(true);
@@ -362,8 +363,8 @@ public class AiWitnessController extends ChatController {
   }
 
   /** Gets the ImageView for a given event ID. */
-  // Maps event ID to corresponding ImageView component
   private ImageView getEventImageById(String eventId) {
+    // Return corresponding UI image component for each event
     switch (eventId) {
       case "event1":
         return event1Image;
@@ -377,6 +378,7 @@ public class AiWitnessController extends ChatController {
   }
 
   /** Gets the index for a given event ID. */
+  // Convert event ID to array index for image loading
   private int getEventIndex(String eventId) {
     // Convert event ID to array index for image loading
     switch (eventId) {
@@ -456,7 +458,7 @@ public class AiWitnessController extends ChatController {
     }
   }
 
-  // Helper method to get event name from ID
+  // Converts event ID to human-readable name for display
   private String getEventName(String eventId) {
     switch (eventId) {
       case "event1":
@@ -471,6 +473,7 @@ public class AiWitnessController extends ChatController {
   }
 
   // Returns correct chronological position for each event (1-based indexing)
+  // Returns correct slot position for timeline event ordering
   private int getCorrectSlot(String eventId) {
     switch (eventId) {
       case "event1":
@@ -610,6 +613,7 @@ public class AiWitnessController extends ChatController {
   }
 
   // Helper method to get current slot contents as a readable string
+  // Builds formatted string showing each slot's current event placement
   private String getSlotContentsAsString() {
     StringBuilder order = new StringBuilder();
     for (int i = 0; i < slotContents.length; i++) {
@@ -747,7 +751,7 @@ public class AiWitnessController extends ChatController {
 
   // Change to screen image
   @FXML
-  protected void onNextScene(ActionEvent event) throws ApiProxyException, IOException {
+  protected void onNextPressed(ActionEvent event) throws ApiProxyException, IOException {
     currentImageIndex++;
     if (currentImageIndex < images.size()) {
       flashbackSlideshow.setImage(images.get(currentImageIndex));

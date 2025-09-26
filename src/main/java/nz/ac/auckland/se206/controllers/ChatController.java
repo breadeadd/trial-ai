@@ -194,6 +194,7 @@ public abstract class ChatController {
    * @throws IOException if there is an I/O error
    */
   @FXML
+  // Handles Enter key press to send chat messages
   private void onKeyPressed(KeyEvent event) throws ApiProxyException, IOException {
     if (event.getCode() == KeyCode.ENTER) {
       onSendMessage(null); // Call existing send method

@@ -69,9 +69,16 @@ public class EndController extends ChatController {
 
     // Count completed interactions
     int interactionsCompleted = 0;
-    if (aegisInteraction) interactionsCompleted++;
-    if (echoInteraction) interactionsCompleted++;
-    if (orionInteraction) interactionsCompleted++;
+    if (aegisInteraction) {
+      interactionsCompleted++;
+    }
+
+    if (echoInteraction) {
+      interactionsCompleted++;
+    }
+    if (orionInteraction) {
+      interactionsCompleted++;
+    }
 
     // Create interaction status message for the system
     StringBuilder interactionStatus = new StringBuilder();
@@ -236,10 +243,12 @@ public class EndController extends ChatController {
    * @param event the mouse event triggered by clicking a rectangle
    * @throws IOException if there is an I/O error
    */
+  // Handles "GUILTY" verdict selection and updates button states
   @FXML
   private void yesPressed(MouseEvent event) throws IOException {
     Platform.runLater(
         () -> {
+          // Update button states and store verdict choice
           yesBtn.setDisable(true);
           noBtn.setDisable(false);
           guessBtn.setDisable(false);
@@ -523,9 +532,11 @@ public class EndController extends ChatController {
   /** Clears the chat history using reflection. */
   private void clearChatHistory() {
     try {
+      // Access private history field using reflection
       java.lang.reflect.Field historyField = ChatHistory.class.getDeclaredField("history");
       historyField.setAccessible(true);
       java.util.List<?> history = (java.util.List<?>) historyField.get(null);
+      // Clear all stored messages
       history.clear();
     } catch (Exception e) {
       System.err.println("Warning: Could not clear chat history: " + e.getMessage());
@@ -570,6 +581,7 @@ public class EndController extends ChatController {
   /** Clears a specific chat controller's UI using reflection. */
   private void clearChatControllerUi(ChatController controller) {
     try {
+      // Access private chat text area field
       java.lang.reflect.Field txtaChatField = ChatController.class.getDeclaredField("txtaChat");
       txtaChatField.setAccessible(true);
       javafx.scene.control.TextArea txtaChat =
@@ -620,6 +632,7 @@ public class EndController extends ChatController {
   /** Resets a specific chat controller's ChatCompletionRequest using reflection. */
   private void resetChatCompletionRequest(ChatController controller) {
     try {
+      // Access and clear the GPT request object
       java.lang.reflect.Field requestField =
           ChatController.class.getDeclaredField("chatCompletionRequest");
       requestField.setAccessible(true);
@@ -632,6 +645,7 @@ public class EndController extends ChatController {
   /** Resets the GameStateManager by reinitializing character states. */
   private void resetGameStateManager() {
     try {
+      // Clear character interaction tracking
       java.lang.reflect.Field charactersField =
           GameStateManager.class.getDeclaredField("charactersTalkedTo");
       charactersField.setAccessible(true);
@@ -789,7 +803,9 @@ public class EndController extends ChatController {
       nextButtonField.setAccessible(true);
       javafx.scene.control.Button nextButton =
           (javafx.scene.control.Button) nextButtonField.get(controller);
-      if (nextButton != null) nextButton.setVisible(true);
+      if (nextButton != null) {
+        nextButton.setVisible(true);
+      }
 
       System.out.println("Reset DefendantController UI elements");
     } catch (Exception e) {
