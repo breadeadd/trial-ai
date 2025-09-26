@@ -754,20 +754,8 @@ public class AiWitnessController extends ChatController {
   // Toggle chat visibility with drop-up/down animation
   @FXML
   private void onToggleChat(ActionEvent event) {
-    chatVisible = toggleChatVisibility(chatVisible, this::animateTranslate);
-    
-    if (chatVisible) {
-      // Change to dropDownArrow shape and position above chatbox
-      updateArrowToDropDown(dropUpArrow);
-    } else {
-      // Change to dropUpArrow shape and original position
-      updateArrowToDropUp(dropUpArrow);
-    }
+    chatVisible = handleToggleChatAction(chatVisible, dropUpArrow, this::animateTranslate);
   }
-
-
-
-
 
   /** Resets the controller to its initial state for game restart. */
   public void resetControllerState() {

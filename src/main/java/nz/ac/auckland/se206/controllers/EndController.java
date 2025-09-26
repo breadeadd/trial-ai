@@ -183,7 +183,7 @@ public class EndController extends ChatController {
   public void playEndTtsAudio() throws URISyntaxException {
     try {
       // Use shared media player setup method for consistent audio configuration
-      this.mediaPlayer = setupMediaPlayer("/audio/endTts.mp3", 1.0);
+      this.mediaPlayer = arrangeMediaPlayer("/audio/endTts.mp3", 1.0);
       mediaPlayer.play();
     } catch (Exception e) {
       e.printStackTrace();
