@@ -155,7 +155,7 @@ public class AiWitnessController extends ChatController {
       txtInput.setVisible(true);
       txtaChat.setVisible(true);
       dropUpArrow.setVisible(true);
-      updateArrowToDropDown();
+      updateArrowToDropDown(dropUpArrow);
       nextButton.setVisible(false);
 
       // Show drag and drop elements
@@ -173,7 +173,7 @@ public class AiWitnessController extends ChatController {
       txtInput.setVisible(true);
       txtaChat.setVisible(true);
       dropUpArrow.setVisible(true);
-      updateArrowToDropDown();
+      updateArrowToDropDown(dropUpArrow);
       nextButton.setVisible(false);
 
       // Show drag and drop elements for puzzle
@@ -759,7 +759,7 @@ public class AiWitnessController extends ChatController {
       showMemoryScreenUserInterface(popupPane, nextButton, backBtn);
 
       dropUpArrow.setVisible(true); // Show drop up arrow when chat appears
-      updateArrowToDropDown(); // Set initial arrow to drop down arrow
+      updateArrowToDropDown(dropUpArrow); // Set initial arrow to drop down arrow
 
       // Show drag and drop elements when reaching the memory screen
       showDragAndDropElements();
@@ -773,52 +773,16 @@ public class AiWitnessController extends ChatController {
     
     if (chatVisible) {
       // Change to dropDownArrow shape and position above chatbox
-      updateArrowToDropDown();
+      updateArrowToDropDown(dropUpArrow);
     } else {
       // Change to dropUpArrow shape and original position
-      updateArrowToDropUp();
+      updateArrowToDropUp(dropUpArrow);
     }
   }
 
-  // Arrow image
-  private void setArrowImage(String imagePath) {
-    try {
-      Image arrowImage = new Image(getClass().getResourceAsStream(imagePath));
-      ImageView imageView = new ImageView(arrowImage);
-      imageView.setFitWidth(40); // Adjust size as needed
-      imageView.setFitHeight(40); // Adjust size as needed
-      imageView.setPreserveRatio(true);
-      dropUpArrow.setGraphic(imageView);
-      dropUpArrow.setText(""); // Remove any text
-      dropUpArrow.setStyle("-fx-background-color: transparent;"); // Make background transparent
-    } catch (Exception e) {
-      System.err.println("Could not load arrow image: " + imagePath);
-      // Fallback to text if image fails
-      dropUpArrow.setGraphic(null);
-      dropUpArrow.setText("▼");
-    }
-  }
 
-  // Update arrow to dropDown shape and position above chatbox
-  private void updateArrowToDropDown() {
-    dropUpArrow.setLayoutX(14.0);
-    dropUpArrow.setLayoutY(400.0);
-    setArrowImage("/images/assets/chatDown.png");
-  }
 
-  // Update arrow to dropUp shape and original position
-  private void updateArrowToDropUp() {
-    dropUpArrow.setLayoutX(14.0);
-    dropUpArrow.setLayoutY(540.0);
-    setArrowImage("/images/assets/chatUp.png");
-  }
 
-  // Animate the vertical transition
-  private void animateTranslate(javafx.scene.Node node, double toY) {
-    TranslateTransition transition = new TranslateTransition(Duration.millis(300), node);
-    transition.setToY(toY);
-    transition.play();
-  }
 
   /** Resets the controller to its initial state for game restart. */
   public void resetControllerState() {

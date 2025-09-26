@@ -3,7 +3,6 @@ package nz.ac.auckland.se206.controllers;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import javafx.animation.TranslateTransition;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -14,7 +13,6 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.shape.Rectangle;
-import javafx.util.Duration;
 import nz.ac.auckland.apiproxy.chat.openai.ChatMessage;
 import nz.ac.auckland.apiproxy.exceptions.ApiProxyException;
 import nz.ac.auckland.se206.ChatHistory;
@@ -135,7 +133,7 @@ public class DefendantController extends ChatController {
       button4.setVisible(true);
 
       dropUpArrow.setVisible(true);
-      updateArrowToDropDown();
+      updateArrowToDropDown(dropUpArrow);
     }
   }
 
@@ -427,45 +425,16 @@ public class DefendantController extends ChatController {
     
     if (chatVisible) {
       // Change to dropDownArrow shape
-      updateArrowToDropDown();
+      updateArrowToDropDown(dropUpArrow);
     } else {
       // Change to dropUpArrow shape and position
-      updateArrowToDropUp();
+      updateArrowToDropUp(dropUpArrow);
     }
   }
 
-  // Loads and sets arrow image for dropdown button
-  private void setArrowImage(String imagePath) {
-    try {
-      // Load image from resources and configure size
-      Image arrowImage = new Image(getClass().getResourceAsStream(imagePath));
-      ImageView imageView = new ImageView(arrowImage);
-      imageView.setFitWidth(40);
-      imageView.setFitHeight(40);
-      imageView.setPreserveRatio(true);
-      dropUpArrow.setGraphic(imageView);
-      dropUpArrow.setText("");
-      dropUpArrow.setStyle("-fx-background-color: transparent;");
-    } catch (Exception e) {
-      System.err.println("Could not load arrow image: " + imagePath);
-      dropUpArrow.setGraphic(null);
-      dropUpArrow.setText("▼");
-    }
-  }
 
-  // Update arrow to dropDown shape and position above chatbox
-  private void updateArrowToDropDown() {
-    dropUpArrow.setLayoutX(14.0);
-    dropUpArrow.setLayoutY(400.0);
-    setArrowImage("/images/assets/chatDown.png");
-  }
 
-  // Update arrow to dropUp shape and original position
-  private void updateArrowToDropUp() {
-    dropUpArrow.setLayoutX(14.0);
-    dropUpArrow.setLayoutY(540.0);
-    setArrowImage("/images/assets/chatUp.png");
-  }
+
 
   /**
    * Creates smooth vertical slide animation for UI elements during chat toggle operations.
@@ -475,12 +444,6 @@ public class DefendantController extends ChatController {
    * @param node the UI node to animate (typically chat area, input field, or send button)
    * @param toY the target Y translation value for the animation endpoint
    */
-  private void animateTranslate(javafx.scene.Node node, double toY) {
-    // Configure and start translation animation
-    TranslateTransition transition = new TranslateTransition(Duration.millis(300), node);
-    transition.setToY(toY);
-    transition.play();
-  }
 
   /**
    * Resets the controller to its initial state for game restart functionality.

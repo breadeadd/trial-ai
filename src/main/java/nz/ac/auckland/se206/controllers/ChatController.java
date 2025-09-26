@@ -3,6 +3,7 @@ package nz.ac.auckland.se206.controllers;
 import java.io.IOException;
 import java.util.List;
 import java.util.function.BiConsumer;
+import javafx.animation.TranslateTransition;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -14,6 +15,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
+import javafx.util.Duration;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
 import nz.ac.auckland.apiproxy.chat.openai.ChatCompletionRequest;
@@ -354,5 +356,70 @@ public abstract class ChatController {
             roomController.updateButtonState();
           }
         });
+  }
+
+  /**
+   * Common utility method for loading and setting arrow images on buttons.
+   * This method is used across multiple controllers to maintain consistent arrow styling.
+   *
+   * @param button the button to set the image on
+   * @param imagePath the path to the image resource
+   */
+  protected void setArrowImage(Button button, String imagePath) {
+    try {
+      // Load image from resources and configure size
+      Image arrowImage = new Image(getClass().getResourceAsStream(imagePath));
+      ImageView imageView = new ImageView(arrowImage);
+      imageView.setFitWidth(40);
+      imageView.setFitHeight(40);
+      imageView.setPreserveRatio(true);
+      button.setGraphic(imageView);
+      button.setText("");
+      button.setStyle("-fx-background-color: transparent;");
+    } catch (Exception e) {
+      System.err.println("Could not load arrow image: " + imagePath);
+      // Fallback to text if image fails
+      button.setGraphic(null);
+      button.setText("▼");
+    }
+  }
+
+  /**
+   * Common utility method for updating arrow button to drop-down state.
+   * Positions the arrow above the chat area and sets the appropriate image.
+   *
+   * @param dropUpArrow the button to configure
+   */
+  protected void updateArrowToDropDown(Button dropUpArrow) {
+    dropUpArrow.setLayoutX(14.0);
+    dropUpArrow.setLayoutY(400.0);
+    setArrowImage(dropUpArrow, "/images/assets/chatDown.png");
+  }
+
+  /**
+   * Common utility method for updating arrow button to drop-up state.
+   * Positions the arrow below the chat area and sets the appropriate image.
+   *
+   * @param dropUpArrow the button to configure
+   */
+  protected void updateArrowToDropUp(Button dropUpArrow) {
+    dropUpArrow.setLayoutX(14.0);
+    dropUpArrow.setLayoutY(540.0);
+    setArrowImage(dropUpArrow, "/images/assets/chatUp.png");
+  }
+
+  /**
+   * Creates smooth vertical slide animation for UI elements during chat toggle operations.
+   * This method provides a consistent animation experience when showing or hiding chat
+   * interface components, enhancing the user experience with fluid visual transitions.
+   *
+   * @param node the UI node to animate (typically chat area, input field, or send button)
+   * @param toY the target Y position for the animation (vertical offset)
+   */
+  protected void animateTranslate(javafx.scene.Node node, double toY) {
+    // Configure and start translation animation with 300ms duration
+    TranslateTransition transition = new TranslateTransition(Duration.millis(300), node);
+    transition.setToY(toY);
+    transition.play();
   }
 }
