@@ -65,14 +65,19 @@ public class ImageLoaderUtil {
    * @return the memory image path or null if character is not recognized
    */
   private static String getMemoryImagePath(String characterName) {
+    // Convert character name to lowercase for case-insensitive matching
     switch (characterName.toLowerCase()) {
       case "defendant":
+        // Return path to defendant's single memory screen image
         return "/images/memories/defendantMem.png";
       case "human":
+        // Return path to human witness's first memory screen (locked phone)
         return "/images/memories/humanMem1.png";
       case "ai":
+        // Return path to AI witness's memory screen with timeline puzzle
         return "/images/memories/aiMem.png";
       default:
+        // Character not recognized - return null to indicate no memory image
         return null;
     }
   }

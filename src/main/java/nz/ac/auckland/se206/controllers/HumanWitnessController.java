@@ -3,7 +3,6 @@ package nz.ac.auckland.se206.controllers;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import javafx.animation.TranslateTransition;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -16,7 +15,6 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.shape.Rectangle;
-import javafx.util.Duration;
 import nz.ac.auckland.apiproxy.chat.openai.ChatMessage;
 import nz.ac.auckland.apiproxy.exceptions.ApiProxyException;
 import nz.ac.auckland.se206.ChatHistory;
@@ -111,7 +109,7 @@ public class HumanWitnessController extends ChatController {
       unlockSlider.setValue(0.0); // Resetting to starting pos
       dropUpArrow.setVisible(true); // Show arrow on humanMem1.png
       // Set to dropUpArrow shape
-      updateArrowToDropDown();
+      updateArrowToDropDown(dropUpArrow);
     }
   }
 
@@ -133,7 +131,7 @@ public class HumanWitnessController extends ChatController {
       unlockSlider.setVisible(true);
       unlockSlider.setDisable(false);
       dropUpArrow.setVisible(true);
-      updateArrowToDropDown(); // Arrow starts pointing down
+      updateArrowToDropDown(dropUpArrow); // Arrow starts pointing down
 
       // Initialize chat as visible
       chatVisible = true;
@@ -153,9 +151,9 @@ public class HumanWitnessController extends ChatController {
       txtInput.setTranslateY(0.0);
       btnSend.setTranslateY(0.0);
       if (chatVisible) {
-        updateArrowToDropDown();
+        updateArrowToDropDown(dropUpArrow);
       } else {
-        updateArrowToDropUp();
+        updateArrowToDropUp(dropUpArrow);
       }
       txtaChat.setVisible(true);
       txtInput.setVisible(true);
@@ -186,9 +184,9 @@ public class HumanWitnessController extends ChatController {
       txtInput.setTranslateY(chatVisible ? 0.0 : 150.0);
       btnSend.setTranslateY(chatVisible ? 0.0 : 150.0);
       if (chatVisible) {
-        updateArrowToDropDown();
+        updateArrowToDropDown(dropUpArrow);
       } else {
-        updateArrowToDropUp();
+        updateArrowToDropUp(dropUpArrow);
       }
       txtaChat.setVisible(chatVisible);
       txtInput.setVisible(chatVisible);
@@ -278,52 +276,16 @@ public class HumanWitnessController extends ChatController {
     
     if (chatVisible) {
       // Change to dropDownArrow shape and position above chatbox
-      updateArrowToDropDown();
+      updateArrowToDropDown(dropUpArrow);
     } else {
       // Change to dropUpArrow shape and move below
-      updateArrowToDropUp();
+      updateArrowToDropUp(dropUpArrow);
     }
   }
 
-  // arrow image
-  private void setArrowImage(String imagePath) {
-    try {
-      Image arrowImage = new Image(getClass().getResourceAsStream(imagePath));
-      ImageView imageView = new ImageView(arrowImage);
-      imageView.setFitWidth(40);
-      imageView.setFitHeight(40);
-      imageView.setPreserveRatio(true);
-      dropUpArrow.setGraphic(imageView);
-      dropUpArrow.setText(""); // Remove any text
-      dropUpArrow.setStyle("-fx-background-color: transparent;"); // Make background transparent
-    } catch (Exception e) {
-      System.err.println("Could not load arrow image: " + imagePath);
-      // Fallback to text if image fails
-      dropUpArrow.setGraphic(null);
-      dropUpArrow.setText("▼");
-    }
-  }
 
-  // Update arrow to dropDown shape and position above chatbox
-  private void updateArrowToDropDown() {
-    dropUpArrow.setLayoutX(14.0);
-    dropUpArrow.setLayoutY(400.0);
-    setArrowImage("/images/assets/chatDown.png");
-  }
 
-  // Update arrow to dropUp shape and original position
-  private void updateArrowToDropUp() {
-    dropUpArrow.setLayoutX(14.0);
-    dropUpArrow.setLayoutY(540.0);
-    setArrowImage("/images/assets/chatUp.png");
-  }
 
-  // Animate the transition
-  private void animateTranslate(javafx.scene.Node node, double toY) {
-    TranslateTransition transition = new TranslateTransition(Duration.millis(300), node);
-    transition.setToY(toY);
-    transition.play();
-  }
 
   /** Resets the controller to its initial state for game restart. */
   public void resetControllerState() {

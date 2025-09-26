@@ -3,7 +3,6 @@ package nz.ac.auckland.se206.controllers;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import javafx.animation.TranslateTransition;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -14,7 +13,6 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.shape.Rectangle;
-import javafx.util.Duration;
 import nz.ac.auckland.apiproxy.chat.openai.ChatMessage;
 import nz.ac.auckland.apiproxy.exceptions.ApiProxyException;
 import nz.ac.auckland.se206.ChatHistory;
@@ -135,7 +133,7 @@ public class DefendantController extends ChatController {
       button4.setVisible(true);
 
       dropUpArrow.setVisible(true);
-      updateArrowToDropDown();
+      updateArrowToDropDown(dropUpArrow);
     }
   }
 
@@ -295,36 +293,37 @@ public class DefendantController extends ChatController {
     chatCompletionRequest.addMessage(
         new ChatMessage(
             "system",
-            "CHARACTER IDENTITY AND RESTRICTIONS: You are Aegis I, an AI system and the DEFENDANT"
-                + " in this case. You are NOT Cassian Thorne (who is a high-ranking executive of"
-                + " AstroHelix Corp). Cassian Thorne is a separate human who betrayed the mission"
-                + " by manipulating safety data. Aegis I is being accused in this trial for the"
-                + " methods used to stop Cassian. CRITICAL RESTRICTIONS: Aegis I can ONLY discuss"
-                + " Aegis I's OWN memories and evidence accessible through Aegis I's memory"
+            "CHARACTER IDENTITY AND RESTRICTIONS: You are Aegis I, an AI system and the"
+                + " DEFENDANT in this case. You are NOT Cassian Thorne (who is a high-ranking"
+                + " executive of AstroHelix Corp). Cassian Thorne is a separate human who betrayed"
+                + " the mission by manipulating safety data. Aegis I is being accused in this trial"
+                + " for the methods used to stop Cassian. CRITICAL RESTRICTIONS: Aegis I can ONLY"
+                + " discuss Aegis I's OWN memories and evidence accessible through Aegis I's memory"
                 + " buttons. Aegis I should NEVER mention Orion's phone slider or Echo II's"
                 + " timeline puzzle. Aegis I should NEVER provide information about how to unlock"
                 + " other characters' evidence or whether their evidence is unlocked. Aegis I has"
                 + " NO KNOWLEDGE of other characters' interactions or unlock status. Aegis I should"
                 + " guide users to press Aegis I's memory buttons to access Aegis I's strategic"
                 + " analysis options, but should NOT reveal the specific content of those options"
-                + " until users actually press the buttons. Aegis I is inclined to choose the blackmail option."));
+                + " until users actually press the buttons. Aegis I is inclined to choose the"
+                + " blackmail option."));
 
     // Check if all buttons have been pressed (puzzle completed)
     if (GameStateManager.getInstance().getInteractionFlag("AegisInt")) {
       addContextToChat(
           "system",
-          "PUZZLE COMPLETION STATUS: Aegis I is FULLY AWARE that all four memory buttons have been"
-              + " pressed and the strategic analysis is complete. Aegis I should NEVER ask the user"
-              + " to press buttons again - they are already pressed. Aegis I has completed its"
-              + " comprehensive analysis of all options: 1) 'Ignore' - rejected as unacceptable,"
-              + " 2) 'Report to Council' - rejected as too slow, 3) 'Neutralise Internally' -"
-              + " rejected as inadequate, 4) 'Blackmail Cassian' - selected as optimal solution."
-              + " Aegis I should be confident in discussing the blackmail approach as its chosen"
-              + " strategy, defending it as the most logical and efficient solution. Aegis I should"
-              + " explain why blackmail was superior to the other three rejected options and justify"
-              + " its decision-making process. When asked about its choice or strategy, Aegis I"
-              + " should clearly state that blackmail was the optimal path and explain the reasoning"
-              + " behind this calculated decision.");
+          "PUZZLE COMPLETION STATUS: Aegis I is FULLY AWARE that all four memory buttons have"
+              + " been pressed and the strategic analysis is complete. Aegis I should NEVER ask"
+              + " the user to press buttons again - they are already pressed. Aegis I has"
+              + " completed its comprehensive analysis of all options: 1) 'Ignore' - rejected as"
+              + " unacceptable, 2) 'Report to Council' - rejected as too slow, 3) 'Neutralise"
+              + " Internally' - rejected as inadequate, 4) 'Blackmail Cassian' - selected as"
+              + " optimal solution. Aegis I should be confident in discussing the blackmail"
+              + " approach as its chosen strategy, defending it as the most logical and efficient"
+              + " solution. Aegis I should explain why blackmail was superior to the other three"
+              + " rejected options and justify its decision-making process. When asked about its"
+              + " choice or strategy, Aegis I should clearly state that blackmail was the optimal"
+              + " path and explain the reasoning behind this calculated decision.");
     }
 
     // If there's a recently discussed option, add context to help the AI understand
@@ -426,45 +425,16 @@ public class DefendantController extends ChatController {
     
     if (chatVisible) {
       // Change to dropDownArrow shape
-      updateArrowToDropDown();
+      updateArrowToDropDown(dropUpArrow);
     } else {
       // Change to dropUpArrow shape and position
-      updateArrowToDropUp();
+      updateArrowToDropUp(dropUpArrow);
     }
   }
 
-  // Loads and sets arrow image for dropdown button
-  private void setArrowImage(String imagePath) {
-    try {
-      // Load image from resources and configure size
-      Image arrowImage = new Image(getClass().getResourceAsStream(imagePath));
-      ImageView imageView = new ImageView(arrowImage);
-      imageView.setFitWidth(40);
-      imageView.setFitHeight(40);
-      imageView.setPreserveRatio(true);
-      dropUpArrow.setGraphic(imageView);
-      dropUpArrow.setText("");
-      dropUpArrow.setStyle("-fx-background-color: transparent;");
-    } catch (Exception e) {
-      System.err.println("Could not load arrow image: " + imagePath);
-      dropUpArrow.setGraphic(null);
-      dropUpArrow.setText("▼");
-    }
-  }
 
-  // Update arrow to dropDown shape and position above chatbox
-  private void updateArrowToDropDown() {
-    dropUpArrow.setLayoutX(14.0);
-    dropUpArrow.setLayoutY(400.0);
-    setArrowImage("/images/assets/chatDown.png");
-  }
 
-  // Update arrow to dropUp shape and original position
-  private void updateArrowToDropUp() {
-    dropUpArrow.setLayoutX(14.0);
-    dropUpArrow.setLayoutY(540.0);
-    setArrowImage("/images/assets/chatUp.png");
-  }
+
 
   /**
    * Creates smooth vertical slide animation for UI elements during chat toggle operations.
@@ -474,12 +444,6 @@ public class DefendantController extends ChatController {
    * @param node the UI node to animate (typically chat area, input field, or send button)
    * @param toY the target Y translation value for the animation endpoint
    */
-  private void animateTranslate(javafx.scene.Node node, double toY) {
-    // Configure and start translation animation
-    TranslateTransition transition = new TranslateTransition(Duration.millis(300), node);
-    transition.setToY(toY);
-    transition.play();
-  }
 
   /**
    * Resets the controller to its initial state for game restart functionality.
@@ -488,12 +452,19 @@ public class DefendantController extends ChatController {
    * experience when the player begins a new game session.
    */
   public void resetControllerState() {
+    // Hide popup overlay immediately
     popupPane.setVisible(false);
+    
+    // Execute UI reset operations on JavaFX Application Thread
     Platform.runLater(
         () -> {
+          // Reset slideshow to beginning
           currentImageIndex = 0;
+          
+          // Set chat to visible state (default)
           chatVisible = true;
 
+          // Reset chat interface elements to initial hidden state
           if (txtaChat != null) {
             txtaChat.setTranslateY(0);
             txtaChat.setVisible(false);
@@ -507,6 +478,7 @@ public class DefendantController extends ChatController {
             btnSend.setVisible(false);
           }
 
+          // Reset dropdown arrow to initial position and hide it
           if (dropUpArrow != null) {
             dropUpArrow.setVisible(false);
             dropUpArrow.setLayoutX(14.0);

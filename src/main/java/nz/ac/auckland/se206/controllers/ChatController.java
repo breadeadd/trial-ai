@@ -2,6 +2,8 @@ package nz.ac.auckland.se206.controllers;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.function.BiConsumer;
+import javafx.animation.TranslateTransition;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -13,9 +15,9 @@ import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
+import javafx.util.Duration;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
-import java.util.function.BiConsumer;
 import nz.ac.auckland.apiproxy.chat.openai.ChatCompletionRequest;
 import nz.ac.auckland.apiproxy.chat.openai.ChatCompletionRequest.Model;
 import nz.ac.auckland.apiproxy.chat.openai.ChatCompletionResult;
@@ -259,12 +261,19 @@ public abstract class ChatController {
       int currentIndex, 
       List<Image> images, 
       ImageView flashbackImageView) {
+    // Move to the next image in the sequence
     currentIndex++;
+    
+    // Check if there are more images to display
     if (currentIndex < images.size()) {
+      // Display the next image in the slideshow
       flashbackImageView.setImage(images.get(currentIndex));
     } else {
+      // End of slideshow reached - disable further mouse interactions
       flashbackImageView.setOnMouseClicked(null);
     }
+    
+    // Return updated index for caller to track current position
     return currentIndex;
   }
 
@@ -279,10 +288,16 @@ public abstract class ChatController {
       Pane popupPane, 
       Button nextButton, 
       Button backBtn) {
+    // Show the popup overlay to indicate interactive mode
     popupPane.setVisible(true);
+    
+    // Hide the next button since user can now interact with memory elements
     nextButton.setVisible(false);
+    
+    // Enable the back button for navigation
     backBtn.setDisable(false);
 
+    // Make all chat interface elements visible for user interaction
     btnSend.setVisible(true);
     txtInput.setVisible(true);
     txtaChat.setVisible(true);
@@ -341,5 +356,70 @@ public abstract class ChatController {
             roomController.updateButtonState();
           }
         });
+  }
+
+  /**
+   * Common utility method for loading and setting arrow images on buttons.
+   * This method is used across multiple controllers to maintain consistent arrow styling.
+   *
+   * @param button the button to set the image on
+   * @param imagePath the path to the image resource
+   */
+  protected void setArrowImage(Button button, String imagePath) {
+    try {
+      // Load image from resources and configure size
+      Image arrowImage = new Image(getClass().getResourceAsStream(imagePath));
+      ImageView imageView = new ImageView(arrowImage);
+      imageView.setFitWidth(40);
+      imageView.setFitHeight(40);
+      imageView.setPreserveRatio(true);
+      button.setGraphic(imageView);
+      button.setText("");
+      button.setStyle("-fx-background-color: transparent;");
+    } catch (Exception e) {
+      System.err.println("Could not load arrow image: " + imagePath);
+      // Fallback to text if image fails
+      button.setGraphic(null);
+      button.setText("▼");
+    }
+  }
+
+  /**
+   * Common utility method for updating arrow button to drop-down state.
+   * Positions the arrow above the chat area and sets the appropriate image.
+   *
+   * @param dropUpArrow the button to configure
+   */
+  protected void updateArrowToDropDown(Button dropUpArrow) {
+    dropUpArrow.setLayoutX(14.0);
+    dropUpArrow.setLayoutY(400.0);
+    setArrowImage(dropUpArrow, "/images/assets/chatDown.png");
+  }
+
+  /**
+   * Common utility method for updating arrow button to drop-up state.
+   * Positions the arrow below the chat area and sets the appropriate image.
+   *
+   * @param dropUpArrow the button to configure
+   */
+  protected void updateArrowToDropUp(Button dropUpArrow) {
+    dropUpArrow.setLayoutX(14.0);
+    dropUpArrow.setLayoutY(540.0);
+    setArrowImage(dropUpArrow, "/images/assets/chatUp.png");
+  }
+
+  /**
+   * Creates smooth vertical slide animation for UI elements during chat toggle operations.
+   * This method provides a consistent animation experience when showing or hiding chat
+   * interface components, enhancing the user experience with fluid visual transitions.
+   *
+   * @param node the UI node to animate (typically chat area, input field, or send button)
+   * @param toY the target Y position for the animation (vertical offset)
+   */
+  protected void animateTranslate(javafx.scene.Node node, double toY) {
+    // Configure and start translation animation with 300ms duration
+    TranslateTransition transition = new TranslateTransition(Duration.millis(300), node);
+    transition.setToY(toY);
+    transition.play();
   }
 }

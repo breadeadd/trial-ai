@@ -155,7 +155,7 @@ public class AiWitnessController extends ChatController {
       txtInput.setVisible(true);
       txtaChat.setVisible(true);
       dropUpArrow.setVisible(true);
-      updateArrowToDropDown();
+      updateArrowToDropDown(dropUpArrow);
       nextButton.setVisible(false);
 
       // Show drag and drop elements
@@ -173,7 +173,7 @@ public class AiWitnessController extends ChatController {
       txtInput.setVisible(true);
       txtaChat.setVisible(true);
       dropUpArrow.setVisible(true);
-      updateArrowToDropDown();
+      updateArrowToDropDown(dropUpArrow);
       nextButton.setVisible(false);
 
       // Show drag and drop elements for puzzle
@@ -467,14 +467,19 @@ public class AiWitnessController extends ChatController {
    * @return the corresponding human-readable name, or "Unknown Event" if not recognized
    */
   private String getEventName(String eventId) {
+    // Map internal event IDs to user-friendly display names
     switch (eventId) {
       case "event1":
+        // First chronological event: Cassian's data manipulation
         return "Logs Altered";
       case "event2":
+        // Second chronological event: Aegis I's response
         return "Counter-Threat";
       case "event3":
+        // Third chronological event: Mission Lead's message overflow
         return "Outrage";
       default:
+        // Handle unrecognized event IDs safely
         return "Unknown Event";
     }
   }
@@ -488,14 +493,19 @@ public class AiWitnessController extends ChatController {
    * @return the correct slot position (1-based indexing), or 0 if event is unrecognized
    */
   private int getCorrectSlot(String eventId) {
+    // Return the chronologically correct position for each event
     switch (eventId) {
       case "event1":
+        // Logs Altered happens first in the timeline
         return 1;
       case "event2":
+        // Counter-Threat happens second in the timeline
         return 2;
       case "event3":
+        // Outrage happens third (final) in the timeline
         return 3;
       default:
+        // Unknown event - return 0 to indicate error
         return 0;
     }
   }
@@ -527,7 +537,8 @@ public class AiWitnessController extends ChatController {
         
         // Echo speaks the success message (assistant role)
         Platform.runLater(() -> {
-          ChatMessage successMessage = new ChatMessage("assistant", "Timeline successfully loaded⏳✔️");
+          ChatMessage successMessage = new ChatMessage("assistant", 
+              "Timeline successfully loaded⏳✔️");
           appendChatMessage(successMessage);
         });
 
@@ -546,11 +557,12 @@ public class AiWitnessController extends ChatController {
           // Add context for AI understanding
           addContextToChat(
               "system",
-              "Player has successfully completed Echo II's timeline memory puzzle. All events were placed in correct chronological"
-                  + " order: 1st - Logs Altered (Cassian made various statistic changes to the Project Starlight Logs), 2nd -"
-                  + " Counter-Threat (Aegis often takes immediate, extreme action. Such as a counter-threat), 3rd - Outrage (O. Vale,"
-                  + " Mission Lead, received an overflow of messages). This represents the correct sequence of events during the"
-                  + " mission compromise.");
+              "Player has successfully completed Echo II's timeline memory puzzle. All events were"
+                  + " placed in correct chronological order: 1st - Logs Altered (Cassian made various"
+                  + " statistic changes to the Project Starlight Logs), 2nd - Counter-Threat (Aegis"
+                  + " often takes immediate, extreme action. Such as a counter-threat), 3rd - Outrage"
+                  + " (O. Vale, Mission Lead, received an overflow of messages). This represents the"
+                  + " correct sequence of events during the mission compromise.");
           lastTimelineAction = "Timeline completed successfully";
         });
       } catch (InterruptedException e) {
@@ -747,7 +759,7 @@ public class AiWitnessController extends ChatController {
       showMemoryScreenUserInterface(popupPane, nextButton, backBtn);
 
       dropUpArrow.setVisible(true); // Show drop up arrow when chat appears
-      updateArrowToDropDown(); // Set initial arrow to drop down arrow
+      updateArrowToDropDown(dropUpArrow); // Set initial arrow to drop down arrow
 
       // Show drag and drop elements when reaching the memory screen
       showDragAndDropElements();
@@ -761,52 +773,16 @@ public class AiWitnessController extends ChatController {
     
     if (chatVisible) {
       // Change to dropDownArrow shape and position above chatbox
-      updateArrowToDropDown();
+      updateArrowToDropDown(dropUpArrow);
     } else {
       // Change to dropUpArrow shape and original position
-      updateArrowToDropUp();
+      updateArrowToDropUp(dropUpArrow);
     }
   }
 
-  // Arrow image
-  private void setArrowImage(String imagePath) {
-    try {
-      Image arrowImage = new Image(getClass().getResourceAsStream(imagePath));
-      ImageView imageView = new ImageView(arrowImage);
-      imageView.setFitWidth(40); // Adjust size as needed
-      imageView.setFitHeight(40); // Adjust size as needed
-      imageView.setPreserveRatio(true);
-      dropUpArrow.setGraphic(imageView);
-      dropUpArrow.setText(""); // Remove any text
-      dropUpArrow.setStyle("-fx-background-color: transparent;"); // Make background transparent
-    } catch (Exception e) {
-      System.err.println("Could not load arrow image: " + imagePath);
-      // Fallback to text if image fails
-      dropUpArrow.setGraphic(null);
-      dropUpArrow.setText("▼");
-    }
-  }
 
-  // Update arrow to dropDown shape and position above chatbox
-  private void updateArrowToDropDown() {
-    dropUpArrow.setLayoutX(14.0);
-    dropUpArrow.setLayoutY(400.0);
-    setArrowImage("/images/assets/chatDown.png");
-  }
 
-  // Update arrow to dropUp shape and original position
-  private void updateArrowToDropUp() {
-    dropUpArrow.setLayoutX(14.0);
-    dropUpArrow.setLayoutY(540.0);
-    setArrowImage("/images/assets/chatUp.png");
-  }
 
-  // Animate the vertical transition
-  private void animateTranslate(javafx.scene.Node node, double toY) {
-    TranslateTransition transition = new TranslateTransition(Duration.millis(300), node);
-    transition.setToY(toY);
-    transition.play();
-  }
 
   /** Resets the controller to its initial state for game restart. */
   public void resetControllerState() {
