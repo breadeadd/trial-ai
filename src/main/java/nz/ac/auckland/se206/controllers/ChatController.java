@@ -544,7 +544,8 @@ public abstract class ChatController {
    * @return configured MediaPlayer instance ready for playback
    * @throws Exception if there is an error loading or configuring the audio
    */
-  protected MediaPlayer arrangeMediaPlayer(String audioResourcePath, double volume) throws Exception {
+  protected MediaPlayer arrangeMediaPlayer(String audioResourcePath, 
+      double volume) throws Exception {
     // Load and configure audio file using resource URI
     String audioPath = getClass().getResource(audioResourcePath).toURI().toString();
     Media media = new Media(audioPath);
@@ -627,7 +628,7 @@ public abstract class ChatController {
    * @return the new chat visibility state after toggle
    */
   protected boolean handleToggleChatAction(boolean currentChatVisible, Button dropUpArrow, 
-      java.util.function.BiConsumer<javafx.scene.Node, Double> animateCallback) {
+      BiConsumer<javafx.scene.Node, Double> animateCallback) {
     boolean newChatVisible = toggleChatVisibility(currentChatVisible, animateCallback);
     
     if (newChatVisible) {
@@ -639,5 +640,62 @@ public abstract class ChatController {
     }
     
     return newChatVisible;
+  }
+  
+  /**
+   * Handles common controller reset operations for game restart functionality.
+   * This method provides shared reset logic for UI elements, chat states, and 
+   * flashback components that are common across multiple controllers.
+   *
+   * @param popupPane the popup overlay to hide during reset
+   * @param dropUpArrow the dropdown arrow UI element to reset
+   * @param nextButton the next button for flashback navigation
+   * @param flashbackSlideshow the main slideshow component
+   * @param images the list of flashback images
+   * @param currentImageIndex reference to current image index to reset
+   * @param chatVisible reference to chat visibility state to reset
+   */
+  protected void performCommonControllerReset(Pane popupPane, Button dropUpArrow, 
+      Button nextButton, ImageView flashbackSlideshow, List<Image> images, 
+      Runnable resetIndexCallback, Runnable setChatVisibleCallback) {
+    
+    // Hide popup overlay immediately
+    if (popupPane != null) {
+      popupPane.setVisible(false);
+    }
+    
+    // Execute UI reset operations on JavaFX Application Thread
+    Platform.runLater(() -> {
+      // Reset slideshow to beginning (callback handles setting index)
+      if (resetIndexCallback != null) {
+        resetIndexCallback.run();
+      }
+      
+      // Set chat to visible state (callback handles setting visibility)
+      if (setChatVisibleCallback != null) {
+        setChatVisibleCallback.run();
+      }
+
+      // Use shared method to reset chat UI elements
+      resetChatUiElements(false); // Initially hidden
+      
+      // Reset dropdown arrow to bottom position and hide it
+      if (dropUpArrow != null) {
+        dropUpArrow.setVisible(false);
+        dropUpArrow.setLayoutX(14.0);
+        dropUpArrow.setLayoutY(540.0); // Bottom position
+      }
+
+      // Show next button for flashbacks
+      if (nextButton != null) {
+        nextButton.setVisible(true);
+      }
+
+      // Reset flashback slideshow to first image
+      if (flashbackSlideshow != null && !images.isEmpty()) {
+        flashbackSlideshow.setImage(images.get(0));
+        flashbackSlideshow.setVisible(true); // Ensure main slideshow is visible
+      }
+    });
   }
 }

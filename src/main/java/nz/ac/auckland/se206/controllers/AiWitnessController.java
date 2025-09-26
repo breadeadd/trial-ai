@@ -759,44 +759,20 @@ public class AiWitnessController extends ChatController {
 
   /** Resets the controller to its initial state for game restart. */
   public void resetControllerState() {
-    popupPane.setVisible(false);
-    Platform.runLater(
-        () -> {
-          // Reset image index to beginning
-          currentImageIndex = 0;
+    // Use shared common reset functionality
+    performCommonControllerReset(popupPane, dropUpArrow, nextButton, flashbackSlideshow, 
+        images, () -> currentImageIndex = 0, () -> chatVisible = true);
+    
+    // Handle AI witness-specific reset operations
+    Platform.runLater(() -> {
+      // Hide the memory screen overlay
+      if (aiFlashback != null) {
+        aiFlashback.setVisible(false);
+      }
 
-          // Reset chat visibility to initial state (visible)
-          chatVisible = true;
-
-          // Use shared method to reset chat UI elements
-          resetChatUiElements(false); // Initially hidden
-
-          // Reset dropdown arrow to bottom position and hide it
-          if (dropUpArrow != null) {
-            dropUpArrow.setVisible(false);
-            dropUpArrow.setLayoutX(14.0);
-            dropUpArrow.setLayoutY(540.0); // Bottom position
-          }
-
-          // Show next button for flashbacks
-          if (nextButton != null) {
-            nextButton.setVisible(true);
-          }
-
-          // Reset flashback slideshow to first image
-          if (flashbackSlideshow != null && !images.isEmpty()) {
-            flashbackSlideshow.setImage(images.get(0));
-            flashbackSlideshow.setVisible(true); // Ensure main slideshow is visible
-          }
-
-          // Hide the memory screen overlay
-          if (aiFlashback != null) {
-            aiFlashback.setVisible(false);
-          }
-
-          // Reset drag and drop puzzle elements
-          resetPuzzleState();
-        });
+      // Reset drag and drop puzzle elements
+      resetPuzzleState();
+    });
   }
 
   /** Resets the drag and drop puzzle to its initial state. */
