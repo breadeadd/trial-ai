@@ -48,14 +48,15 @@ public class CountdownTimer {
         // Player loses immediately for not talking to all characters
         App.setRoot("answer");
         if (nz.ac.auckland.se206.controllers.EndController.instance != null) {
-          nz.ac.auckland.se206.controllers.EndController.instance.setMessage("incomplete_interactions");
+          nz.ac.auckland.se206.controllers.EndController.instance.setMessage(
+              "incomplete_interactions");
           nz.ac.auckland.se206.controllers.EndController.instance.setVisible();
           nz.ac.auckland.se206.controllers.EndController.instance.setRestartVisible();
-          nz.ac.auckland.se206.controllers.EndController.instance.setIncompleteInteractionsRationale();
+          nz.ac.auckland.se206.controllers.EndController.instance.setIncompleteInteractions();
         }
         return; // Don't continue with normal timeout flow
       }
-      
+
       // only run when 120 times out
       App.setRoot("answer");
 

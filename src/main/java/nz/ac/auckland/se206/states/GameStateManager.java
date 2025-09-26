@@ -8,19 +8,19 @@ public class GameStateManager {
   private Map<String, Boolean> charactersTalkedTo;
   private Map<String, Boolean> gameFlags;
 
+  public static GameStateManager getInstance() {
+    if (instance == null) {
+      instance = new GameStateManager();
+    }
+    return instance;
+  }
+
   // Manage game state and character interactions
   private GameStateManager() {
     charactersTalkedTo = new HashMap<>();
     gameFlags = new HashMap<>();
     initializeCharacters();
     initializeInteractionFlags();
-  }
-
-  public static GameStateManager getInstance() {
-    if (instance == null) {
-      instance = new GameStateManager();
-    }
-    return instance;
   }
 
   private void initializeCharacters() {

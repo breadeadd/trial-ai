@@ -12,6 +12,7 @@ public class ChatHistory {
   private static final Map<String, List<ChatMessage>> characterContexts = new HashMap<>();
 
   public static void addMessage(ChatMessage msg, String who) {
+    // Determine speaker prefix for context tracking
     String prefix = "";
     switch (who) {
       case "aegis":
@@ -34,11 +35,13 @@ public class ChatHistory {
         prefix = who + " said: ";
         break;
     }
+    // Create message with speaker context and add to shared history
     ChatMessage contextualMsg = new ChatMessage(msg.getRole(), prefix + msg.getContent());
     history.add(contextualMsg);
   }
 
   public static void addCharacterContext(ChatMessage msg, String characterName) {
+    // Store character-specific conversation context
     characterContexts.computeIfAbsent(characterName, k -> new ArrayList<>()).add(msg);
   }
 

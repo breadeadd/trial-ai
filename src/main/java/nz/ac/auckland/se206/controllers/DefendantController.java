@@ -56,19 +56,23 @@ public class DefendantController extends ChatController {
    */
   @FXML
   public void initialize() throws ApiProxyException {
+    // Initialize popup overlay and instruction text
     popupPane.setVisible(false);
     popupPane.setOnMouseClicked(e -> popupPane.setVisible(false));
     instructionLabel.setText("Press the buttons to uncover Aegis I's calculations.");
 
+    // Load flashback images and initialize chat system
     loadImages(null);
     initChat();
     initButtons();
 
+    // Hide chat elements initially until flashback completion
     btnSend.setVisible(false);
     txtInput.setVisible(false);
     txtaChat.setVisible(false);
     backBtn.setDisable(true);
     dropUpArrow.setVisible(false);
+    // Set loading indicator to spinning mode
     loading.setProgress(-1);
   }
 
@@ -108,10 +112,11 @@ public class DefendantController extends ChatController {
         new Image(getClass().getResourceAsStream("/images/memories/defendantMem.png")));
   }
 
-  // loading images for flashback
+  // Preloads flashback and memory images in background thread
   private void loadImages(Runnable onLoaded) {
     new Thread(
             () -> {
+              // Load all defendant flashback sequence images
               List<Image> loadedImages = new ArrayList<>();
               loadedImages.add(
                   new Image(
@@ -125,12 +130,15 @@ public class DefendantController extends ChatController {
                   new Image(
                       getClass()
                           .getResourceAsStream("/images/flashbacks/defendant/defendant3F.png")));
+              // Add final memory image
               loadedImages.add(
                   new Image(getClass().getResourceAsStream("/images/memories/defendantMem.png")));
+              // Update image list on UI thread
               Platform.runLater(
                   () -> {
                     images.clear();
                     images.addAll(loadedImages);
+                    // Execute callback when loading complete
                     if (onLoaded != null) {
                       onLoaded.run();
                     }
@@ -140,7 +148,7 @@ public class DefendantController extends ChatController {
   }
 
   @FXML
-  protected void nextScene(ActionEvent event) throws ApiProxyException, IOException {
+  protected void onNextScene(ActionEvent event) throws ApiProxyException, IOException {
     currentImageIndex++;
     if (currentImageIndex < images.size()) {
       flashbackSlideshow.setImage(images.get(currentImageIndex));
@@ -430,7 +438,7 @@ public class DefendantController extends ChatController {
 
   // toggle chat visibility with drop up/down animation
   @FXML
-  private void toggleChatVisibility(ActionEvent event) {
+  private void onToggleChat(ActionEvent event) {
     if (chatVisible) {
       // Drop down (hide)
       animateTranslate(txtaChat, 150.0);
