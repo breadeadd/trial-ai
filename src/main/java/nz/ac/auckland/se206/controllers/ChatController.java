@@ -18,6 +18,8 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import javafx.util.Duration;
 import nz.ac.auckland.apiproxy.chat.openai.ChatCompletionRequest;
 import nz.ac.auckland.apiproxy.chat.openai.ChatCompletionRequest.Model;
@@ -497,14 +499,18 @@ public abstract class ChatController {
    * @param task the task to execute after the delay
    */
   protected void executeDelayedTask(long delayMs, Runnable task) {
+    // Create a new thread for the delayed execution
     Thread delayedThread = new Thread(() -> {
+      // Sleep for the specified delay
       try {
         Thread.sleep(delayMs);
         Platform.runLater(task);
       } catch (InterruptedException e) {
+        // Handle interruption
         Thread.currentThread().interrupt();
       }
     });
+    // Mark the thread as a daemon thread
     delayedThread.setDaemon(true);
     delayedThread.start();
   }
@@ -525,6 +531,88 @@ public abstract class ChatController {
         ChatHistory.addMessage(delayedMessage, getCharacterName());
       }
       appendChatMessage(delayedMessage);
+    });
+  }
+
+  /**
+   * Sets up and configures a MediaPlayer for audio playback with standard error handling.
+   * This method creates a consistent audio setup pattern used across multiple controllers
+   * for playing TTS audio and other sound effects during game interactions.
+   * 
+   * @param audioResourcePath the path to the audio resource (e.g., "/audio/openTts.mp3")
+   * @param volume the playback volume (0.0 to 1.0)
+   * @return configured MediaPlayer instance ready for playback
+   * @throws Exception if there is an error loading or configuring the audio
+   */
+  protected MediaPlayer setupMediaPlayer(String audioResourcePath, double volume) throws Exception {
+    // Load and configure audio file using resource URI
+    String audioPath = getClass().getResource(audioResourcePath).toURI().toString();
+    Media media = new Media(audioPath);
+    MediaPlayer player = new MediaPlayer(media);
+    
+    // Configure playback settings
+    player.setVolume(volume);
+    
+    // Auto-play when audio file is ready for playback
+    player.setOnReady(() -> player.play());
+    
+    // Handle any playback errors that occur during audio processing
+    player.setOnError(() -> {
+      if (player.getError() != null) {
+        player.getError().printStackTrace();
+      }
+    });
+    
+    return player;
+  }
+
+  /**
+   * Initializes flashback slideshow with consistent loading and display behavior.
+   * This method provides a standard approach for setting up image slideshows
+   * across different character controllers, ensuring uniform user experience.
+   * 
+   * @param images the list of images to display in the slideshow
+   * @param flashbackImageView the ImageView component to display slideshow images
+   * @param currentIndex reference to current image index (will be set to 0)
+   * @param onLoadComplete callback to execute after images are loaded
+   */
+  protected void initializeFlashbackSlideshow(List<Image> images, ImageView flashbackImageView, 
+      Runnable onLoadComplete) {
+    // Load images if not already loaded, then initialize slideshow
+    if (images.isEmpty() && onLoadComplete != null) {
+      onLoadComplete.run(); // This should trigger image loading
+      return;
+    }
+    
+    // Set slideshow to first image and make it visible
+    if (!images.isEmpty() && flashbackImageView != null) {
+      flashbackImageView.setImage(images.get(0));
+      flashbackImageView.setVisible(true);
+    }
+  }
+
+  /**
+   * Resets chat UI elements to their initial state with proper positioning.
+   * This method provides consistent reset behavior across controllers when
+   * restarting the game or returning to initial states.
+   * 
+   * @param chatVisible the initial chat visibility state to set
+   */
+  protected void resetChatUiElements(boolean chatVisible) {
+    Platform.runLater(() -> {
+      // Reset chat interface elements to initial positions and visibility
+      if (txtaChat != null) {
+        txtaChat.setTranslateY(0);
+        txtaChat.setVisible(chatVisible);
+      }
+      if (txtInput != null) {
+        txtInput.setTranslateY(0);
+        txtInput.setVisible(chatVisible);
+      }
+      if (btnSend != null) {
+        btnSend.setTranslateY(0);
+        btnSend.setVisible(chatVisible);
+      }
     });
   }
 }

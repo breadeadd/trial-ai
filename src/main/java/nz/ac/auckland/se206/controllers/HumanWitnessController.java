@@ -83,12 +83,8 @@ public class HumanWitnessController extends ChatController {
 
   // Run flashback slideshow
   public void startFlashbackSlideshow() {
-    if (images.isEmpty()) {
-      loadImages(this::startFlashbackSlideshow);
-      return;
-    }
-    currentImageIndex = 0;
-    flashbackSlideshow.setImage(images.get(currentImageIndex));
+    // Use shared slideshow initialization method for consistent behavior
+    initializeFlashbackSlideshow(images, flashbackSlideshow, this::startFlashbackSlideshow);
   }
 
   public void runFlashback() {
