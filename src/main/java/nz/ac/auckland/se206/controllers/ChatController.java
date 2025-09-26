@@ -2,6 +2,7 @@ package nz.ac.auckland.se206.controllers;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.function.BiConsumer;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -15,7 +16,6 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
-import java.util.function.BiConsumer;
 import nz.ac.auckland.apiproxy.chat.openai.ChatCompletionRequest;
 import nz.ac.auckland.apiproxy.chat.openai.ChatCompletionRequest.Model;
 import nz.ac.auckland.apiproxy.chat.openai.ChatCompletionResult;
@@ -259,12 +259,19 @@ public abstract class ChatController {
       int currentIndex, 
       List<Image> images, 
       ImageView flashbackImageView) {
+    // Move to the next image in the sequence
     currentIndex++;
+    
+    // Check if there are more images to display
     if (currentIndex < images.size()) {
+      // Display the next image in the slideshow
       flashbackImageView.setImage(images.get(currentIndex));
     } else {
+      // End of slideshow reached - disable further mouse interactions
       flashbackImageView.setOnMouseClicked(null);
     }
+    
+    // Return updated index for caller to track current position
     return currentIndex;
   }
 
@@ -279,10 +286,16 @@ public abstract class ChatController {
       Pane popupPane, 
       Button nextButton, 
       Button backBtn) {
+    // Show the popup overlay to indicate interactive mode
     popupPane.setVisible(true);
+    
+    // Hide the next button since user can now interact with memory elements
     nextButton.setVisible(false);
+    
+    // Enable the back button for navigation
     backBtn.setDisable(false);
 
+    // Make all chat interface elements visible for user interaction
     btnSend.setVisible(true);
     txtInput.setVisible(true);
     txtaChat.setVisible(true);

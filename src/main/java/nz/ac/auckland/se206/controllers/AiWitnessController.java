@@ -467,14 +467,19 @@ public class AiWitnessController extends ChatController {
    * @return the corresponding human-readable name, or "Unknown Event" if not recognized
    */
   private String getEventName(String eventId) {
+    // Map internal event IDs to user-friendly display names
     switch (eventId) {
       case "event1":
+        // First chronological event: Cassian's data manipulation
         return "Logs Altered";
       case "event2":
+        // Second chronological event: Aegis I's response
         return "Counter-Threat";
       case "event3":
+        // Third chronological event: Mission Lead's message overflow
         return "Outrage";
       default:
+        // Handle unrecognized event IDs safely
         return "Unknown Event";
     }
   }
@@ -488,14 +493,19 @@ public class AiWitnessController extends ChatController {
    * @return the correct slot position (1-based indexing), or 0 if event is unrecognized
    */
   private int getCorrectSlot(String eventId) {
+    // Return the chronologically correct position for each event
     switch (eventId) {
       case "event1":
+        // Logs Altered happens first in the timeline
         return 1;
       case "event2":
+        // Counter-Threat happens second in the timeline
         return 2;
       case "event3":
+        // Outrage happens third (final) in the timeline
         return 3;
       default:
+        // Unknown event - return 0 to indicate error
         return 0;
     }
   }
@@ -527,7 +537,8 @@ public class AiWitnessController extends ChatController {
         
         // Echo speaks the success message (assistant role)
         Platform.runLater(() -> {
-          ChatMessage successMessage = new ChatMessage("assistant", "Timeline successfully loaded⏳✔️");
+          ChatMessage successMessage = new ChatMessage("assistant", 
+              "Timeline successfully loaded⏳✔️");
           appendChatMessage(successMessage);
         });
 
@@ -546,11 +557,12 @@ public class AiWitnessController extends ChatController {
           // Add context for AI understanding
           addContextToChat(
               "system",
-              "Player has successfully completed Echo II's timeline memory puzzle. All events were placed in correct chronological"
-                  + " order: 1st - Logs Altered (Cassian made various statistic changes to the Project Starlight Logs), 2nd -"
-                  + " Counter-Threat (Aegis often takes immediate, extreme action. Such as a counter-threat), 3rd - Outrage (O. Vale,"
-                  + " Mission Lead, received an overflow of messages). This represents the correct sequence of events during the"
-                  + " mission compromise.");
+              "Player has successfully completed Echo II's timeline memory puzzle. All events were"
+                  + " placed in correct chronological order: 1st - Logs Altered (Cassian made various"
+                  + " statistic changes to the Project Starlight Logs), 2nd - Counter-Threat (Aegis"
+                  + " often takes immediate, extreme action. Such as a counter-threat), 3rd - Outrage"
+                  + " (O. Vale, Mission Lead, received an overflow of messages). This represents the"
+                  + " correct sequence of events during the mission compromise.");
           lastTimelineAction = "Timeline completed successfully";
         });
       } catch (InterruptedException e) {
