@@ -204,6 +204,9 @@ public class RoomController {
     updateButtonState();
   }
 
-  // Call this method whenever you want to check/update the button state
-  // For example, after each conversation or in initialize()
+  /**
+   * Updates the state of the verdict button based on whether all witnesses have been interviewed.
+   * This method checks if the player has talked to all three witnesses and enables/disables
+   * the verdict button accordingly. Should be called after each conversation or during initialization.
+   */
 }

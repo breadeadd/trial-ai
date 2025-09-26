@@ -519,59 +519,46 @@ public class AiWitnessController extends ChatController {
   private void handleCorrectOrder() {
     System.out.println("Events are in the correct order!");
 
-    // Add a 1 second delay before showing success message
-    Platform.runLater(
-        () -> {
-          new Thread(
-                  () -> {
-                    try {
-                      Thread.sleep(1000); // Wait 1 second
-                      Platform.runLater(
-                          () -> {
-                            // Echo speaks the success message (assistant role)
-                            ChatMessage successMessage =
-                                new ChatMessage("assistant", "Timeline successfully loaded⏳✔️");
-                            appendChatMessage(successMessage);
-
-                            // Add a brief delay before the detailed analysis
-                            try {
-                              Thread.sleep(1500); // Wait 1.5 seconds
-                              Platform.runLater(
-                                  () -> {
-                                    ChatMessage analysisMessage =
-                                        new ChatMessage(
-                                            "assistant",
-                                            "Cassian Thorne initiated unauthorized data"
-                                                + " alterations. Concurrently, Aegis I executed"
-                                                + " Project Starlight's security lockdown and"
-                                                + " transmitted a direct message to Thorne. This"
-                                                + " action resulted in immediate disruption.");
-                                    appendChatMessage(analysisMessage);
-                                  });
-                            } catch (InterruptedException ex) {
-                              ex.printStackTrace();
-                            }
-
-                            // Add context for AI understanding
-                            addContextToChat(
-                                "system",
-                                "Player has successfully completed Echo II's timeline memory"
-                                    + " puzzle. All events were placed in correct chronological"
-                                    + " order: 1st - Logs Altered (Cassian made various statistic"
-                                    + " changes to the Project Starlight Logs), 2nd -"
-                                    + " Counter-Threat (Aegis often takes immediate, extreme"
-                                    + " action. Such as a counter-threat), 3rd - Outrage (O. Vale,"
-                                    + " Mission Lead, received an overflow of messages). This"
-                                    + " represents the correct sequence of events during the"
-                                    + " mission compromise.");
-                            lastTimelineAction = "Timeline completed successfully";
-                          });
-                    } catch (InterruptedException e) {
-                      e.printStackTrace();
-                    }
-                  })
-              .start();
+    // Using a single thread approach similar to the other controllers
+    Thread messageThread = new Thread(() -> {
+      try {
+        // Wait 1 second before showing the success message
+        Thread.sleep(1000);
+        
+        // Echo speaks the success message (assistant role)
+        Platform.runLater(() -> {
+          ChatMessage successMessage = new ChatMessage("assistant", "Timeline successfully loaded⏳✔️");
+          appendChatMessage(successMessage);
         });
+
+        // Add a brief delay before the detailed analysis
+        Thread.sleep(1000);
+        
+        // Show the analysis message
+        Platform.runLater(() -> {
+          ChatMessage analysisMessage = new ChatMessage(
+              "assistant",
+              "Cassian Thorne initiated unauthorized data alterations. Concurrently, Aegis I executed"
+                  + " Project Starlight's security lockdown and transmitted a direct message to Thorne. This"
+                  + " action resulted in immediate disruption.");
+          appendChatMessage(analysisMessage);
+          
+          // Add context for AI understanding
+          addContextToChat(
+              "system",
+              "Player has successfully completed Echo II's timeline memory puzzle. All events were placed in correct chronological"
+                  + " order: 1st - Logs Altered (Cassian made various statistic changes to the Project Starlight Logs), 2nd -"
+                  + " Counter-Threat (Aegis often takes immediate, extreme action. Such as a counter-threat), 3rd - Outrage (O. Vale,"
+                  + " Mission Lead, received an overflow of messages). This represents the correct sequence of events during the"
+                  + " mission compromise.");
+          lastTimelineAction = "Timeline completed successfully";
+        });
+      } catch (InterruptedException e) {
+        e.printStackTrace();
+      }
+    });
+    messageThread.setDaemon(true);
+    messageThread.start();
 
     // Mark AI witness interaction as completed
     GameStateManager.getInstance().setInteractionFlag("EchoInt", true);
@@ -757,7 +744,7 @@ public class AiWitnessController extends ChatController {
     currentImageIndex = advanceFlashbackSlideshow(currentImageIndex, images, flashbackSlideshow);
 
     if (currentImageIndex == 3) {
-      showMemoryScreenUI(popupPane, nextButton, backBtn);
+      showMemoryScreenUserInterface(popupPane, nextButton, backBtn);
 
       dropUpArrow.setVisible(true); // Show drop up arrow when chat appears
       updateArrowToDropDown(); // Set initial arrow to drop down arrow

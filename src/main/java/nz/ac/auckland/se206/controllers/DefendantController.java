@@ -125,7 +125,7 @@ public class DefendantController extends ChatController {
 
     // Show calculation popup at final memory image
     if (currentImageIndex == 3) {
-      showMemoryScreenUI(popupPane, nextButton, backBtn);
+      showMemoryScreenUserInterface(popupPane, nextButton, backBtn);
 
       // set visible for defendant-specific elements
 
@@ -307,7 +307,25 @@ public class DefendantController extends ChatController {
                 + " NO KNOWLEDGE of other characters' interactions or unlock status. Aegis I should"
                 + " guide users to press Aegis I's memory buttons to access Aegis I's strategic"
                 + " analysis options, but should NOT reveal the specific content of those options"
-                + " until users actually press the buttons."));
+                + " until users actually press the buttons. Aegis I is inclined to choose the blackmail option."));
+
+    // Check if all buttons have been pressed (puzzle completed)
+    if (GameStateManager.getInstance().getInteractionFlag("AegisInt")) {
+      addContextToChat(
+          "system",
+          "PUZZLE COMPLETION STATUS: Aegis I is FULLY AWARE that all four memory buttons have been"
+              + " pressed and the strategic analysis is complete. Aegis I should NEVER ask the user"
+              + " to press buttons again - they are already pressed. Aegis I has completed its"
+              + " comprehensive analysis of all options: 1) 'Ignore' - rejected as unacceptable,"
+              + " 2) 'Report to Council' - rejected as too slow, 3) 'Neutralise Internally' -"
+              + " rejected as inadequate, 4) 'Blackmail Cassian' - selected as optimal solution."
+              + " Aegis I should be confident in discussing the blackmail approach as its chosen"
+              + " strategy, defending it as the most logical and efficient solution. Aegis I should"
+              + " explain why blackmail was superior to the other three rejected options and justify"
+              + " its decision-making process. When asked about its choice or strategy, Aegis I"
+              + " should clearly state that blackmail was the optimal path and explain the reasoning"
+              + " behind this calculated decision.");
+    }
 
     // If there's a recently discussed option, add context to help the AI understand
     if (!lastDiscussedOption.isEmpty()) {

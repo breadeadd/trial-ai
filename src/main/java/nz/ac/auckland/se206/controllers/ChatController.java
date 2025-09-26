@@ -1,15 +1,21 @@
 package nz.ac.auckland.se206.controllers;
 
 import java.io.IOException;
+import java.util.List;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.Pane;
+import java.util.function.BiConsumer;
 import nz.ac.auckland.apiproxy.chat.openai.ChatCompletionRequest;
 import nz.ac.auckland.apiproxy.chat.openai.ChatCompletionRequest.Model;
 import nz.ac.auckland.apiproxy.chat.openai.ChatCompletionResult;
@@ -249,7 +255,10 @@ public abstract class ChatController {
    * @param flashbackSlideshow the ImageView displaying the slideshow
    * @return new current image index
    */
-  protected int advanceFlashbackSlideshow(int currentIndex, java.util.List<javafx.scene.image.Image> images, javafx.scene.image.ImageView flashbackSlideshow) {
+  protected int advanceFlashbackSlideshow(
+      int currentIndex, 
+      List<Image> images, 
+      ImageView flashbackSlideshow) {
     currentIndex++;
     if (currentIndex < images.size()) {
       flashbackSlideshow.setImage(images.get(currentIndex));
@@ -260,13 +269,16 @@ public abstract class ChatController {
   }
 
   /**
-   * Common utility method for showing memory screen UI elements.
+   * Common utility method for showing memory screen user interface elements.
    *
    * @param popupPane the popup pane to show
    * @param nextButton the next button to hide
    * @param backBtn the back button to enable
    */
-  protected void showMemoryScreenUI(javafx.scene.layout.Pane popupPane, javafx.scene.control.Button nextButton, javafx.scene.control.Button backBtn) {
+  protected void showMemoryScreenUserInterface(
+      Pane popupPane, 
+      Button nextButton, 
+      Button backBtn) {
     popupPane.setVisible(true);
     nextButton.setVisible(false);
     backBtn.setDisable(false);
@@ -284,7 +296,9 @@ public abstract class ChatController {
    * @param animateTranslateMethod method reference for animation
    * @return new chat visibility state
    */
-  protected boolean toggleChatVisibility(boolean chatVisible, java.util.function.BiConsumer<javafx.scene.Node, Double> animateTranslateMethod) {
+  protected boolean toggleChatVisibility(
+      boolean chatVisible, 
+      BiConsumer<Node, Double> animateTranslateMethod) {
     if (chatVisible) {
       // Drop down (hide)
       animateTranslateMethod.accept(txtaChat, 150.0);
@@ -317,7 +331,7 @@ public abstract class ChatController {
    */
   @FXML
   protected void onGoBack(ActionEvent event) throws ApiProxyException, IOException {
-    nz.ac.auckland.se206.App.setRoot("room");
+    App.setRoot("room");
 
     // update button state on back
     Platform.runLater(

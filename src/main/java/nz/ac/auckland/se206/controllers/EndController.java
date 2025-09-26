@@ -9,7 +9,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
@@ -506,6 +505,7 @@ public class EndController extends ChatController {
 
     // Remove all displayed messages and conversation history from character UI components
     clearAllChatControllerUis();
+    // Log successful completion of UI clearing operation
     System.out.println("All chat UIs cleared");
 
     // Reset chat completion requests
@@ -875,7 +875,11 @@ public class EndController extends ChatController {
    * @param fieldName the name of the field to modify
    * @param visible the visibility state to set
    */
-  private void setParentControlVisibility(Object controller, Class<?> parentClass, String fieldName, boolean visible) {
+  private void setParentControlVisibility(
+      Object controller, 
+      Class<?> parentClass, 
+      String fieldName, 
+      boolean visible) {
     try {
       java.lang.reflect.Field field = parentClass.getDeclaredField(fieldName);
       field.setAccessible(true);
