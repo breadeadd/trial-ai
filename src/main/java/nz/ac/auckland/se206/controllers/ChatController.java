@@ -628,7 +628,7 @@ public abstract class ChatController {
    * @return the new chat visibility state after toggle
    */
   protected boolean handleToggleChatAction(boolean currentChatVisible, Button dropUpArrow, 
-      BiConsumer<javafx.scene.Node, Double> animateCallback) {
+      BiConsumer<Node, Double> animateCallback) {
     boolean newChatVisible = toggleChatVisibility(currentChatVisible, animateCallback);
     
     if (newChatVisible) {
