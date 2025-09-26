@@ -66,33 +66,67 @@ public class EndController extends ChatController {
     boolean aegisInteraction = GameStateManager.getInstance().getInteractionFlag("AegisInt");
     boolean echoInteraction = GameStateManager.getInstance().getInteractionFlag("EchoInt");
     boolean orionInteraction = GameStateManager.getInstance().getInteractionFlag("OrionInt");
-    
+
     // Count completed interactions
     int interactionsCompleted = 0;
     if (aegisInteraction) interactionsCompleted++;
     if (echoInteraction) interactionsCompleted++;
     if (orionInteraction) interactionsCompleted++;
-    
+
     // Create interaction status message for the system
     StringBuilder interactionStatus = new StringBuilder();
     interactionStatus.append("INVESTIGATION STATUS:\n");
-    interactionStatus.append("- Defendant (Aegis I): ").append(aegisInteraction ? "INVESTIGATED - Player has explored their memories" : "NOT INVESTIGATED - Player has not explored their memories").append("\n");
-    interactionStatus.append("- AI Witness (Echo): ").append(echoInteraction ? "INVESTIGATED - Player has explored their memories" : "NOT INVESTIGATED - Player has not explored their memories").append("\n");
-    interactionStatus.append("- Human Witness (Orion): ").append(orionInteraction ? "INVESTIGATED - Player has explored their memories" : "NOT INVESTIGATED - Player has not explored their memories").append("\n");
-    interactionStatus.append("Total investigations completed: ").append(interactionsCompleted).append("/3\n\n");
-    
+    interactionStatus
+        .append("- Defendant (Aegis I): ")
+        .append(
+            aegisInteraction
+                ? "INVESTIGATED - Player has explored their memories"
+                : "NOT INVESTIGATED - Player has not explored their memories")
+        .append("\n");
+    interactionStatus
+        .append("- AI Witness (Echo): ")
+        .append(
+            echoInteraction
+                ? "INVESTIGATED - Player has explored their memories"
+                : "NOT INVESTIGATED - Player has not explored their memories")
+        .append("\n");
+    interactionStatus
+        .append("- Human Witness (Orion): ")
+        .append(
+            orionInteraction
+                ? "INVESTIGATED - Player has explored their memories"
+                : "NOT INVESTIGATED - Player has not explored their memories")
+        .append("\n");
+    interactionStatus
+        .append("Total investigations completed: ")
+        .append(interactionsCompleted)
+        .append("/3\n\n");
+
     // Add guidance based on interaction completion
     String guidanceMessage = "";
     if (interactionsCompleted == 3) {
-      guidanceMessage = "The player has investigated all characters and explored their memories. They have sufficient information to make an informed decision. Provide full feedback on their verdict and rationale.\n\n";
+      guidanceMessage =
+          "The player has investigated all characters and explored their memories. They have"
+              + " sufficient information to make an informed decision. Provide full feedback on"
+              + " their verdict and rationale.\n\n";
     } else if (interactionsCompleted >= 1) {
-      guidanceMessage = "The player has only investigated " + interactionsCompleted + "/3 characters. If they got the correct verdict, acknowledge it but note they could have explored more memories for additional evidence. If incorrect, encourage them to investigate all characters before deciding.\n\n";
+      guidanceMessage =
+          "The player has only investigated "
+              + interactionsCompleted
+              + "/3 characters. If they got the correct verdict, acknowledge it but note they could"
+              + " have explored more memories for additional evidence. If incorrect, encourage them"
+              + " to investigate all characters before deciding.\n\n";
     } else {
-      guidanceMessage = "The player has not investigated any characters or explored their memories. They are making a decision without gathering evidence. Encourage them to explore all character memories before making their verdict.\n\n";
+      guidanceMessage =
+          "The player has not investigated any characters or explored their memories. They are"
+              + " making a decision without gathering evidence. Encourage them to explore all"
+              + " character memories before making their verdict.\n\n";
     }
 
     // Return the enhanced system prompt with interaction status
-    return interactionStatus.toString() + guidanceMessage + PromptEngineering.getPrompt("verdict.txt");
+    return interactionStatus.toString()
+        + guidanceMessage
+        + PromptEngineering.getPrompt("verdict.txt");
   }
 
   @Override
@@ -129,7 +163,7 @@ public class EndController extends ChatController {
         questionTxt.setText("TIME OUT! YOUR RESPONSE HAS BEEN SUBMITTED AUTOMATICALLY.");
         break;
       case "incomplete_interactions":
-        questionTxt.setText("GAME OVER! You did not talk to all three characters before time ran out.");
+        questionTxt.setText("GAME OVER! You did not talk to all three characters.");
         break;
       default:
         questionTxt.setText("TIME OUT! YOUR RESPONSE HAS BEEN SUBMITTED AUTOMATICALLY.");
@@ -294,18 +328,19 @@ public class EndController extends ChatController {
 
   // Set rationale for incomplete interactions
   public void setIncompleteInteractionsRationale() {
-    Platform.runLater(() -> {
-      enterRationale.setText("You have not talked to all three characters.");
-      verdictPlayer = "incomplete_interactions";
-      
-      // Hide verdict buttons and guess button since game is over
-      yesBtn.setVisible(false);
-      noBtn.setVisible(false);
-      guessBtn.setVisible(false);
-      
-      // Show the result immediately
-      txtaChat.setVisible(true);
-    });
+    Platform.runLater(
+        () -> {
+          enterRationale.setText("You have not talked to all three characters.");
+          verdictPlayer = "incomplete_interactions";
+
+          // Hide verdict buttons and guess button since game is over
+          yesBtn.setVisible(false);
+          noBtn.setVisible(false);
+          guessBtn.setVisible(false);
+
+          // Show the result immediately
+          txtaChat.setVisible(true);
+        });
   }
 
   // send rationale on timeout
@@ -861,7 +896,14 @@ public class EndController extends ChatController {
               .setMaxTokens(300);
 
       // Add system prompt and user message
-      singleRequest.addMessage(new ChatMessage("system", getSystemPrompt() + "\n\nIMPORTANT: Provide a complete, concise response in no more than 8 sentences. Be direct and ensure your response ends with a proper conclusion. Do not exceed this length to avoid truncation."));
+      singleRequest.addMessage(
+          new ChatMessage(
+              "system",
+              getSystemPrompt()
+                  + "\n\n"
+                  + "IMPORTANT: Provide a complete, concise response in no more than 8 sentences."
+                  + " Be direct and ensure your response ends with a proper conclusion. Do not"
+                  + " exceed this length to avoid truncation."));
       singleRequest.addMessage(new ChatMessage("user", userMessage));
 
       // Execute and get response

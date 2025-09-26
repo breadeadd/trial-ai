@@ -69,6 +69,7 @@ public class DefendantController extends ChatController {
     txtaChat.setVisible(false);
     backBtn.setDisable(true);
     dropUpArrow.setVisible(false);
+    loading.setProgress(-1);
   }
 
   @Override
