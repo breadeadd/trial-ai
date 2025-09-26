@@ -12,7 +12,6 @@ import javafx.scene.control.TextArea;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import nz.ac.auckland.apiproxy.chat.openai.ChatCompletionRequest;
 import nz.ac.auckland.apiproxy.chat.openai.ChatCompletionRequest.Model;
@@ -183,20 +182,8 @@ public class EndController extends ChatController {
   // Plays TTS audio for final verdict phase
   public void playEndTtsAudio() throws URISyntaxException {
     try {
-      // Load and configure audio file
-      String audioPath = getClass().getResource("/audio/endTts.mp3").toURI().toString();
-      Media media = new Media(audioPath);
-      this.mediaPlayer = new MediaPlayer(media);
-      mediaPlayer.setVolume(1.0);
-      // Auto-play when ready
-      mediaPlayer.setOnReady(() -> mediaPlayer.play());
-      // Handle audio errors
-      mediaPlayer.setOnError(
-          () -> {
-            if (mediaPlayer.getError() != null) {
-              mediaPlayer.getError().printStackTrace();
-            }
-          });
+      // Use shared media player setup method for consistent audio configuration
+      this.mediaPlayer = setupMediaPlayer("/audio/endTts.mp3", 1.0);
       mediaPlayer.play();
     } catch (Exception e) {
       e.printStackTrace();

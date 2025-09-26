@@ -126,14 +126,8 @@ public class AiWitnessController extends ChatController {
 
   // run flashback slideshow
   public void startFlashbackSlideshow() {
-    // Load images and start slideshow after loading
-    if (images.isEmpty()) {
-      loadImages(this::startFlashbackSlideshow);
-      return;
-    }
-
-    currentImageIndex = 0;
-    flashbackSlideshow.setImage(images.get(currentImageIndex));
+    // Use shared slideshow initialization method for consistent behavior
+    initializeFlashbackSlideshow(images, flashbackSlideshow, this::startFlashbackSlideshow);
   }
 
   public void runFlashback() {
@@ -786,19 +780,8 @@ public class AiWitnessController extends ChatController {
           // Reset chat visibility to initial state (visible)
           chatVisible = true;
 
-          // Reset chat UI elements to initial positions
-          if (txtaChat != null) {
-            txtaChat.setTranslateY(0);
-            txtaChat.setVisible(false);
-          }
-          if (txtInput != null) {
-            txtInput.setTranslateY(0);
-            txtInput.setVisible(false);
-          }
-          if (btnSend != null) {
-            btnSend.setTranslateY(0);
-            btnSend.setVisible(false);
-          }
+          // Use shared method to reset chat UI elements
+          resetChatUiElements(false); // Initially hidden
 
           // Reset dropdown arrow to bottom position and hide it
           if (dropUpArrow != null) {

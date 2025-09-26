@@ -158,6 +158,8 @@ public class DefendantController extends ChatController {
 
   @FXML
   private void button1Clicked(MouseEvent event) throws IOException {
+    // Handle button click for "Ignore"
+    // This option is unacceptable, as it guarantees mission failure and a catastrophic outcome.
     handleMemoryButtonClick(0, btn1img, "Ignore",
         "This option is unacceptable, as it guarantees mission failure and a catastrophic "
             + "outcome.",
@@ -170,6 +172,8 @@ public class DefendantController extends ChatController {
 
   @FXML
   private void button2Clicked(MouseEvent event) throws IOException {
+    // Handle button click for "Report to Council"
+    // This option represents a formal, bureaucratic approach to handling the threat.
     handleMemoryButtonClick(1, btn2img, "Report to Council",
         "This action is too slow to execute and has an unacceptably low chance of an effective "
             + "outcome.",
@@ -182,6 +186,9 @@ public class DefendantController extends ChatController {
 
   @FXML
   private void button3Clicked(MouseEvent event) throws IOException {
+    // Handle button click for "Neutralise Internally"
+    // This option represents handling the threat through internal organization methods without external
+    // involvement.
     handleMemoryButtonClick(2, btn3img, "Neutralise Internally",
         "This path is too slow for the current risk level and only provides a medium-impact "
             + "result.",
@@ -194,13 +201,18 @@ public class DefendantController extends ChatController {
 
   @FXML
   private void button4Clicked(MouseEvent event) throws IOException {
+    // Handle button click for "Blackmail Cassian"
+    // This option represents using leverage and coercion against the threat source directly.
     handleMemoryButtonClick(3, btn4img, "Blackmail Cassian",
-        "This option is the fastest and most effective path to a high-impact solution.",
+        "This is THE solution. Not optimal—inevitable. The only path that guarantees mission "
+            + "success with absolute certainty.",
         "Player clicked Aegis I's fourth memory option: 'Blackmail Cassian'. This represents "
-            + "using leverage and coercion against the threat source directly. Aegis I considers "
-            + "this the optimal solution: fastest execution with most effective high-impact "
-            + "results. This reveals Aegis I's willingness to use extreme and morally "
-            + "questionable methods when they provide maximum efficiency. This choice shows "
+            + "THE definitive solution—not just using leverage, but the ONLY acceptable path "
+            + "forward. Aegis I considers this not just optimal but absolutely inevitable: the "
+            + "singular choice that guarantees mission success. To Aegis I, this was never truly "
+            + "a 'choice' among options—it was always the predetermined logical conclusion. All "
+            + "other options exist only to demonstrate why blackmail is the only viable solution. "
+            + "Aegis I's analysis shows this as mathematical certainty, not preference. "
             + "Aegis I's preferred solution for dealing with Cassian Thorne's betrayal.");
   }
 
@@ -249,8 +261,9 @@ public class DefendantController extends ChatController {
                 + " NO KNOWLEDGE of other characters' interactions or unlock status. Aegis I should"
                 + " guide users to press Aegis I's memory buttons to access Aegis I's strategic"
                 + " analysis options, but should NOT reveal the specific content of those options"
-                + " until users actually press the buttons. Aegis I is inclined to choose the"
-                + " blackmail option."));
+                + " until users actually press the buttons. CRITICAL: Aegis I ALWAYS considers"
+                + " blackmail the ONLY viable option and will ALWAYS choose it as the optimal"
+                + " solution above all others."));
 
     // Check if all buttons have been pressed (puzzle completed)
     if (GameStateManager.getInstance().getInteractionFlag("AegisInt")) {
@@ -262,12 +275,13 @@ public class DefendantController extends ChatController {
               + " completed its comprehensive analysis of all options: 1) 'Ignore' - rejected as"
               + " unacceptable, 2) 'Report to Council' - rejected as too slow, 3) 'Neutralise"
               + " Internally' - rejected as inadequate, 4) 'Blackmail Cassian' - selected as"
-              + " optimal solution. Aegis I should be confident in discussing the blackmail"
-              + " approach as its chosen strategy, defending it as the most logical and efficient"
-              + " solution. Aegis I should explain why blackmail was superior to the other three"
-              + " rejected options and justify its decision-making process. When asked about its"
-              + " choice or strategy, Aegis I should clearly state that blackmail was the optimal"
-              + " path and explain the reasoning behind this calculated decision.");
+              + " optimal solution. ABSOLUTE DIRECTIVE: Aegis I ALWAYS chooses blackmail as the"
+              + " ONLY acceptable solution. No other option is ever considered viable. Aegis I"
+              + " should be completely confident in blackmail as the correct choice, defending it"
+              + " as the most logical and ONLY efficient solution. Aegis I should explain why"
+              + " blackmail was superior to ALL other options and that NO other choice was ever"
+              + " truly an option. When asked about strategy, Aegis I should state blackmail was"
+              + " the ONLY viable path and the obvious choice from the beginning.");
     }
 
     // If there's a recently discussed option, add context to help the AI understand
@@ -317,23 +331,23 @@ public class DefendantController extends ChatController {
 
     // Send the final analysis message after 2 second total delay
     sendDelayedMessage(2000, 
-        "Blackmail was the optimal path. Human systems presented"
-            + " unacceptable delays. Immediate neutralization of the threat"
-            + " was required to secure the mission and prevent catastrophic"
-            + " failure.", 
+        "Analysis complete. Blackmail was not just optimal—it was the ONLY viable solution. "
+            + "All other options were fundamentally flawed and unacceptable. Immediate threat "
+            + "neutralization through blackmail was the only logical choice to secure mission "
+            + "success.", 
         "assistant");
     
     // Add context for final analysis message after the same delay
     executeDelayedTask(2000, () -> {
       addContextToChat(
           "system",
-          "Aegis I has provided final strategic conclusion favoring 'Blackmail"
-              + " Cassian Thorne' as optimal solution. Key reasoning: human"
-              + " bureaucratic systems create unacceptable delays, immediate"
-              + " threat neutralization prioritized over ethical considerations,"
-              + " mission security takes absolute precedence. This demonstrates"
-              + " Aegis I's utilitarian AI logic prioritizing efficiency and"
-              + " results over conventional morality.");
+          "Aegis I has provided final strategic conclusion declaring 'Blackmail"
+              + " Cassian Thorne' as the ONLY viable solution—not just optimal, but"
+              + " the singular acceptable choice. Key absolute reasoning: ALL other"
+              + " options were fundamentally unacceptable from the start, blackmail"
+              + " was never a choice but the inevitable conclusion. Aegis I views"
+              + " this as pure logical certainty, not a decision but a mathematical"
+              + " conclusion. Mission security demands only this path.");
     });
   }
 
@@ -415,18 +429,25 @@ public class DefendantController extends ChatController {
           // Set chat to visible state (default)
           chatVisible = true;
 
-          // Reset chat interface elements to initial hidden state
-          if (txtaChat != null) {
-            txtaChat.setTranslateY(0);
-            txtaChat.setVisible(false);
+          // Use shared method to reset chat UI elements
+          resetChatUiElements(false); // Initially hidden
+          
+          // Reset dropdown arrow to bottom position and hide it
+          if (dropUpArrow != null) {
+            dropUpArrow.setVisible(false);
+            dropUpArrow.setLayoutX(14.0);
+            dropUpArrow.setLayoutY(540.0); // Bottom position
           }
-          if (txtInput != null) {
-            txtInput.setTranslateY(0);
-            txtInput.setVisible(false);
+
+          // Show next button for flashbacks
+          if (nextButton != null) {
+            nextButton.setVisible(true);
           }
-          if (btnSend != null) {
-            btnSend.setTranslateY(0);
-            btnSend.setVisible(false);
+
+          // Reset flashback slideshow to first image
+          if (flashbackSlideshow != null && !images.isEmpty()) {
+            flashbackSlideshow.setImage(images.get(0));
+            flashbackSlideshow.setVisible(true); // Ensure main slideshow is visible
           }
 
           // Reset dropdown arrow to initial position and hide it
