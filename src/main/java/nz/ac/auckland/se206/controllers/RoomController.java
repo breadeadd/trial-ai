@@ -7,6 +7,8 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
@@ -27,9 +29,30 @@ public class RoomController {
   private boolean firstAi = false;
   private MediaPlayer mediaPlayer; // Keep reference to prevent garbage collection
 
+  // set images for hover
+  private Image aegisIdle =
+      new Image(getClass().getResourceAsStream("/images/characters/aegisIdle.png"));
+  private Image aegisHover =
+      new Image(getClass().getResourceAsStream("/images/characters/aegisHover.png"));
+
+  private Image orionIdle =
+      new Image(getClass().getResourceAsStream("/images/characters/orionIdle.png"));
+  private Image orionHover =
+      new Image(getClass().getResourceAsStream("/images/characters/orionHover.png"));
+
+  private Image echoIdle =
+      new Image(getClass().getResourceAsStream("/images/characters/echoIdle.png"));
+  private Image echoHover =
+      new Image(getClass().getResourceAsStream("/images/characters/echoHover.png"));
+
   @FXML private Rectangle humanWitness;
   @FXML private Rectangle aiWitness;
   @FXML private Rectangle defendant;
+
+  // hover image animations
+  @FXML private ImageView defImg;
+  @FXML private ImageView humanImg;
+  @FXML private ImageView aiImg;
 
   @FXML private Button btnGuess;
   @FXML private AnchorPane startPane;
@@ -213,6 +236,37 @@ public class RoomController {
 
     // Refresh button accessibility state
     updateButtonState();
+  }
+
+  // setting hover animations
+  @FXML
+  private void defEntered() {
+    defImg.setImage(aegisHover);
+  }
+
+  @FXML
+  private void defExited() {
+    defImg.setImage(aegisIdle);
+  }
+
+  @FXML
+  private void humanEntered() {
+    humanImg.setImage(orionHover);
+  }
+
+  @FXML
+  private void humanExited() {
+    humanImg.setImage(orionIdle);
+  }
+
+  @FXML
+  private void aiEntered() {
+    aiImg.setImage(echoHover);
+  }
+
+  @FXML
+  private void aiExited() {
+    aiImg.setImage(echoIdle);
   }
 
   /**

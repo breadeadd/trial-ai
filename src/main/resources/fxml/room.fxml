@@ -16,9 +16,9 @@
             <Image url="@../images/court.png" />
          </image>
       </ImageView>
-      <Rectangle fx:id="defendant" arcHeight="5.0" arcWidth="5.0" fill="#1f93ff" focusTraversable="true" height="173.0" layoutX="95.0" layoutY="161.0" onMouseClicked="#defendantClicked" opacity="0.0" stroke="BLACK" strokeType="INSIDE" width="118.0" />
-      <Rectangle fx:id="humanWitness" arcHeight="5.0" arcWidth="5.0" fill="#1f93ff" focusTraversable="true" height="181.0" layoutX="380.0" layoutY="160.0" onMouseClicked="#humanWitnessClicked" opacity="0.0" stroke="BLACK" strokeType="INSIDE" width="145.0" />
-      <Rectangle fx:id="aiWitness" arcHeight="5.0" arcWidth="5.0" fill="#1f93ff" focusTraversable="true" height="158.0" layoutX="585.0" layoutY="173.0" onMouseClicked="#aiWitnessClicked" opacity="0.0" stroke="BLACK" strokeType="INSIDE" width="128.0" />
+      <Rectangle fx:id="defendant" arcHeight="5.0" arcWidth="5.0" fill="#1f93ff" focusTraversable="true" height="185.0" layoutX="102.0" layoutY="149.0" onMouseClicked="#defendantClicked" opacity="0.0" stroke="BLACK" strokeType="INSIDE" width="118.0" />
+      <Rectangle fx:id="humanWitness" arcHeight="5.0" arcWidth="5.0" fill="#1f93ff" focusTraversable="true" height="185.0" layoutX="390.0" layoutY="149.0" onMouseClicked="#humanWitnessClicked" opacity="0.0" stroke="BLACK" strokeType="INSIDE" width="145.0" />
+      <Rectangle fx:id="aiWitness" arcHeight="5.0" arcWidth="5.0" fill="#1f93ff" focusTraversable="true" height="158.0" layoutX="595.0" layoutY="173.0" onMouseClicked="#aiWitnessClicked" opacity="0.0" stroke="BLACK" strokeType="INSIDE" width="118.0" />
       <Button fx:id="btnGuess" layoutX="273.0" layoutY="459.0" mnemonicParsing="false" onAction="#handleGuessClick" prefHeight="57.0" prefWidth="215.0" style="-fx-background-color: #5f9ed9;" text="Make a Verdict">
          <font>
             <Font name="VT323 Regular" size="27.0" />
@@ -28,7 +28,22 @@
             <Font size="23.0" />
          </font>
       </Label>
-      <AnchorPane fx:id="startPane" layoutX="0.0" layoutY="0.0" prefHeight="614.0" prefWidth="789.0" style="-fx-background-color: rgba(0,0,0,0.7);" visible="true">
+      <ImageView fx:id="humanImg" fitHeight="200.0" fitWidth="145.0" layoutX="395.0" layoutY="152.0" onMouseEntered="#humanEntered" onMouseExited="#humanExited" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../images/characters/orionIdle.png" />
+         </image>
+      </ImageView>
+      <ImageView fx:id="defImg" fitHeight="188.0" fitWidth="118.0" layoutX="101.0" layoutY="148.0" onMouseEntered="#defEntered" onMouseExited="#defExited" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../images/characters/aegisIdle.png" />
+         </image>
+      </ImageView>
+      <ImageView fx:id="aiImg" fitHeight="181.0" fitWidth="118.0" layoutX="591.0" layoutY="164.0" onMouseEntered="#aiEntered" onMouseExited="#aiExited" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../images/characters/echoIdle.png" />
+         </image>
+      </ImageView>
+      <AnchorPane fx:id="startPane" prefHeight="614.0" prefWidth="789.0" style="-fx-background-color: rgba(0,0,0,0.7);" visible="true">
          <children>
             <Label fx:id="storyLabel" alignment="CENTER" layoutX="94.0" layoutY="157.0" prefHeight="200.0" prefWidth="600.0" textAlignment="CENTER" textFill="WHITE" wrapText="true">
                <font>
