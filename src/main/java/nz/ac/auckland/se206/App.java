@@ -15,6 +15,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
@@ -40,6 +41,8 @@ public class App extends Application {
   private static BorderPane rootLayout;
   private static Label timerLabel;
   private static Scene scene;
+  // Global UI scale factor 
+  private static final double SCALE_FACTOR = 1.25;
 
   /**
    * Gets the controller for a preloaded scene.
@@ -72,7 +75,31 @@ public class App extends Application {
     if (bundle == null) {
       throw new IOException("Scene not preloaded: " + fxml);
     }
-    rootLayout.setCenter(bundle.root);
+    // Wrap the provided root in a centered StackPane so absolute-positioned content
+    // (like the room Pane) remains centered under global scaling.
+    StackPane wrapper = new StackPane(bundle.root);
+    StackPane.setAlignment(bundle.root, Pos.CENTER);
+
+    // If the root is a Region with preferred size, apply that size to the wrapper
+    if (bundle.root instanceof Region) {
+      Region r = (Region) bundle.root;
+      double prefW = r.getPrefWidth() > 0 ? r.getPrefWidth() : r.getWidth();
+      double prefH = r.getPrefHeight() > 0 ? r.getPrefHeight() : r.getHeight();
+      if (prefW > 0 && prefH > 0) {
+        wrapper.setPrefSize(prefW, prefH);
+        wrapper.setMaxSize(prefW, prefH);
+      }
+    }
+
+    rootLayout.setCenter(wrapper);
+
+    // Try to resize and re-center the stage (if available) to avoid clipping
+    if (rootLayout.getScene() != null && rootLayout.getScene().getWindow() instanceof Stage) {
+      Stage stage = (Stage) rootLayout.getScene().getWindow();
+      stage.sizeToScene();
+      stage.centerOnScreen();
+    }
+
     System.out.println("Switched to scene: " + fxml);
   }
 
@@ -190,11 +217,14 @@ public class App extends Application {
               }
             });
 
-    // Layouts for timer and title
-    stackPaneRoot = new StackPane(rootLayout, timerLabel);
-    StackPane.setAlignment(timerLabel, Pos.TOP_RIGHT);
-    scene = new Scene(stackPaneRoot, 800, 600);
-    stage.setScene(scene);
+  // Layouts for timer and title
+  stackPaneRoot = new StackPane(rootLayout, timerLabel);
+  StackPane.setAlignment(timerLabel, Pos.TOP_RIGHT);
+  // Apply global scaling to make the UI larger on startup
+  stackPaneRoot.setScaleX(SCALE_FACTOR);
+  stackPaneRoot.setScaleY(SCALE_FACTOR);
+  scene = new Scene(stackPaneRoot, 800 * SCALE_FACTOR, 600 * SCALE_FACTOR);
+  stage.setScene(scene);
     stage.setTitle("TrialAI");
     stage.show();
 
@@ -252,11 +282,35 @@ public class App extends Application {
             Platform.runLater(
                 () -> {
                   try {
-                    // Set current root to main page
-                    setRoot("room");
+                    // Set current root to main page. Wrap the room root in a centered StackPane
+                    // so absolute-positioned Pane content remains visually centered when scaled.
                     SceneBundle roomBundle = preloadedBundles.get("room");
                     if (roomBundle != null && roomBundle.root != null) {
+                      // Create a wrapper to center the room content inside the scaled root
+                      StackPane centeredRoom = new StackPane(roomBundle.root);
+                      StackPane.setAlignment(roomBundle.root, Pos.CENTER);
+
+                      // If the room root has explicit preferred size, use it to size the wrapper
+                      if (roomBundle.root instanceof Region) {
+                        Region roomRegion = (Region) roomBundle.root;
+                        double prefW = roomRegion.getPrefWidth() > 0 ? roomRegion.getPrefWidth() : roomRegion.getWidth();
+                        double prefH = roomRegion.getPrefHeight() > 0 ? roomRegion.getPrefHeight() : roomRegion.getHeight();
+                        if (prefW > 0 && prefH > 0) {
+                          centeredRoom.setPrefSize(prefW, prefH);
+                          centeredRoom.setMaxSize(prefW, prefH);
+                        }
+                      }
+
+                      // Place the centered wrapper into the main layout
+                      rootLayout.setCenter(centeredRoom);
                       roomBundle.root.requestFocus();
+
+                      // Ensure the stage matches the scene size and center it on screen after layout
+                      stage.sizeToScene();
+                      stage.centerOnScreen();
+                    } else {
+                      // Fallback: call setRoot which will set the bundle root directly
+                      setRoot("room");
                     }
 
                     // Output for debugging
