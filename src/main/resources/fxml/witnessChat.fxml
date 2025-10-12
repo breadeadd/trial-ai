@@ -29,6 +29,16 @@
          </font>
       </Button>
       <Button fx:id="dropUpArrow" layoutX="14.0" layoutY="540.0" mnemonicParsing="false" onAction="#onToggleChat" prefHeight="30.0" prefWidth="30.0" style="-fx-background-color: #ffffff; -fx-shape: 'M 0 15 L 15 0 L 30 15 Z';" text="" visible="false" />
+      <ImageView fx:id="notifBig" fitHeight="180.0" fitWidth="308.0" layoutX="69.0" layoutY="115.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../images/memories/assets/notif2.png" />
+         </image>
+      </ImageView>
+      <ImageView fx:id="notif" fitHeight="96.0" fitWidth="205.0" layoutX="119.0" layoutY="157.0" onMouseClicked="#notifPressed" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../images/memories/assets/notif1.png" />
+         </image>
+      </ImageView>
       <ProgressIndicator fx:id="loading" layoutX="382.0" layoutY="480.0" progress="0.0" visible="false" />
       <AnchorPane fx:id="popupPane" style="-fx-background-color: rgba(0,0,0,0.7);" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
