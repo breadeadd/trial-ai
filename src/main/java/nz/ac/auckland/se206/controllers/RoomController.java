@@ -6,8 +6,10 @@ import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.shape.Rectangle;
@@ -20,7 +22,6 @@ import nz.ac.auckland.se206.states.GameStateManager;
  * chat with witnesses and defendant to gain a better understanding.
  */
 public class RoomController {
-  private static boolean isFirstTimeInit = true;
   private boolean firstDefendant = false;
   private boolean firstHuman = false;
   private boolean firstAi = false;
@@ -31,6 +32,9 @@ public class RoomController {
   @FXML private Rectangle defendant;
 
   @FXML private Button btnGuess;
+  @FXML private AnchorPane startPane;
+  @FXML private Button startButton;
+  @FXML private Label storyLabel;
 
   /**
    * Initializes the room view. If it's the first time initialization, it will provide instructions
@@ -38,14 +42,12 @@ public class RoomController {
    */
   @FXML
   public void initialize() {
-    if (isFirstTimeInit) {
-      try {
-        playOpenTtsAudio();
-      } catch (URISyntaxException e) {
-        e.printStackTrace();
-      }
-      isFirstTimeInit = false;
-    }
+    // Set the story text
+    storyLabel.setText(
+        "AstroHelix's security system, Aegis I, detected executive Cassian Thorne"
+            + " falsifying mission safety data although her motives aren’t clear. Aegis I responded"
+            + " with the highest security measure. Chat with the characters to uncover the"
+            + " details.");
 
     // always check if all characters have been spoken to
     Platform.runLater(() -> updateButtonState());
@@ -102,10 +104,10 @@ public class RoomController {
    */
 
   /**
-   * Handles mouse click events on the defendant character to initiate conversation.
-   * Switches to the defendant chat scene, synchronizes chat history, and manages
-   * the flashback sequence based on whether this is the player's first visit.
-   * 
+   * Handles mouse click events on the defendant character to initiate conversation. Switches to the
+   * defendant chat scene, synchronizes chat history, and manages the flashback sequence based on
+   * whether this is the player's first visit.
+   *
    * @param event the mouse event triggered by clicking the defendant
    * @throws IOException if there is an error loading the defendant chat scene
    */
@@ -128,10 +130,10 @@ public class RoomController {
   }
 
   /**
-   * Handles mouse click events on the human witness character to initiate conversation.
-   * Switches to the human witness chat scene, synchronizes chat history, and tracks
-   * whether this is the first visit to manage appropriate conversation flow.
-   * 
+   * Handles mouse click events on the human witness character to initiate conversation. Switches to
+   * the human witness chat scene, synchronizes chat history, and tracks whether this is the first
+   * visit to manage appropriate conversation flow.
+   *
    * @param event the mouse event triggered by clicking the human witness
    * @throws IOException if there is an error loading the witness chat scene
    */
@@ -153,10 +155,10 @@ public class RoomController {
   }
 
   /**
-   * Handles mouse click events on the AI witness character to initiate conversation.
-   * Switches to the AI witness chat scene, synchronizes chat history, and manages
-   * the flashback sequence and timeline puzzle based on first-time visit status.
-   * 
+   * Handles mouse click events on the AI witness character to initiate conversation. Switches to
+   * the AI witness chat scene, synchronizes chat history, and manages the flashback sequence and
+   * timeline puzzle based on first-time visit status.
+   *
    * @param event the mouse event triggered by clicking the AI witness
    * @throws IOException if there is an error loading the AI witness chat scene
    */
@@ -191,9 +193,9 @@ public class RoomController {
   }
 
   /**
-   * Updates the verdict button state based on whether the player has spoken to all characters.
-   * This method checks the game state and enables or disables the guess button accordingly,
-   * ensuring players can only proceed to the verdict phase after gathering all evidence.
+   * Updates the verdict button state based on whether the player has spoken to all characters. This
+   * method checks the game state and enables or disables the guess button accordingly, ensuring
+   * players can only proceed to the verdict phase after gathering all evidence.
    */
   public void updateButtonState() {
     System.out.println("Updating button state..."); // Debug
@@ -215,8 +217,13 @@ public class RoomController {
 
   /**
    * Updates the state of the verdict button based on whether all witnesses have been interviewed.
-   * This method checks if the player has talked to all three witnesses and enables/disables
-   * the verdict button accordingly. Should be called after each conversation or during
-   * initialization.
+   * This method checks if the player has talked to all three witnesses and enables/disables the
+   * verdict button accordingly. Should be called after each conversation or during initialization.
    */
+  @FXML
+  private void onStartGame(ActionEvent event) throws URISyntaxException {
+    startPane.setVisible(false);
+    playOpenTtsAudio();
+    CountdownTimer.start();
+  }
 }

@@ -238,7 +238,7 @@ public class App extends Application {
       preloadSceneAsync(fxml, latch);
     }
 
-    // Wait for preloading, then show room and start timer
+    // Wait for preloading, then show room (timer starts via start button in RoomController)
     Task<Void> waitTask =
         new Task<Void>() {
           @Override
@@ -254,7 +254,6 @@ public class App extends Application {
                   try {
                     // Set current root to main page
                     setRoot("room");
-                    CountdownTimer.start();
                     SceneBundle roomBundle = preloadedBundles.get("room");
                     if (roomBundle != null && roomBundle.root != null) {
                       roomBundle.root.requestFocus();
