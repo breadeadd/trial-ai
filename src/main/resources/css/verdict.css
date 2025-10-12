@@ -12,6 +12,13 @@
   -fx-border-color: #cee0dc;
 }
 
+.text-area .scroll-bar:vertical {
+  -fx-pref-width: 1;
+  /* Minimize the width */
+  -fx-opacity: 0;
+  /* Make it fully transparent */
+}
+
 .text {
   -fx-font-family: "VT323", monospace;
   -fx-font-size: 26px;

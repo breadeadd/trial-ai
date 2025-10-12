@@ -25,11 +25,11 @@
             <Font name="System Bold" size="21.0" />
          </font>
       </Button>
-      <TextArea fx:id="txtaChat" editable="false" layoutX="111.0" layoutY="137.0" opacity="0.9" prefHeight="304.0" prefWidth="565.0" style="-fx-font-size: 14px; -fx-background-color: e3f3ef;" styleClass="text_area" wrapText="true">
+      <TextArea fx:id="txtaChat" editable="false" layoutX="111.0" layoutY="137.0" opacity="0.9" prefHeight="304.0" prefWidth="565.0" style="-fx-font-size: 18px; -fx-background-color: e3f3ef;" styleClass="text-area" wrapText="true">
          <font>
             <Font size="16.0" />
          </font></TextArea>
-      <TextArea fx:id="enterRationale" layoutX="117.0" layoutY="228.0" onKeyPressed="#onKeyPressed" prefHeight="215.0" prefWidth="552.0" styleClass="text_area" wrapText="true" />
+      <TextArea fx:id="enterRationale" layoutX="117.0" layoutY="228.0" onKeyPressed="#onKeyPressed" prefHeight="215.0" prefWidth="552.0" styleClass="text-area" wrapText="true" />
       <Label fx:id="rationalTxt" alignment="CENTER" contentDisplay="CENTER" layoutX="122.0" layoutY="188.0" prefHeight="43.0" prefWidth="541.0" text="Justify your decision" textAlignment="CENTER">
          <font>
             <Font name="System Bold" size="21.0" />
