@@ -809,6 +809,10 @@ public class AiWitnessController extends ChatController {
 
           // Reset drag and drop puzzle elements
           resetPuzzleState();
+           // Disable back button until flashbacks end
+           if (backBtn != null) {
+             backBtn.setDisable(true);
+           }
         });
   }
 

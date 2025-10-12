@@ -16,18 +16,6 @@
             <Image url="@../images/court.png" />
          </image>
       </ImageView>
-      <Rectangle fx:id="defendant" arcHeight="5.0" arcWidth="5.0" fill="#1f93ff" focusTraversable="true" height="185.0" layoutX="102.0" layoutY="149.0" onMouseClicked="#defendantClicked" opacity="0.0" stroke="BLACK" strokeType="INSIDE" width="118.0" />
-      <Rectangle fx:id="humanWitness" arcHeight="5.0" arcWidth="5.0" fill="#1f93ff" focusTraversable="true" height="185.0" layoutX="390.0" layoutY="149.0" onMouseClicked="#humanWitnessClicked" opacity="0.0" stroke="BLACK" strokeType="INSIDE" width="145.0" />
-      <Rectangle fx:id="aiWitness" arcHeight="5.0" arcWidth="5.0" fill="#1f93ff" focusTraversable="true" height="158.0" layoutX="595.0" layoutY="173.0" onMouseClicked="#aiWitnessClicked" opacity="0.0" stroke="BLACK" strokeType="INSIDE" width="118.0" />
-      <Button fx:id="btnGuess" layoutX="273.0" layoutY="459.0" mnemonicParsing="false" onAction="#handleGuessClick" prefHeight="57.0" prefWidth="215.0" style="-fx-background-color: #5f9ed9;" text="Make a Verdict">
-         <font>
-            <Font name="VT323 Regular" size="27.0" />
-         </font></Button>
-      <Label alignment="CENTER" layoutX="-21.0" layoutY="562.0" prefHeight="38.0" prefWidth="826.0" text="Talk to the characters and determine if the Aegis I's actions were ethical" textFill="WHITE">
-         <font>
-            <Font size="23.0" />
-         </font>
-      </Label>
       <ImageView fx:id="humanImg" fitHeight="200.0" fitWidth="145.0" layoutX="395.0" layoutY="152.0" onMouseEntered="#humanEntered" onMouseExited="#humanExited" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../images/characters/orionIdle.png" />
@@ -43,6 +31,18 @@
             <Image url="@../images/characters/echoIdle.png" />
          </image>
       </ImageView>
+      <Rectangle fx:id="defendant" arcHeight="5.0" arcWidth="5.0" fill="#1f93ff" focusTraversable="true" height="185.0" layoutX="102.0" layoutY="149.0" onMouseClicked="#defendantClicked" opacity="0.0" stroke="BLACK" strokeType="INSIDE" width="118.0" />
+      <Rectangle fx:id="humanWitness" arcHeight="5.0" arcWidth="5.0" fill="#1f93ff" focusTraversable="true" height="185.0" layoutX="390.0" layoutY="149.0" onMouseClicked="#humanWitnessClicked" opacity="0.0" stroke="BLACK" strokeType="INSIDE" width="145.0" />
+      <Rectangle fx:id="aiWitness" arcHeight="5.0" arcWidth="5.0" fill="#1f93ff" focusTraversable="true" height="158.0" layoutX="595.0" layoutY="173.0" onMouseClicked="#aiWitnessClicked" opacity="0.0" stroke="BLACK" strokeType="INSIDE" width="118.0" />
+      <Button fx:id="btnGuess" layoutX="273.0" layoutY="459.0" mnemonicParsing="false" onAction="#handleGuessClick" prefHeight="57.0" prefWidth="215.0" style="-fx-background-color: #5f9ed9;" text="Make a Verdict">
+         <font>
+            <Font name="VT323 Regular" size="27.0" />
+         </font></Button>
+      <Label alignment="CENTER" layoutX="-21.0" layoutY="562.0" prefHeight="38.0" prefWidth="826.0" text="Talk to the characters and determine if the Aegis I's actions were ethical" textFill="WHITE">
+         <font>
+            <Font size="23.0" />
+         </font>
+      </Label>
       <AnchorPane fx:id="startPane" prefHeight="614.0" prefWidth="789.0" style="-fx-background-color: rgba(0,0,0,0.7);" visible="true">
          <children>
             <Label fx:id="storyLabel" alignment="CENTER" layoutX="94.0" layoutY="157.0" prefHeight="200.0" prefWidth="600.0" textAlignment="CENTER" textFill="WHITE" wrapText="true">
