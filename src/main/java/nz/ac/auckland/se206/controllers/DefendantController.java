@@ -406,6 +406,11 @@ public class DefendantController extends ChatController {
     Platform.runLater(() -> {
       // Reset memory buttons to initial state
       resetMemoryButtons();
+
+      // Disable back button until flashbacks end
+      if (backBtn != null) {
+        backBtn.setDisable(true);
+      }
     });
   }
 
