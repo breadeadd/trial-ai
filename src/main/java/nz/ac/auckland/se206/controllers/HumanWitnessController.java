@@ -13,6 +13,7 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.shape.Rectangle;
 import nz.ac.auckland.apiproxy.chat.openai.ChatMessage;
@@ -30,6 +31,7 @@ public class HumanWitnessController extends ChatController {
   private List<Image> images = new ArrayList<>();
   private int currentImageIndex = 0;
   private boolean chatVisible = true; // Track chat visibility state, default to visible
+  private boolean notifInteract = false;
 
   @FXML private ImageView flashbackSlideshow;
   @FXML private Rectangle screenBox;
@@ -40,6 +42,8 @@ public class HumanWitnessController extends ChatController {
   @FXML private TextField txtInput;
   @FXML private Button btnSend;
   @FXML private Button backBtn;
+  @FXML private ImageView notif;
+  @FXML private ImageView notifBig;
 
   @FXML private AnchorPane popupPane;
   @FXML private Label instructionLabel;
@@ -64,6 +68,10 @@ public class HumanWitnessController extends ChatController {
 
     unlockSlider.setVisible(false); // Slider is initially hidden
     dropUpArrow.setVisible(false); // Drop up arrow initially hidden
+
+    // notifications
+    notif.setVisible(false);
+    notifBig.setVisible(false);
   }
 
   @Override
@@ -103,6 +111,12 @@ public class HumanWitnessController extends ChatController {
       unlockSlider.setDisable(false);
       unlockSlider.setValue(0.0); // Resetting to starting pos
       dropUpArrow.setVisible(true); // Show arrow on humanMem1.png
+      if (notifInteract) {
+        notifBig.setVisible(true);
+      } else {
+        notif.setVisible(true);
+        notif.setDisable(false);
+      }
       // Set to dropUpArrow shape
       updateArrowToDropDown(dropUpArrow);
     }
@@ -126,6 +140,7 @@ public class HumanWitnessController extends ChatController {
       unlockSlider.setVisible(true);
       unlockSlider.setDisable(false);
       dropUpArrow.setVisible(true);
+      notif.setVisible(true);
       updateArrowToDropDown(dropUpArrow); // Arrow starts pointing down
 
       // Initialize chat as visible
@@ -136,6 +151,7 @@ public class HumanWitnessController extends ChatController {
       txtaChat.setVisible(true); // Ensure chat, text field, and send button is visible
       txtInput.setVisible(true);
       btnSend.setVisible(true);
+
     } else if (currentImageIndex == 4) { // When reaching humanMem2.png
       unlockSlider.setVisible(false);
       dropUpArrow.setVisible(true);
@@ -158,6 +174,14 @@ public class HumanWitnessController extends ChatController {
       // Hide chat UI elements
       setChatUiVisibility(false);
     }
+  }
+
+  // notification transition
+  @FXML
+  private void notifPressed(MouseEvent event) {
+    notifInteract = true;
+    notif.setVisible(false);
+    notifBig.setVisible(true);
   }
 
   // Handle slider release to transition to humanMem2.png and hide slider
@@ -217,12 +241,14 @@ public class HumanWitnessController extends ChatController {
     Platform.runLater(() -> displayMessage("Phone Unlocked 🔓"));
 
     // Send witness response after 1 second delay
-    executeDelayedTask(1000, () -> {
-      displayMessage(
-          "So Cassian compromised the mission, which makes Aegis's reaction to"
-              + " protect it understandable. But its methods were EXTREME. Cassian"
-              + " could've been in action for good.");
-    });
+    executeDelayedTask(
+        1000,
+        () -> {
+          displayMessage(
+              "So Cassian compromised the mission, which makes Aegis's reaction to"
+                  + " protect it understandable. But its methods were EXTREME. Cassian"
+                  + " could've been in action for good.");
+        });
   }
 
   // Display a message in the chat area
@@ -252,10 +278,6 @@ public class HumanWitnessController extends ChatController {
   private void onToggleChat(ActionEvent event) {
     chatVisible = handleToggleChatAction(chatVisible, dropUpArrow, this::animateTranslate);
   }
-
-
-
-
 
   /** Resets the controller to its initial state for game restart. */
   public void resetControllerState() {
@@ -310,6 +332,10 @@ public class HumanWitnessController extends ChatController {
           if (flashbackSlideshow != null && !images.isEmpty()) {
             flashbackSlideshow.setImage(images.get(0));
           }
+
+          // reset notification
+          notif.setVisible(false);
+          notifBig.setVisible(false);
         });
   }
 
