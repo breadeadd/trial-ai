@@ -41,6 +41,22 @@ public class AiWitnessController extends ChatController {
   private double[] originalX = new double[3]; // Store original positions
   private double[] originalY = new double[3];
 
+  // set images
+  private Image event1 =
+      new Image(getClass().getResourceAsStream("/images/memories/assets/event1.png"));
+  private Image event1C =
+      new Image(getClass().getResourceAsStream("/images/memories/assets/event1Correct.png"));
+
+  private Image event2 =
+      new Image(getClass().getResourceAsStream("/images/memories/assets/event2.png"));
+  private Image event2C =
+      new Image(getClass().getResourceAsStream("/images/memories/assets/event2Correct.png"));
+
+  private Image event3 =
+      new Image(getClass().getResourceAsStream("/images/memories/assets/event3.png"));
+  private Image event3C =
+      new Image(getClass().getResourceAsStream("/images/memories/assets/event3Correct.png"));
+
   @FXML private ImageView flashbackSlideshow;
   @FXML private ImageView aiFlashback;
   @FXML private Button nextButton;
@@ -388,6 +404,12 @@ public class AiWitnessController extends ChatController {
     }
   }
 
+  private void setImageReset() {
+    event1Image.setImage(event1);
+    event2Image.setImage(event2);
+    event3Image.setImage(event3);
+  }
+
   /** Displays a message when an event is placed in a slot. */
   private void displayEventPlacementMessage(String eventId, int slotIndex) {
     String message = "";
@@ -407,6 +429,7 @@ public class AiWitnessController extends ChatController {
                   + " data and statistics, setting the chain of events in motion. Echo II"
                   + " recognizes this as the root cause of the mission crisis.";
           lastTimelineAction = "Logs Altered event placed correctly";
+          event1Image.setImage(event1C);
           break;
         case "event2":
           message = "Aegis often takes immediate, extreme action. Such as a counter-threat.";
@@ -416,6 +439,7 @@ public class AiWitnessController extends ChatController {
                   + " detecting the security breach. Echo II understands this as the escalation"
                   + " phase where Aegis I's aggressive protocols triggered further complications.";
           lastTimelineAction = "Counter-Threat event placed correctly";
+          event2Image.setImage(event2C);
           break;
         case "event3":
           message = "O. Vale, Mission Lead, received an overflow of messages.";
@@ -425,6 +449,7 @@ public class AiWitnessController extends ChatController {
                   + " became overwhelmed, paralyzing mission coordination. Echo II sees this as the"
                   + " culmination of the crisis sequence.";
           lastTimelineAction = "Outrage event placed correctly";
+          event3Image.setImage(event3C);
           break;
       }
 
@@ -454,9 +479,9 @@ public class AiWitnessController extends ChatController {
   }
 
   /**
-   * Converts an internal event ID to a human-readable name for display purposes.
-   * Used to show meaningful event names in the user interface and debug messages.
-   * 
+   * Converts an internal event ID to a human-readable name for display purposes. Used to show
+   * meaningful event names in the user interface and debug messages.
+   *
    * @param eventId the internal event identifier (e.g., "event1", "event2", "event3")
    * @return the corresponding human-readable name, or "Unknown Event" if not recognized
    */
@@ -479,10 +504,10 @@ public class AiWitnessController extends ChatController {
   }
 
   /**
-   * Determines the correct slot position for a given event in the chronological timeline.
-   * Used for puzzle validation to check if events are placed in the proper order.
-   * The correct sequence is: Logs Altered (slot 1), Counter-Threat (slot 2), Outrage (slot 3).
-   * 
+   * Determines the correct slot position for a given event in the chronological timeline. Used for
+   * puzzle validation to check if events are placed in the proper order. The correct sequence is:
+   * Logs Altered (slot 1), Counter-Threat (slot 2), Outrage (slot 3).
+   *
    * @param eventId the event identifier to check
    * @return the correct slot position (1-based indexing), or 0 if event is unrecognized
    */
@@ -527,28 +552,31 @@ public class AiWitnessController extends ChatController {
     sendDelayedMessage(1000, "Timeline successfully loaded⏳✔️", "assistant");
 
     // Send detailed analysis message after 2 second total delay
-    sendDelayedMessage(2000, 
+    sendDelayedMessage(
+        2000,
         "Cassian Thorne initiated unauthorized data alterations. "
             + "Concurrently, Aegis I executed Project Starlight's security lockdown "
             + "and transmitted a direct message to Thorne. "
-            + "This action resulted in immediate disruption.", 
+            + "This action resulted in immediate disruption.",
         "assistant");
-    
+
     // Add context for AI understanding after the same delay
-    executeDelayedTask(2000, () -> {
-      addContextToChat(
-          "system",
+    executeDelayedTask(
+        2000,
+        () -> {
+          addContextToChat(
+              "system",
               "Player has successfully completed Echo II's timeline memory puzzle. "
                   + "All events were placed in correct chronological order: "
                   + "1st - Logs Altered (Cassian made various statistic changes "
-              + "to the Project Starlight Logs), "
-              + "2nd - Counter-Threat (Aegis often takes immediate, extreme action. "
-              + "Such as a counter-threat), "
-              + "3rd - Outrage (O. Vale, Mission Lead, received an overflow of messages). "
-              + "This represents the correct sequence of events "
-              + "during the mission compromise.");
-      lastTimelineAction = "Timeline completed successfully";
-    });
+                  + "to the Project Starlight Logs), "
+                  + "2nd - Counter-Threat (Aegis often takes immediate, extreme action. "
+                  + "Such as a counter-threat), "
+                  + "3rd - Outrage (O. Vale, Mission Lead, received an overflow of messages). "
+                  + "This represents the correct sequence of events "
+                  + "during the mission compromise.");
+          lastTimelineAction = "Timeline completed successfully";
+        });
 
     // Mark AI witness interaction as completed
     GameStateManager.getInstance().setInteractionFlag("EchoInt", true);
@@ -562,6 +590,8 @@ public class AiWitnessController extends ChatController {
     ChatMessage errorMessage =
         new ChatMessage("assistant", "ERROR: Incorrect timeline, try again. ❌");
     appendChatMessage(errorMessage);
+
+    setImageReset();
 
     // Add context for AI understanding
     String currentOrder = getSlotContentsAsString();
@@ -603,10 +633,10 @@ public class AiWitnessController extends ChatController {
   }
 
   /**
-   * Generates a formatted string representation of the current slot contents.
-   * This method builds a readable description showing which events are placed in each slot,
-   * used for debugging, AI context, and user feedback about the current puzzle state.
-   * 
+   * Generates a formatted string representation of the current slot contents. This method builds a
+   * readable description showing which events are placed in each slot, used for debugging, AI
+   * context, and user feedback about the current puzzle state.
+   *
    * @return a formatted string describing the contents of each timeline slot
    */
   private String getSlotContentsAsString() {
@@ -644,11 +674,11 @@ public class AiWitnessController extends ChatController {
   }
 
   /**
-   * Analyzes the current state of the timeline puzzle and generates a status description.
-   * This method evaluates how many events have been placed, their positions, and whether
-   * the puzzle is complete and correct. Used to provide contextual information to the AI
-   * system about the player's progress through the memory reconstruction challenge.
-   * 
+   * Analyzes the current state of the timeline puzzle and generates a status description. This
+   * method evaluates how many events have been placed, their positions, and whether the puzzle is
+   * complete and correct. Used to provide contextual information to the AI system about the
+   * player's progress through the memory reconstruction challenge.
+   *
    * @return a descriptive status string indicating puzzle progress and correctness
    */
   private String getTimelinePuzzleStatus() {
@@ -760,19 +790,26 @@ public class AiWitnessController extends ChatController {
   /** Resets the controller to its initial state for game restart. */
   public void resetControllerState() {
     // Use shared common reset functionality
-    performCommonControllerReset(popupPane, dropUpArrow, nextButton, flashbackSlideshow, 
-        images, () -> currentImageIndex = 0, () -> chatVisible = true);
-    
-    // Handle AI witness-specific reset operations
-    Platform.runLater(() -> {
-      // Hide the memory screen overlay
-      if (aiFlashback != null) {
-        aiFlashback.setVisible(false);
-      }
+    performCommonControllerReset(
+        popupPane,
+        dropUpArrow,
+        nextButton,
+        flashbackSlideshow,
+        images,
+        () -> currentImageIndex = 0,
+        () -> chatVisible = true);
 
-      // Reset drag and drop puzzle elements
-      resetPuzzleState();
-    });
+    // Handle AI witness-specific reset operations
+    Platform.runLater(
+        () -> {
+          // Hide the memory screen overlay
+          if (aiFlashback != null) {
+            aiFlashback.setVisible(false);
+          }
+
+          // Reset drag and drop puzzle elements
+          resetPuzzleState();
+        });
   }
 
   /** Resets the drag and drop puzzle to its initial state. */
@@ -809,6 +846,9 @@ public class AiWitnessController extends ChatController {
     if (dropSlot3 != null) {
       dropSlot3.setVisible(false);
     }
+
+    // reset images to default
+    setImageReset();
 
     // Reset event images to original scrambled positions (2-3-1 order)
     Platform.runLater(

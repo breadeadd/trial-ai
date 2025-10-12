@@ -332,6 +332,10 @@ public class HumanWitnessController extends ChatController {
           if (flashbackSlideshow != null && !images.isEmpty()) {
             flashbackSlideshow.setImage(images.get(0));
           }
+
+          // reset notification
+          notif.setVisible(false);
+          notifBig.setVisible(false);
         });
   }
 
