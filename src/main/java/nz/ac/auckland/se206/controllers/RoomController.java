@@ -14,7 +14,6 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
-import javafx.scene.shape.Rectangle;
 import nz.ac.auckland.se206.App;
 import nz.ac.auckland.se206.CountdownTimer;
 import nz.ac.auckland.se206.states.GameStateManager;
@@ -44,10 +43,6 @@ public class RoomController {
       new Image(getClass().getResourceAsStream("/images/characters/echoIdle.png"));
   private Image echoHover =
       new Image(getClass().getResourceAsStream("/images/characters/echoHover.png"));
-
-  @FXML private Rectangle humanWitness;
-  @FXML private Rectangle aiWitness;
-  @FXML private Rectangle defendant;
 
   // hover image animations
   @FXML private ImageView defImg;

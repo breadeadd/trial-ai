@@ -6,7 +6,6 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.Pane?>
-<?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
 
 <Pane fx:id="room" focusTraversable="true" onKeyPressed="#onKeyPressed" onKeyReleased="#onKeyReleased" prefHeight="614.0" prefWidth="789.0" style="-fx-background-color: #000000;" stylesheets="@../css/chatroom.css" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="nz.ac.auckland.se206.controllers.RoomController">
@@ -16,24 +15,21 @@
             <Image url="@../images/court.png" />
          </image>
       </ImageView>
-      <ImageView fx:id="humanImg" fitHeight="200.0" fitWidth="145.0" layoutX="395.0" layoutY="152.0" onMouseEntered="#humanEntered" onMouseExited="#humanExited" pickOnBounds="true" preserveRatio="true">
+      <ImageView fx:id="humanImg" fitHeight="200.0" fitWidth="145.0" layoutX="395.0" layoutY="152.0" onMouseClicked="#humanWitnessClicked" onMouseEntered="#humanEntered" onMouseExited="#humanExited" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../images/characters/orionIdle.png" />
          </image>
       </ImageView>
-      <ImageView fx:id="defImg" fitHeight="188.0" fitWidth="118.0" layoutX="101.0" layoutY="148.0" onMouseEntered="#defEntered" onMouseExited="#defExited" pickOnBounds="true" preserveRatio="true">
+      <ImageView fx:id="defImg" fitHeight="188.0" fitWidth="118.0" layoutX="101.0" layoutY="148.0" onMouseClicked="#defendantClicked" onMouseEntered="#defEntered" onMouseExited="#defExited" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../images/characters/aegisIdle.png" />
          </image>
       </ImageView>
-      <ImageView fx:id="aiImg" fitHeight="181.0" fitWidth="118.0" layoutX="591.0" layoutY="164.0" onMouseEntered="#aiEntered" onMouseExited="#aiExited" pickOnBounds="true" preserveRatio="true">
+      <ImageView fx:id="aiImg" fitHeight="181.0" fitWidth="118.0" layoutX="591.0" layoutY="164.0" onMouseClicked="#aiWitnessClicked" onMouseEntered="#aiEntered" onMouseExited="#aiExited" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../images/characters/echoIdle.png" />
          </image>
       </ImageView>
-      <Rectangle fx:id="defendant" arcHeight="5.0" arcWidth="5.0" fill="#1f93ff" focusTraversable="true" height="185.0" layoutX="102.0" layoutY="149.0" onMouseClicked="#defendantClicked" opacity="0.0" stroke="BLACK" strokeType="INSIDE" width="118.0" />
-      <Rectangle fx:id="humanWitness" arcHeight="5.0" arcWidth="5.0" fill="#1f93ff" focusTraversable="true" height="185.0" layoutX="390.0" layoutY="149.0" onMouseClicked="#humanWitnessClicked" opacity="0.0" stroke="BLACK" strokeType="INSIDE" width="145.0" />
-      <Rectangle fx:id="aiWitness" arcHeight="5.0" arcWidth="5.0" fill="#1f93ff" focusTraversable="true" height="158.0" layoutX="595.0" layoutY="173.0" onMouseClicked="#aiWitnessClicked" opacity="0.0" stroke="BLACK" strokeType="INSIDE" width="118.0" />
       <Button fx:id="btnGuess" layoutX="273.0" layoutY="459.0" mnemonicParsing="false" onAction="#handleGuessClick" prefHeight="57.0" prefWidth="215.0" style="-fx-background-color: #5f9ed9;" text="Make a Verdict">
          <font>
             <Font name="VT323 Regular" size="27.0" />
