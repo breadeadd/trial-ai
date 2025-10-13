@@ -19,7 +19,6 @@
       </ImageView>
       <ImageView fx:id="aiFlashback" fitHeight="558.0" fitWidth="804.0" pickOnBounds="true" preserveRatio="true" visible="false" />
       
-      <!-- Draggable Event Images (positioned in scrambled order: 2-3-1) -->
       <ImageView fx:id="event2Image" fitHeight="150.0" fitWidth="150.0" layoutX="85.0" layoutY="320.0" pickOnBounds="true" preserveRatio="true" visible="false">
          <image>
             <Image url="@../images/memories/assets/event2.png" />
@@ -36,10 +35,10 @@
          </image>
       </ImageView>
       
-      <!-- Drop Slot Areas (positioned on timeline) -->
       <ImageView fx:id="dropSlot1" fitHeight="150.0" fitWidth="150.0" layoutX="85.0" layoutY="165.0" pickOnBounds="true" preserveRatio="true" style="-fx-border-color: #FFFFFF; -fx-border-width: 2; -fx-background-color: rgba(255,255,255,0.3);" visible="false" />
       <ImageView fx:id="dropSlot2" fitHeight="150.0" fitWidth="150.0" layoutX="320.0" layoutY="165.0" pickOnBounds="true" preserveRatio="true" style="-fx-border-color: #FFFFFF; -fx-border-width: 2; -fx-background-color: rgba(255,255,255,0.3);" visible="false" />
       <ImageView fx:id="dropSlot3" fitHeight="150.0" fitWidth="150.0" layoutX="550.0" layoutY="165.0" pickOnBounds="true" preserveRatio="true" style="-fx-border-color: #FFFFFF; -fx-border-width: 2; -fx-background-color: rgba(255,255,255,0.3);" visible="false" />
+
       <TextArea fx:id="txtaChat" editable="false" layoutX="7.0" layoutY="439.0" opacity="0.9" prefHeight="131.0" prefWidth="773.0" wrapText="true" />
       <TextField fx:id="txtInput" layoutX="9.0" layoutY="578.0" onAction="#onSendMessage" onKeyPressed="#onKeyPressed" prefHeight="26.0" prefWidth="655.0" />
       <Button fx:id="btnSend" layoutX="670.0" layoutY="578.0" mnemonicParsing="false" onAction="#onSendMessage" prefHeight="25.0" prefWidth="109.0" style="-fx-background-color: #5f9ed9;" text="Send" />
@@ -51,16 +50,20 @@
       </Button>
       <Button fx:id="dropUpArrow" layoutX="14.0" layoutY="400.0" mnemonicParsing="false" onAction="#onToggleChat" prefHeight="40.0" prefWidth="40.0" style="-fx-background-color: transparent;" visible="false" />
       <ProgressIndicator fx:id="loading" layoutX="382.0" layoutY="480.0" progress="0.0" visible="false" />
-      <AnchorPane fx:id="popupPane" style="-fx-background-color: rgba(0,0,0,0.7);" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+
+      <AnchorPane fx:id="popupPane" style="-fx-background-color: rgba(0,0,0,0.7);" visible="false"
+                  AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
+                  AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
-            <Label fx:id="instructionLabel" alignment="CENTER" layoutX="194.0" layoutY="257.0" prefHeight="60.0" prefWidth="400.0" textAlignment="CENTER" textFill="WHITE" wrapText="true">
+            <Button fx:id="closePopupBtn" layoutX="740.0" layoutY="25.0" mnemonicParsing="false"
+                    prefHeight="40.0" prefWidth="40.0" text="✕" 
+                    style="-fx-background-color: red; -fx-background-radius: 50%; -fx-text-fill: white; -fx-font-size: 20px; -fx-cursor: hand;"
+                    onAction="#onClosePopup" />
+            <Label fx:id="instructionLabel" alignment="CENTER" layoutX="194.0" layoutY="257.0"
+                   prefHeight="60.0" prefWidth="400.0" textAlignment="CENTER" textFill="WHITE"
+                   wrapText="true">
                <font>
                   <Font size="20.0" />
-               </font>
-            </Label>
-            <Label alignment="CENTER" layoutX="194.0" layoutY="350.0" prefHeight="40.0" prefWidth="400.0" text="(click anywhere to exit)" textAlignment="CENTER" textFill="WHITE" wrapText="true">
-               <font>
-                  <Font size="14.0" />
                </font>
             </Label>
          </children>

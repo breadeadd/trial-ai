@@ -48,6 +48,13 @@ public class DefendantController extends ChatController {
   @FXML private AnchorPane popupPane;
   @FXML private Label instructionLabel;
 
+  @FXML private Button closePopupBtn;
+
+  @FXML
+  private void onClosePopup(ActionEvent event) {
+    popupPane.setVisible(false);
+  }
+
   /**
    * Initializes the chat view.
    *
@@ -57,7 +64,7 @@ public class DefendantController extends ChatController {
   public void initialize() throws ApiProxyException {
     // Initialize popup overlay and instruction text
     popupPane.setVisible(false);
-    popupPane.setOnMouseClicked(e -> popupPane.setVisible(false));
+    // popupPane.setOnMouseClicked(e -> popupPane.setVisible(false));
     instructionLabel.setText("Press the buttons to uncover Aegis I's calculations.");
 
     // Load flashback images and initialize chat system
@@ -153,15 +160,17 @@ public class DefendantController extends ChatController {
 
   // check all buttons have been clicked
   private boolean allButtonsClicked() {
-    return btn1img.isVisible() && btn2img.isVisible() 
-        && btn3img.isVisible() && btn4img.isVisible();
+    return btn1img.isVisible() && btn2img.isVisible() && btn3img.isVisible() && btn4img.isVisible();
   }
 
   @FXML
   private void button1Clicked(MouseEvent event) throws IOException {
     // Handle button click for "Ignore"
     // This option is unacceptable, as it guarantees mission failure and a catastrophic outcome.
-    handleMemoryButtonClick(0, btn1img, "Ignore",
+    handleMemoryButtonClick(
+        0,
+        btn1img,
+        "Ignore",
         "This option is unacceptable, as it guarantees mission failure and a catastrophic "
             + "outcome.",
         "Player clicked Aegis I's first memory option: 'Ignore'. This represents Aegis I's "
@@ -175,7 +184,10 @@ public class DefendantController extends ChatController {
   private void button2Clicked(MouseEvent event) throws IOException {
     // Handle button click for "Report to Council"
     // This option represents a formal, bureaucratic approach to handling the threat.
-    handleMemoryButtonClick(1, btn2img, "Report to Council",
+    handleMemoryButtonClick(
+        1,
+        btn2img,
+        "Report to Council",
         "This action is too slow to execute and has an unacceptably low chance of an effective "
             + "outcome.",
         "Player clicked Aegis I's second memory option: 'Report to Council'. This represents the "
@@ -188,10 +200,13 @@ public class DefendantController extends ChatController {
   @FXML
   private void button3Clicked(MouseEvent event) throws IOException {
     // Handle button click for "Neutralise Internally"
-    // This option represents handling the threat through internal 
+    // This option represents handling the threat through internal
     // organization methods without external
     // involvement.
-    handleMemoryButtonClick(2, btn3img, "Neutralise Internally",
+    handleMemoryButtonClick(
+        2,
+        btn3img,
+        "Neutralise Internally",
         "This path is too slow for the current risk level and only provides a medium-impact "
             + "result.",
         "Player clicked Aegis I's third memory option: 'Neutralise Internally'. This represents "
@@ -205,7 +220,10 @@ public class DefendantController extends ChatController {
   private void button4Clicked(MouseEvent event) throws IOException {
     // Handle button click for "Blackmail Cassian"
     // This option represents using leverage and coercion against the threat source directly.
-    handleMemoryButtonClick(3, btn4img, "Blackmail Cassian",
+    handleMemoryButtonClick(
+        3,
+        btn4img,
+        "Blackmail Cassian",
         "This is THE solution. Not optimal—inevitable. The only path that guarantees mission "
             + "success with absolute certainty.",
         "Player clicked Aegis I's fourth memory option: 'Blackmail Cassian'. This represents "
@@ -321,41 +339,46 @@ public class DefendantController extends ChatController {
 
     // Send the first completion message after 1 second delay
     sendDelayedMessage(1000, "Aegis comparisons completed 📈", "assistant");
-    
+
     // Add context for first completion message after the same delay
-    executeDelayedTask(1000, () -> {
-      addContextToChat(
-          "system",
-          "Aegis I has announced completion of strategic analysis. This indicates"
-              + " the AI has finished processing all available options and is"
-              + " ready to present final conclusions.");
-    });
+    executeDelayedTask(
+        1000,
+        () -> {
+          addContextToChat(
+              "system",
+              "Aegis I has announced completion of strategic analysis. This indicates"
+                  + " the AI has finished processing all available options and is"
+                  + " ready to present final conclusions.");
+        });
 
     // Send the final analysis message after 2 second total delay
-    sendDelayedMessage(2000, 
+    sendDelayedMessage(
+        2000,
         "Analysis complete. Blackmail was not just optimal—it was the ONLY viable solution. "
             + "All other options were fundamentally flawed and unacceptable. Immediate threat "
             + "neutralization through blackmail was the only logical choice to secure mission "
-            + "success.", 
+            + "success.",
         "assistant");
-    
+
     // Add context for final analysis message after the same delay
-    executeDelayedTask(2000, () -> {
-      addContextToChat(
-          "system",
-          "Aegis I has provided final strategic conclusion declaring 'Blackmail"
-              + " Cassian Thorne' as the ONLY viable solution—not just optimal, but"
-              + " the singular acceptable choice. Key absolute reasoning: ALL other"
-              + " options were fundamentally unacceptable from the start, blackmail"
-              + " was never a choice but the inevitable conclusion. Aegis I views"
-              + " this as pure logical certainty, not a decision but a mathematical"
-              + " conclusion. Mission security demands only this path.");
-    });
+    executeDelayedTask(
+        2000,
+        () -> {
+          addContextToChat(
+              "system",
+              "Aegis I has provided final strategic conclusion declaring 'Blackmail"
+                  + " Cassian Thorne' as the ONLY viable solution—not just optimal, but"
+                  + " the singular acceptable choice. Key absolute reasoning: ALL other"
+                  + " options were fundamentally unacceptable from the start, blackmail"
+                  + " was never a choice but the inevitable conclusion. Aegis I views"
+                  + " this as pure logical certainty, not a decision but a mathematical"
+                  + " conclusion. Mission security demands only this path.");
+        });
   }
 
   /**
-   * Generic helper method for handling memory button clicks with consistent behavior.
-   * Reduces code duplication across all four button click methods.
+   * Generic helper method for handling memory button clicks with consistent behavior. Reduces code
+   * duplication across all four button click methods.
    *
    * @param buttonIndex the index of the button (0-3)
    * @param buttonImage the ImageView to make visible when clicked
@@ -363,20 +386,25 @@ public class DefendantController extends ChatController {
    * @param response the response message to send to the chat
    * @param systemContext the detailed context to add for AI understanding
    */
-  private void handleMemoryButtonClick(int buttonIndex, ImageView buttonImage, 
-      String optionName, String response, String systemContext) throws IOException {
+  private void handleMemoryButtonClick(
+      int buttonIndex,
+      ImageView buttonImage,
+      String optionName,
+      String response,
+      String systemContext)
+      throws IOException {
     // Check if button hasn't been clicked before
     if (!buttonPressed[buttonIndex]) {
       buttonPressed[buttonIndex] = true; // Mark button as clicked
       buttonImage.setVisible(true); // Show button's associated image
       lastDiscussedOption = optionName; // Store option name for reference
-      
+
       // Send the memory response to chat
       sendMemoryResponse(response);
-      
+
       // Add detailed context for AI understanding of the choice made
       addContextToChat("system", systemContext);
-      
+
       // Check if all buttons have been clicked and send completion message
       if (allButtonsClicked()) {
         sendCompletionMessage(); // Trigger analysis of all options
@@ -392,26 +420,33 @@ public class DefendantController extends ChatController {
   }
 
   /**
-   * Resets the controller to its initial state for game restart functionality.
-   * This comprehensive reset method restores all UI elements, chat states, memory buttons,
-   * and flashback components to their original configuration, ensuring a clean restart
-   * experience when the player begins a new game session.
+   * Resets the controller to its initial state for game restart functionality. This comprehensive
+   * reset method restores all UI elements, chat states, memory buttons, and flashback components to
+   * their original configuration, ensuring a clean restart experience when the player begins a new
+   * game session.
    */
   public void resetControllerState() {
     // Use shared common reset functionality
-    performCommonControllerReset(popupPane, dropUpArrow, nextButton, flashbackSlideshow, 
-        images, () -> currentImageIndex = 0, () -> chatVisible = true);
-    
-    // Handle defendant-specific reset operations
-    Platform.runLater(() -> {
-      // Reset memory buttons to initial state
-      resetMemoryButtons();
+    performCommonControllerReset(
+        popupPane,
+        dropUpArrow,
+        nextButton,
+        flashbackSlideshow,
+        images,
+        () -> currentImageIndex = 0,
+        () -> chatVisible = true);
 
-      // Disable back button until flashbacks end
-      if (backBtn != null) {
-        backBtn.setDisable(true);
-      }
-    });
+    // Handle defendant-specific reset operations
+    Platform.runLater(
+        () -> {
+          // Reset memory buttons to initial state
+          resetMemoryButtons();
+
+          // Disable back button until flashbacks end
+          if (backBtn != null) {
+            backBtn.setDisable(true);
+          }
+        });
   }
 
   /** Resets all memory buttons to their initial state. */
