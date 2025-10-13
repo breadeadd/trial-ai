@@ -261,12 +261,10 @@ public abstract class ChatController {
    * @return new current image index
    */
   protected int advanceFlashbackSlideshow(
-      int currentIndex, 
-      List<Image> images, 
-      ImageView flashbackImageView) {
+      int currentIndex, List<Image> images, ImageView flashbackImageView) {
     // Move to the next image in the sequence
     currentIndex++;
-    
+
     // Check if there are more images to display
     if (currentIndex < images.size()) {
       // Display the next image in the slideshow
@@ -275,7 +273,7 @@ public abstract class ChatController {
       // End of slideshow reached - disable further mouse interactions
       flashbackImageView.setOnMouseClicked(null);
     }
-    
+
     // Return updated index for caller to track current position
     return currentIndex;
   }
@@ -287,16 +285,13 @@ public abstract class ChatController {
    * @param nextButton the next button to hide
    * @param backBtn the back button to enable
    */
-  protected void showMemoryScreenUserInterface(
-      Pane popupPane, 
-      Button nextButton, 
-      Button backBtn) {
+  protected void showMemoryScreenUserInterface(Pane popupPane, Button nextButton, Button backBtn) {
     // Show the popup overlay to indicate interactive mode
     popupPane.setVisible(true);
-    
+
     // Hide the next button since user can now interact with memory elements
     nextButton.setVisible(false);
-    
+
     // Enable the back button for navigation
     backBtn.setDisable(false);
 
@@ -305,16 +300,15 @@ public abstract class ChatController {
   }
 
   /**
-   * Common utility method for toggling chat visibility with animations.
-   * Subclasses should call this method and handle arrow updates separately.
+   * Common utility method for toggling chat visibility with animations. Subclasses should call this
+   * method and handle arrow updates separately.
    *
    * @param chatVisible current chat visibility state
    * @param animateTranslateMethod method reference for animation
    * @return new chat visibility state
    */
   protected boolean toggleChatVisibility(
-      boolean chatVisible, 
-      BiConsumer<Node, Double> animateTranslateMethod) {
+      boolean chatVisible, BiConsumer<Node, Double> animateTranslateMethod) {
     if (chatVisible) {
       // Drop down (hide)
       animateTranslateMethod.accept(txtaChat, 150.0);
@@ -356,8 +350,8 @@ public abstract class ChatController {
   }
 
   /**
-   * Common utility method for loading and setting arrow images on buttons.
-   * This method is used across multiple controllers to maintain consistent arrow styling.
+   * Common utility method for loading and setting arrow images on buttons. This method is used
+   * across multiple controllers to maintain consistent arrow styling.
    *
    * @param button the button to set the image on
    * @param imagePath the path to the image resource
@@ -382,8 +376,8 @@ public abstract class ChatController {
   }
 
   /**
-   * Common utility method for updating arrow button to drop-down state.
-   * Positions the arrow above the chat area and sets the appropriate image.
+   * Common utility method for updating arrow button to drop-down state. Positions the arrow above
+   * the chat area and sets the appropriate image.
    *
    * @param dropUpArrow the button to configure
    */
@@ -394,8 +388,8 @@ public abstract class ChatController {
   }
 
   /**
-   * Common utility method for updating arrow button to drop-up state.
-   * Positions the arrow below the chat area and sets the appropriate image.
+   * Common utility method for updating arrow button to drop-up state. Positions the arrow below the
+   * chat area and sets the appropriate image.
    *
    * @param dropUpArrow the button to configure
    */
@@ -406,9 +400,9 @@ public abstract class ChatController {
   }
 
   /**
-   * Creates smooth vertical slide animation for UI elements during chat toggle operations.
-   * This method provides a consistent animation experience when showing or hiding chat
-   * interface components, enhancing the user experience with fluid visual transitions.
+   * Creates smooth vertical slide animation for UI elements during chat toggle operations. This
+   * method provides a consistent animation experience when showing or hiding chat interface
+   * components, enhancing the user experience with fluid visual transitions.
    *
    * @param node the UI node to animate (typically chat area, input field, or send button)
    * @param toY the target Y position for the animation (vertical offset)
@@ -421,8 +415,8 @@ public abstract class ChatController {
   }
 
   /**
-   * Loads a list of images from specified paths in a background thread.
-   * This method provides consistent image loading behavior across all chat controllers.
+   * Loads a list of images from specified paths in a background thread. This method provides
+   * consistent image loading behavior across all chat controllers.
    *
    * @param imagePaths array of image resource paths to load
    * @param onLoaded callback to execute when all images are loaded
@@ -431,25 +425,27 @@ public abstract class ChatController {
   protected List<Image> loadImagesInBackground(String[] imagePaths, Runnable onLoaded) {
     List<Image> images = new ArrayList<>();
     // Load images in background thread to avoid blocking UI
-    new Thread(() -> {
-      try {
-        for (String path : imagePaths) {
-          Image image = new Image(getClass().getResourceAsStream(path));
-          images.add(image);
-        }
-        // Execute callback on JavaFX thread when loading complete
-        Platform.runLater(onLoaded);
-      } catch (Exception e) {
-        System.err.println("Error loading images: " + e.getMessage());
-        Platform.runLater(onLoaded); // Still execute callback even if loading fails
-      }
-    }).start();
+    new Thread(
+            () -> {
+              try {
+                for (String path : imagePaths) {
+                  Image image = new Image(getClass().getResourceAsStream(path));
+                  images.add(image);
+                }
+                // Execute callback on JavaFX thread when loading complete
+                Platform.runLater(onLoaded);
+              } catch (Exception e) {
+                System.err.println("Error loading images: " + e.getMessage());
+                Platform.runLater(onLoaded); // Still execute callback even if loading fails
+              }
+            })
+        .start();
     return images;
   }
 
   /**
-   * Clears the chat UI text area, removing all displayed messages.
-   * This method provides a standard way to reset chat interfaces.
+   * Clears the chat UI text area, removing all displayed messages. This method provides a standard
+   * way to reset chat interfaces.
    */
   public void clearChatUi() {
     if (txtaChat != null) {
@@ -460,7 +456,7 @@ public abstract class ChatController {
   /**
    * Resets an ImageView to its default visual state (opacity 1.0, scale 1.0, no translation).
    * Common utility for resetting UI elements to their original appearance.
-   * 
+   *
    * @param imageView the ImageView to reset, can be null (will be ignored)
    */
   protected void resetImageProperties(ImageView imageView) {
@@ -474,9 +470,9 @@ public abstract class ChatController {
   }
 
   /**
-   * Sets the visibility of the main chat UI elements (chat area, input field, send button).
-   * This is a common operation across controllers to show/hide chat interface.
-   * 
+   * Sets the visibility of the main chat UI elements (chat area, input field, send button). This is
+   * a common operation across controllers to show/hide chat interface.
+   *
    * @param visible true to show the chat UI elements, false to hide them
    */
   protected void setChatUiVisibility(boolean visible) {
@@ -492,99 +488,104 @@ public abstract class ChatController {
   }
 
   /**
-   * Executes a task after a specified delay on a background thread.
-   * This is a common pattern for timed message delivery and UI updates.
-   * 
+   * Executes a task after a specified delay on a background thread. This is a common pattern for
+   * timed message delivery and UI updates.
+   *
    * @param delayMs delay in milliseconds before executing the task
    * @param task the task to execute after the delay
    */
   protected void executeDelayedTask(long delayMs, Runnable task) {
     // Create a new thread for the delayed execution
-    Thread delayedThread = new Thread(() -> {
-      // Sleep for the specified delay
-      try {
-        Thread.sleep(delayMs);
-        Platform.runLater(task);
-      } catch (InterruptedException e) {
-        // Handle interruption
-        Thread.currentThread().interrupt();
-      }
-    });
+    Thread delayedThread =
+        new Thread(
+            () -> {
+              // Sleep for the specified delay
+              try {
+                Thread.sleep(delayMs);
+                Platform.runLater(task);
+              } catch (InterruptedException e) {
+                // Handle interruption
+                Thread.currentThread().interrupt();
+              }
+            });
     // Mark the thread as a daemon thread
     delayedThread.setDaemon(true);
     delayedThread.start();
   }
 
   /**
-   * Sends a message to chat after a specified delay.
-   * Common pattern across controllers for timed message delivery.
-   * 
+   * Sends a message to chat after a specified delay. Common pattern across controllers for timed
+   * message delivery.
+   *
    * @param delayMs delay in milliseconds before sending the message
    * @param message the message content to send
    * @param role the message role (usually "assistant")
    */
   protected void sendDelayedMessage(long delayMs, String message, String role) {
-    executeDelayedTask(delayMs, () -> {
-      ChatMessage delayedMessage = new ChatMessage(role, message);
-      // Add to chat history if this is from a character
-      if ("assistant".equals(role)) {
-        ChatHistory.addMessage(delayedMessage, getCharacterName());
-      }
-      appendChatMessage(delayedMessage);
-    });
+    executeDelayedTask(
+        delayMs,
+        () -> {
+          ChatMessage delayedMessage = new ChatMessage(role, message);
+          // Add to chat history if this is from a character
+          if ("assistant".equals(role)) {
+            ChatHistory.addMessage(delayedMessage, getCharacterName());
+          }
+          appendChatMessage(delayedMessage);
+        });
   }
 
   /**
-   * Sets up and configures a MediaPlayer for audio playback with standard error handling.
-   * This method creates a consistent audio setup pattern used across multiple controllers
-   * for playing TTS audio and other sound effects during game interactions.
-   * 
+   * Sets up and configures a MediaPlayer for audio playback with standard error handling. This
+   * method creates a consistent audio setup pattern used across multiple controllers for playing
+   * TTS audio and other sound effects during game interactions.
+   *
    * @param audioResourcePath the path to the audio resource (e.g., "/audio/openTts.mp3")
    * @param volume the playback volume (0.0 to 1.0)
    * @return configured MediaPlayer instance ready for playback
    * @throws Exception if there is an error loading or configuring the audio
    */
-  protected MediaPlayer arrangeMediaPlayer(String audioResourcePath, 
-      double volume) throws Exception {
+  protected MediaPlayer arrangeMediaPlayer(String audioResourcePath, double volume)
+      throws Exception {
     // Load and configure audio file using resource URI
     String audioPath = getClass().getResource(audioResourcePath).toURI().toString();
     Media media = new Media(audioPath);
     MediaPlayer player = new MediaPlayer(media);
-    
+
     // Configure playback settings
     player.setVolume(volume);
-    
+
     // Auto-play when audio file is ready for playback
     player.setOnReady(() -> player.play());
-    
+
     // Handle any playback errors that occur during audio processing
-    player.setOnError(() -> {
-      if (player.getError() != null) {
-        player.getError().printStackTrace();
-      }
-    });
-    
+    player.setOnError(
+        () -> {
+          if (player.getError() != null) {
+            player.getError().printStackTrace();
+          }
+        });
+
     return player;
   }
 
   /**
-   * Initializes flashback slideshow with consistent loading and display behavior.
-   * This method provides a standard approach for setting up image slideshows
-   * across different character controllers, ensuring uniform user experience.
-   * 
+   * Initializes flashback slideshow with consistent loading and display behavior. This method
+   * provides a standard approach for setting up image slideshows across different character
+   * controllers, ensuring uniform user experience.
+   *
    * @param images the list of images to display in the slideshow
    * @param flashbackImageView the ImageView component to display slideshow images
    * @param currentIndex reference to current image index (will be set to 0)
    * @param onLoadComplete callback to execute after images are loaded
    */
-  protected void initializeFlashbackSlideshow(List<Image> images, ImageView flashbackImageView, 
-      Runnable onLoadComplete) {
+  protected void initializeFlashbackSlideshow(
+      List<Image> images, ImageView flashbackImageView, Runnable onLoadComplete) {
     // Load images if not already loaded, then initialize slideshow
     if (images.isEmpty() && onLoadComplete != null) {
       onLoadComplete.run(); // This should trigger image loading
       return;
     }
-    
+
     // Set slideshow to first image and make it visible
     if (!images.isEmpty() && flashbackImageView != null) {
       flashbackImageView.setImage(images.get(0));
@@ -593,44 +594,45 @@ public abstract class ChatController {
   }
 
   /**
-   * Resets chat UI elements to their initial state with proper positioning.
-   * This method provides consistent reset behavior across controllers when
-   * restarting the game or returning to initial states.
-   * 
+   * Resets chat UI elements to their initial state with proper positioning. This method provides
+   * consistent reset behavior across controllers when restarting the game or returning to initial
+   * states.
+   *
    * @param chatVisible the initial chat visibility state to set
    */
   protected void resetChatUiElements(boolean chatVisible) {
-    Platform.runLater(() -> {
-      // Reset chat interface elements to initial positions and visibility
-      if (txtaChat != null) {
-        txtaChat.setTranslateY(0);
-        txtaChat.setVisible(chatVisible);
-      }
-      if (txtInput != null) {
-        txtInput.setTranslateY(0);
-        txtInput.setVisible(chatVisible);
-      }
-      if (btnSend != null) {
-        btnSend.setTranslateY(0);
-        btnSend.setVisible(chatVisible);
-      }
-    });
+    Platform.runLater(
+        () -> {
+          // Reset chat interface elements to initial positions and visibility
+          if (txtaChat != null) {
+            txtaChat.setTranslateY(0);
+            txtaChat.setVisible(chatVisible);
+          }
+          if (txtInput != null) {
+            txtInput.setTranslateY(0);
+            txtInput.setVisible(chatVisible);
+          }
+          if (btnSend != null) {
+            btnSend.setTranslateY(0);
+            btnSend.setVisible(chatVisible);
+          }
+        });
   }
-  
+
   /**
-   * Handles toggle chat action for controllers with drop up/down arrow functionality.
-   * This method provides consistent chat visibility toggling behavior across multiple
-   * controllers, managing arrow state changes and chat visibility animations.
+   * Handles toggle chat action for controllers with drop up/down arrow functionality. This method
+   * provides consistent chat visibility toggling behavior across multiple controllers, managing
+   * arrow state changes and chat visibility animations.
    *
    * @param currentChatVisible the current chat visibility state
    * @param dropUpArrow the arrow button UI element
    * @param animateCallback callback method for animation (typically this::animateTranslate)
    * @return the new chat visibility state after toggle
    */
-  protected boolean handleToggleChatAction(boolean currentChatVisible, Button dropUpArrow, 
-      BiConsumer<Node, Double> animateCallback) {
+  protected boolean handleToggleChatAction(
+      boolean currentChatVisible, Button dropUpArrow, BiConsumer<Node, Double> animateCallback) {
     boolean newChatVisible = toggleChatVisibility(currentChatVisible, animateCallback);
-    
+
     if (newChatVisible) {
       // Change to dropDownArrow shape
       updateArrowToDropDown(dropUpArrow);
@@ -638,14 +640,14 @@ public abstract class ChatController {
       // Change to dropUpArrow shape and position
       updateArrowToDropUp(dropUpArrow);
     }
-    
+
     return newChatVisible;
   }
-  
+
   /**
-   * Handles common controller reset operations for game restart functionality.
-   * This method provides shared reset logic for UI elements, chat states, and 
-   * flashback components that are common across multiple controllers.
+   * Handles common controller reset operations for game restart functionality. This method provides
+   * shared reset logic for UI elements, chat states, and flashback components that are common
+   * across multiple controllers.
    *
    * @param popupPane the popup overlay to hide during reset
    * @param dropUpArrow the dropdown arrow UI element to reset
@@ -655,47 +657,53 @@ public abstract class ChatController {
    * @param currentImageIndex reference to current image index to reset
    * @param chatVisible reference to chat visibility state to reset
    */
-  protected void performCommonControllerReset(Pane popupPane, Button dropUpArrow, 
-      Button nextButton, ImageView flashbackSlideshow, List<Image> images, 
-      Runnable resetIndexCallback, Runnable setChatVisibleCallback) {
-    
+  protected void performCommonControllerReset(
+      Pane popupPane,
+      Button dropUpArrow,
+      Button nextButton,
+      ImageView flashbackSlideshow,
+      List<Image> images,
+      Runnable resetIndexCallback,
+      Runnable setChatVisibleCallback) {
+
     // Hide popup overlay immediately
     if (popupPane != null) {
       popupPane.setVisible(false);
     }
-    
+
     // Execute UI reset operations on JavaFX Application Thread
-    Platform.runLater(() -> {
-      // Reset slideshow to beginning (callback handles setting index)
-      if (resetIndexCallback != null) {
-        resetIndexCallback.run();
-      }
-      
-      // Set chat to visible state (callback handles setting visibility)
-      if (setChatVisibleCallback != null) {
-        setChatVisibleCallback.run();
-      }
+    Platform.runLater(
+        () -> {
+          // Reset slideshow to beginning (callback handles setting index)
+          if (resetIndexCallback != null) {
+            resetIndexCallback.run();
+          }
 
-      // Use shared method to reset chat UI elements
-      resetChatUiElements(false); // Initially hidden
-      
-      // Reset dropdown arrow to bottom position and hide it
-      if (dropUpArrow != null) {
-        dropUpArrow.setVisible(false);
-        dropUpArrow.setLayoutX(14.0);
-        dropUpArrow.setLayoutY(540.0); // Bottom position
-      }
+          // Set chat to visible state (callback handles setting visibility)
+          if (setChatVisibleCallback != null) {
+            setChatVisibleCallback.run();
+          }
 
-      // Show next button for flashbacks
-      if (nextButton != null) {
-        nextButton.setVisible(true);
-      }
+          // Use shared method to reset chat UI elements
+          resetChatUiElements(false); // Initially hidden
 
-      // Reset flashback slideshow to first image
-      if (flashbackSlideshow != null && !images.isEmpty()) {
-        flashbackSlideshow.setImage(images.get(0));
-        flashbackSlideshow.setVisible(true); // Ensure main slideshow is visible
-      }
-    });
+          // Reset dropdown arrow to bottom position and hide it
+          if (dropUpArrow != null) {
+            dropUpArrow.setVisible(false);
+            dropUpArrow.setLayoutX(14.0);
+            dropUpArrow.setLayoutY(540.0); // Bottom position
+          }
+
+          // Show next button for flashbacks
+          if (nextButton != null) {
+            nextButton.setVisible(true);
+          }
+
+          // Reset flashback slideshow to first image
+          if (flashbackSlideshow != null && !images.isEmpty()) {
+            flashbackSlideshow.setImage(images.get(0));
+            flashbackSlideshow.setVisible(true); // Ensure main slideshow is visible
+          }
+        });
   }
 }

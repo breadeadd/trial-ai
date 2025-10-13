@@ -41,7 +41,7 @@ public class App extends Application {
   private static BorderPane rootLayout;
   private static Label timerLabel;
   private static Scene scene;
-  // Global UI scale factor 
+  // Global UI scale factor
   private static final double SCALE_FACTOR = 1.25;
 
   /**
@@ -217,14 +217,14 @@ public class App extends Application {
               }
             });
 
-  // Layouts for timer and title
-  stackPaneRoot = new StackPane(rootLayout, timerLabel);
-  StackPane.setAlignment(timerLabel, Pos.TOP_RIGHT);
-  // Apply global scaling to make the UI larger on startup
-  stackPaneRoot.setScaleX(SCALE_FACTOR);
-  stackPaneRoot.setScaleY(SCALE_FACTOR);
-  scene = new Scene(stackPaneRoot, 800 * SCALE_FACTOR, 600 * SCALE_FACTOR);
-  stage.setScene(scene);
+    // Layouts for timer and title
+    stackPaneRoot = new StackPane(rootLayout, timerLabel);
+    StackPane.setAlignment(timerLabel, Pos.TOP_RIGHT);
+    // Apply global scaling to make the UI larger on startup
+    stackPaneRoot.setScaleX(SCALE_FACTOR);
+    stackPaneRoot.setScaleY(SCALE_FACTOR);
+    scene = new Scene(stackPaneRoot, 800 * SCALE_FACTOR, 600 * SCALE_FACTOR);
+    stage.setScene(scene);
     stage.setTitle("TrialAI");
     stage.show();
 
@@ -293,8 +293,14 @@ public class App extends Application {
                       // If the room root has explicit preferred size, use it to size the wrapper
                       if (roomBundle.root instanceof Region) {
                         Region roomRegion = (Region) roomBundle.root;
-                        double prefW = roomRegion.getPrefWidth() > 0 ? roomRegion.getPrefWidth() : roomRegion.getWidth();
-                        double prefH = roomRegion.getPrefHeight() > 0 ? roomRegion.getPrefHeight() : roomRegion.getHeight();
+                        double prefW =
+                            roomRegion.getPrefWidth() > 0
+                                ? roomRegion.getPrefWidth()
+                                : roomRegion.getWidth();
+                        double prefH =
+                            roomRegion.getPrefHeight() > 0
+                                ? roomRegion.getPrefHeight()
+                                : roomRegion.getHeight();
                         if (prefW > 0 && prefH > 0) {
                           centeredRoom.setPrefSize(prefW, prefH);
                           centeredRoom.setMaxSize(prefW, prefH);
@@ -305,7 +311,8 @@ public class App extends Application {
                       rootLayout.setCenter(centeredRoom);
                       roomBundle.root.requestFocus();
 
-                      // Ensure the stage matches the scene size and center it on screen after layout
+                      // Ensure the stage matches the scene size and center it on screen after
+                      // layout
                       stage.sizeToScene();
                       stage.centerOnScreen();
                     } else {

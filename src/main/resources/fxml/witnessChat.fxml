@@ -40,17 +40,10 @@
          </image>
       </ImageView>
       <ProgressIndicator fx:id="loading" layoutX="382.0" layoutY="480.0" progress="0.0" visible="false" />
-      <AnchorPane fx:id="popupPane" style="-fx-background-color: rgba(0,0,0,0.7);" visible="false"
-                  AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
-                  AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <AnchorPane fx:id="popupPane" style="-fx-background-color: rgba(0,0,0,0.7);" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
-            <Button fx:id="closePopupBtn" layoutX="740.0" layoutY="25.0" mnemonicParsing="false"
-                    prefHeight="40.0" prefWidth="40.0" text="✕" 
-                    style="-fx-background-color: red; -fx-background-radius: 50%; -fx-text-fill: white; -fx-font-size: 20px; -fx-cursor: hand;"
-                    onAction="#onClosePopup" />
-            <Label fx:id="instructionLabel" alignment="CENTER" layoutX="194.0" layoutY="257.0"
-                   prefHeight="60.0" prefWidth="400.0" textAlignment="CENTER" textFill="WHITE"
-                   wrapText="true">
+            <Button fx:id="closePopupBtn" layoutX="630.0" layoutY="200.0" mnemonicParsing="false" onAction="#onClosePopup" prefHeight="40.0" prefWidth="40.0" style="-fx-background-color: red; -fx-background-radius: 50%; -fx-text-fill: white; -fx-font-size: 20px; -fx-cursor: hand;" text="✕" />
+            <Label fx:id="instructionLabel" alignment="CENTER" layoutX="194.0" layoutY="257.0" prefHeight="60.0" prefWidth="400.0" textAlignment="CENTER" textFill="WHITE" wrapText="true">
                <font>
                   <Font size="20.0" />
                </font>
