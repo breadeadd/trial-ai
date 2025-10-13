@@ -48,6 +48,13 @@ public class HumanWitnessController extends ChatController {
   @FXML private AnchorPane popupPane;
   @FXML private Label instructionLabel;
 
+  @FXML private Button closePopupBtn;
+
+  @FXML
+  private void onClosePopup(ActionEvent event) {
+    popupPane.setVisible(false);
+  }
+
   /**
    * Initializes the chat view.
    *
@@ -56,7 +63,7 @@ public class HumanWitnessController extends ChatController {
   @FXML
   public void initialize() throws ApiProxyException {
     popupPane.setVisible(false);
-    popupPane.setOnMouseClicked(e -> popupPane.setVisible(false));
+    // popupPane.setOnMouseClicked(e -> popupPane.setVisible(false));
     instructionLabel.setText("Investigate to find Cassian Thorne's messages.");
     loadImages(null);
     initChat();
@@ -89,23 +96,23 @@ public class HumanWitnessController extends ChatController {
     appendChatMessage(screenUserMsg);
 
     // Add two system-context entries to provide AI with detailed context about the inspection
-  addContextToChat(
-    "system",
-    "COMPUTER SCREEN INSPECTION CONTEXT: The player inspected a computer terminal's"
-      + " screen (desktop client / mail client) that displayed an email from AstroHelix."
-      + " When opened the email showed: 'Hi AstroHelix, we will invest $1m if Project"
-      + " Starlight's green light can be given by the end of this month.' Treat this as an"
-      + " email (not a phone notification) and as independent corroborating evidence from"
-      + " the phone contents. The AI should recognise terms like 'email', 'mail client',"
-      + " 'inbox', and 'email preview' when referencing this evidence.");
+    addContextToChat(
+        "system",
+        "COMPUTER SCREEN INSPECTION CONTEXT: The player inspected a computer terminal's"
+            + " screen (desktop client / mail client) that displayed an email from AstroHelix."
+            + " When opened the email showed: 'Hi AstroHelix, we will invest $1m if Project"
+            + " Starlight's green light can be given by the end of this month.' Treat this as an"
+            + " email (not a phone notification) and as independent corroborating evidence from"
+            + " the phone contents. The AI should recognise terms like 'email', 'mail client',"
+            + " 'inbox', and 'email preview' when referencing this evidence.");
 
-  addContextToChat(
-    "system",
-    "INVESTIGATION AWARENESS: The player actively inspected the computer screen and"
-      + " opened an email in the desktop client. Orion should explicitly acknowledge the"
-      + " email inspection in his responses and reference the email contents or mail"
-      + " client logs when discussing evidence. When referring to the human interacting"
-      + " with the UI, use the term 'player' (or 'user') rather than 'investigator'.");
+    addContextToChat(
+        "system",
+        "INVESTIGATION AWARENESS: The player actively inspected the computer screen and"
+            + " opened an email in the desktop client. Orion should explicitly acknowledge the"
+            + " email inspection in his responses and reference the email contents or mail"
+            + " client logs when discussing evidence. When referring to the human interacting"
+            + " with the UI, use the term 'player' (or 'user') rather than 'investigator'.");
 
     // Schedule a short assistant acknowledgement
     executeDelayedTask(
@@ -114,16 +121,16 @@ public class HumanWitnessController extends ChatController {
             displayMessage(
                 "I saw those logs too. They mention unauthorized access tied to Cassian — that's"
                     + " serious."));
-  // After a short delay, if the phone hasn't been unlocked yet, nudge the player to check it
-  executeDelayedTask(
-    2000,
-    () -> {
-      if (!GameStateManager.getInstance().getInteractionFlag("OrionInt")) {
-      displayMessage(
-        "You should probably unlock my phone next — there may be messages from"
-          + " the CEO that explain motives related to Project Starlight.");
-      }
-    });
+    // After a short delay, if the phone hasn't been unlocked yet, nudge the player to check it
+    executeDelayedTask(
+        2000,
+        () -> {
+          if (!GameStateManager.getInstance().getInteractionFlag("OrionInt")) {
+            displayMessage(
+                "You should probably unlock my phone next — there may be messages from"
+                    + " the CEO that explain motives related to Project Starlight.");
+          }
+        });
   }
 
   @Override
@@ -241,37 +248,37 @@ public class HumanWitnessController extends ChatController {
     ChatMessage notifUserMsg = new ChatMessage("user", "Notification Viewed 🔎");
     appendChatMessage(notifUserMsg);
 
-  // Add two system-context entries (descriptive + investigation awareness) for AI
-  // Explain that the on-screen preview was partial and tapping revealed the full message
-  addContextToChat(
-    "system",
-    "NOTIFICATION VIEWED CONTEXT: A truncated notification preview from AstroHelix was"
-      + " visible on the computer screen before the player tapped it (the preview showed a"
-      + " short snippet referencing Project Starlight and an investment). When the player"
-      + " tapped the preview, the full message was revealed and reads: 'Hi AstroHelix, we"
-      + " will invest $1m if Project Starlight's green light can be given by the end of this"
-      + " month.' This revealed message suggests possible financial leverage or negotiation"
-      + " around Project Starlight and may corroborate other evidence referring to Cassian"
-      + " Thorne.");
+    // Add two system-context entries (descriptive + investigation awareness) for AI
+    // Explain that the on-screen preview was partial and tapping revealed the full message
+    addContextToChat(
+        "system",
+        "NOTIFICATION VIEWED CONTEXT: A truncated notification preview from AstroHelix was"
+            + " visible on the computer screen before the player tapped it (the preview showed a"
+            + " short snippet referencing Project Starlight and an investment). When the player"
+            + " tapped the preview, the full message was revealed and reads: 'Hi AstroHelix, we"
+            + " will invest $1m if Project Starlight's green light can be given by the end of this"
+            + " month.' This revealed message suggests possible financial leverage or negotiation"
+            + " around Project Starlight and may corroborate other evidence referring to Cassian"
+            + " Thorne.");
 
-  addContextToChat(
-    "system",
-    "INVESTIGATION AWARENESS: The notification preview is a distinct interactive event"
-      + " from the phone slider unlock. Orion should acknowledge that the preview was"
-      + " initially partial and that the player revealed the full notification by tapping it."
-      + " Orion should reference the full contents (including the AstroHelix offer and"
-      + " Project Starlight mention) as corroborating evidence when appropriate. The"
-      + " notification could indicate financial pressure or leverage tied to Project"
-      + " Starlight.");
+    addContextToChat(
+        "system",
+        "INVESTIGATION AWARENESS: The notification preview is a distinct interactive event"
+            + " from the phone slider unlock. Orion should acknowledge that the preview was"
+            + " initially partial and that the player revealed the full notification by tapping it."
+            + " Orion should reference the full contents (including the AstroHelix offer and"
+            + " Project Starlight mention) as corroborating evidence when appropriate. The"
+            + " notification could indicate financial pressure or leverage tied to Project"
+            + " Starlight.");
 
-  // Schedule a short assistant acknowledgement referencing the notification
-  executeDelayedTask(
-    800,
-    () ->
-      displayMessage(
-        "It mentions AstroHelix and an investment tied to"
-          + " Project Starlight. That could explain why someone might try to use this as"
-          + " leverage."));
+    // Schedule a short assistant acknowledgement referencing the notification
+    executeDelayedTask(
+        800,
+        () ->
+            displayMessage(
+                "It mentions AstroHelix and an investment tied to"
+                    + " Project Starlight. That could explain why someone might try to use this as"
+                    + " leverage."));
   }
 
   // Handle slider release to transition to humanMem2.png and hide slider
@@ -459,20 +466,20 @@ public class HumanWitnessController extends ChatController {
 
     // Add phone status context based on current state
     if (GameStateManager.getInstance().getInteractionFlag("OrionInt")) {
-    chatCompletionRequest.addMessage(
-      new ChatMessage(
-        "assistant",
-        "CRITICAL: I am Orion Vale and I KNOW my phone has been unlocked. The investigator"
-          + " successfully used the slider mechanism to access my phone. I witnessed this"
-          + " happen and I am fully aware of it. I must NOT tell them to unlock the phone"
-          + " again - it's already unlocked. I must NOT ask for permission to access my"
-          + " phone - it's MY phone and it's already open. I should freely discuss what was"
-          + " found on my phone: the messages revealing Cassian Thorne's betrayal, the data"
-          + " showing he manipulated mission parameters, evidence of Aegis I's extreme"
-          + " protocols, and Project Starlight intelligence. Messages on the phone indicate"
-          + " that the CEO prioritised financial gain over crew safety — financial incentives"
-          + " were often placed above safety concerns. I should acknowledge that the player"
-          + " has already seen this evidence on my unlocked phone."));
+      chatCompletionRequest.addMessage(
+          new ChatMessage(
+              "assistant",
+              "CRITICAL: I am Orion Vale and I KNOW my phone has been unlocked. The investigator"
+                  + " successfully used the slider mechanism to access my phone. I witnessed this"
+                  + " happen and I am fully aware of it. I must NOT tell them to unlock the phone"
+                  + " again - it's already unlocked. I must NOT ask for permission to access my"
+                  + " phone - it's MY phone and it's already open. I should freely discuss what was"
+                  + " found on my phone: the messages revealing Cassian Thorne's betrayal, the data"
+                  + " showing he manipulated mission parameters, evidence of Aegis I's extreme"
+                  + " protocols, and Project Starlight intelligence. Messages on the phone indicate"
+                  + " that the CEO prioritised financial gain over crew safety — financial"
+                  + " incentives were often placed above safety concerns. I should acknowledge that"
+                  + " the player has already seen this evidence on my unlocked phone."));
 
       chatCompletionRequest.addMessage(
           new ChatMessage(
@@ -499,34 +506,34 @@ public class HumanWitnessController extends ChatController {
     // Add computer screen context if the investigator inspected the computer screen.
     // This is distinct from the phone unlock interaction and should be treated separately.
     if (GameStateManager.getInstance().getInteractionFlag("OrionScreen")) {
-    chatCompletionRequest.addMessage(
-      new ChatMessage(
-        "assistant",
-        "CRITICAL: I am Orion Vale and I ACKNOWLEDGE that the player inspected a computer"
-          + " screen which displayed an email in the desktop client. The email referenced"
-          + " Project Starlight and an investment offer. This email is independent evidence"
-          + " from the phone contents. When discussing the investigation I should explicitly"
-          + " reference the computer email and avoid conflating it with the phone unlock or"
-          + " its messages."));
+      chatCompletionRequest.addMessage(
+          new ChatMessage(
+              "assistant",
+              "CRITICAL: I am Orion Vale and I ACKNOWLEDGE that the player inspected a computer"
+                  + " screen which displayed an email in the desktop client. The email referenced"
+                  + " Project Starlight and an investment offer. This email is independent evidence"
+                  + " from the phone contents. When discussing the investigation I should"
+                  + " explicitly reference the computer email and avoid conflating it with the"
+                  + " phone unlock or its messages."));
 
-    chatCompletionRequest.addMessage(
-      new ChatMessage(
-        "system",
-        "COMPUTER SCREEN INSPECTION STATUS: The player has inspected the computer's"
-          + " screen and viewed an email in the desktop client from AstroHelix referencing"
-          + " Project Starlight and an investment offer. This email is independent from the"
-          + " phone evidence. Orion is aware of the email and should treat it as separate"
-          + " corroborating evidence when relevant to the conversation."));
+      chatCompletionRequest.addMessage(
+          new ChatMessage(
+              "system",
+              "COMPUTER SCREEN INSPECTION STATUS: The player has inspected the computer's"
+                  + " screen and viewed an email in the desktop client from AstroHelix referencing"
+                  + " Project Starlight and an investment offer. This email is independent from the"
+                  + " phone evidence. Orion is aware of the email and should treat it as separate"
+                  + " corroborating evidence when relevant to the conversation."));
     } else {
-    chatCompletionRequest.addMessage(
-      new ChatMessage(
-        "system",
-        "SCREEN NOTICE: The computer screen currently displays a partial email preview"
-          + " (subject/preview snippet) from the desktop mail client referencing Project"
-          + " Starlight. The full email (including an investment offer) is only visible when"
-          + " the player opens the email; opening reveals the complete message. This email"
-          + " preview should be treated as separate evidence from the phone and may indicate"
-          + " financial pressure or negotiation related to Project Starlight."));
+      chatCompletionRequest.addMessage(
+          new ChatMessage(
+              "system",
+              "SCREEN NOTICE: The computer screen currently displays a partial email preview"
+                  + " (subject/preview snippet) from the desktop mail client referencing Project"
+                  + " Starlight. The full email (including an investment offer) is only visible"
+                  + " when the player opens the email; opening reveals the complete message. This"
+                  + " email preview should be treated as separate evidence from the phone and may"
+                  + " indicate financial pressure or negotiation related to Project Starlight."));
     }
 
     // Call the parent runGpt method which now handles cleaning

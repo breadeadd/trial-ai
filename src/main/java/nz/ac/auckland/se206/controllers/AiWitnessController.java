@@ -76,6 +76,13 @@ public class AiWitnessController extends ChatController {
   @FXML private AnchorPane popupPane;
   @FXML private Label instructionLabel;
 
+  @FXML private Button closePopupBtn;
+
+  @FXML
+  private void onClosePopup(ActionEvent event) {
+    popupPane.setVisible(false);
+  }
+
   /**
    * Initializes the chat view.
    *
@@ -87,8 +94,8 @@ public class AiWitnessController extends ChatController {
     backBtn.setDisable(true);
 
     popupPane.setVisible(false);
-    popupPane.setOnMouseClicked(e -> popupPane.setVisible(false));
-    instructionLabel.setText("Arrange the events to reconstruct Echo II's memory.");
+    // popupPane.setOnMouseClicked(e -> popupPane.setVisible(false));
+    instructionLabel.setText("Drag to arrange the events to reconstruct Echo II's memory.");
 
     loadImages(null);
     initChat();
@@ -809,10 +816,10 @@ public class AiWitnessController extends ChatController {
 
           // Reset drag and drop puzzle elements
           resetPuzzleState();
-           // Disable back button until flashbacks end
-           if (backBtn != null) {
-             backBtn.setDisable(true);
-           }
+          // Disable back button until flashbacks end
+          if (backBtn != null) {
+            backBtn.setDisable(true);
+          }
         });
   }
 
