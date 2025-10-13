@@ -244,6 +244,9 @@ public class HumanWitnessController extends ChatController {
     notif.setVisible(false);
     notifBig.setVisible(true);
 
+    // Mark that the player inspected the computer email via the notification
+    GameStateManager.getInstance().setInteractionFlag("OrionScreen", true);
+
     // Append visible user message so chat shows "You: Notification Viewed 🔎"
     ChatMessage notifUserMsg = new ChatMessage("user", "Notification Viewed 🔎");
     appendChatMessage(notifUserMsg);
@@ -279,6 +282,17 @@ public class HumanWitnessController extends ChatController {
                 "It mentions AstroHelix and an investment tied to"
                     + " Project Starlight. That could explain why someone might try to use this as"
                     + " leverage."));
+
+  // After a short delay, if the phone hasn't been unlocked yet, nudge the player to check it
+  executeDelayedTask(
+    2000,
+    () -> {
+      if (!GameStateManager.getInstance().getInteractionFlag("OrionInt")) {
+      displayMessage(
+        "You should probably unlock my phone next — there may be messages from"
+          + " the CEO that explain motives related to Project Starlight.");
+      }
+    });
   }
 
   // Handle slider release to transition to humanMem2.png and hide slider

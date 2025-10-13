@@ -65,7 +65,10 @@ public class EndController extends ChatController {
     // Check interaction flags
     boolean aegisInteraction = GameStateManager.getInstance().getInteractionFlag("AegisInt");
     boolean echoInteraction = GameStateManager.getInstance().getInteractionFlag("EchoInt");
-    boolean orionInteraction = GameStateManager.getInstance().getInteractionFlag("OrionInt");
+    // Require both phone unlock (OrionInt) and computer/email inspection (OrionScreen)
+    boolean orionInteraction =
+        GameStateManager.getInstance().getInteractionFlag("OrionInt")
+            && GameStateManager.getInstance().getInteractionFlag("OrionScreen");
 
     // Count completed interactions
     int interactionsCompleted = 0;
