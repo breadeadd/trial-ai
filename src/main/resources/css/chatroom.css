@@ -72,3 +72,14 @@ thumb:hover {
   -fx-pref-height: 25px;
   -fx-background-position: center;
 }
+
+.close-button {
+  -fx-font-size: 14px;
+  -fx-font-weight: bold;
+  -fx-background-color: #8b2626;
+  -fx-text-fill: white;
+  -fx-border-radius: 5px;
+
+  -fx-padding: 5%;
+  -fx-border-radius: 5px;
+}

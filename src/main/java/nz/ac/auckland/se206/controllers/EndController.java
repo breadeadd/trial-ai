@@ -537,7 +537,7 @@ public class EndController extends ChatController {
     // Array of controller names for systematic processing
     String[] controllerNames = {"defendantChat", "witnessChat", "aiChat"};
     String[] controllerTypes = {"defendant", "human witness", "AI witness"};
-    
+
     // Clear each controller's UI systematically
     for (int i = 0; i < controllerNames.length; i++) {
       try {
@@ -546,8 +546,8 @@ public class EndController extends ChatController {
           controller.clearChatUi(); // Use base class method
         }
       } catch (Exception e) {
-        System.err.println("Warning: Could not clear " + controllerTypes[i] 
-            + " chat UI: " + e.getMessage());
+        System.err.println(
+            "Warning: Could not clear " + controllerTypes[i] + " chat UI: " + e.getMessage());
       }
     }
   }
@@ -557,7 +557,7 @@ public class EndController extends ChatController {
     // Array of controller names for systematic processing
     String[] controllerNames = {"defendantChat", "witnessChat", "aiChat"};
     String[] controllerTypes = {"defendant", "human witness", "AI witness"};
-    
+
     // Reset each controller's chat completion request systematically
     for (int i = 0; i < controllerNames.length; i++) {
       try {
@@ -566,8 +566,8 @@ public class EndController extends ChatController {
           resetChatCompletionRequest(controller); // Use existing reflection method
         }
       } catch (Exception e) {
-        System.err.println("Warning: Could not reset " + controllerTypes[i] 
-            + " chat request: " + e.getMessage());
+        System.err.println(
+            "Warning: Could not reset " + controllerTypes[i] + " chat request: " + e.getMessage());
       }
     }
   }
@@ -713,7 +713,6 @@ public class EndController extends ChatController {
   }
 
   /** Resets DefendantController UI elements to initial state. */
-  /** Resets DefendantController UI elements to initial state. */
   private void resetDefendantUi(DefendantController controller) {
     try {
       // Reset common chat elements
@@ -817,10 +816,7 @@ public class EndController extends ChatController {
    * @param visible the visibility state to set
    */
   private void setParentControlVisibility(
-      Object controller, 
-      Class<?> parentClass, 
-      String fieldName, 
-      boolean visible) {
+      Object controller, Class<?> parentClass, String fieldName, boolean visible) {
     try {
       java.lang.reflect.Field field = parentClass.getDeclaredField(fieldName);
       field.setAccessible(true);
