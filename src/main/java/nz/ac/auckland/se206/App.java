@@ -275,8 +275,8 @@ public class App extends Application {
                     SceneBundle roomBundle = preloadedBundles.get("room");
                     if (roomBundle != null && roomBundle.root != null) {
                       // Create a wrapper to center the room content inside the scaled root
-                        // Place the centered wrapper into the main layout
-                        rootLayout.setCenter(createCenteredWrapper(roomBundle.root));
+                      // Place the centered wrapper into the main layout
+                      rootLayout.setCenter(createCenteredWrapper(roomBundle.root));
                       roomBundle.root.requestFocus();
 
                       // Ensure the stage matches the scene size and center it on screen after
@@ -303,17 +303,21 @@ public class App extends Application {
   }
 
   /**
-   * Create a centered StackPane wrapper for a provided root. If the root is a Region with
-   * preferred size, the wrapper will be sized to that preferred size to avoid layout clipping
-   * when global scaling is applied.
+   * Create a centered StackPane wrapper for a provided root. If the root is a Region with preferred
+   * size, the wrapper will be sized to that preferred size to avoid layout clipping when global
+   * scaling is applied.
    *
    * @param root the scene root to wrap
    * @return a StackPane that centers the provided root
    */
   private static StackPane createCenteredWrapper(Parent root) {
+    // Center the provided root so absolute-positioned content remains visually
+    // centered when the main UI root is scaled.
     StackPane wrapper = new StackPane(root);
     StackPane.setAlignment(root, Pos.CENTER);
 
+    // If the root reports a preferred size, apply it to the wrapper to avoid
+    // unwanted clipping or layout shifts after scaling.
     if (root instanceof Region) {
       Region r = (Region) root;
       double prefW = r.getPrefWidth() > 0 ? r.getPrefWidth() : r.getWidth();

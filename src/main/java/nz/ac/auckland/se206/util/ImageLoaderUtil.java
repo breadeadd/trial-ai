@@ -26,20 +26,16 @@ public class ImageLoaderUtil {
 
               // Load character-specific flashback images
               for (int i = 1; i <= 3; i++) {
-                String path = String.format(
-                    "/images/flashbacks/%s/%s%dF.png", 
-                    characterName, 
-                    characterName, 
-                    i);
-                loadedImages.add(
-                    new Image(ImageLoaderUtil.class.getResourceAsStream(path)));
+                String path =
+                    String.format(
+                        "/images/flashbacks/%s/%s%dF.png", characterName, characterName, i);
+                loadedImages.add(new Image(ImageLoaderUtil.class.getResourceAsStream(path)));
               }
 
               // Add memory image
               String memoryPath = getMemoryImagePath(characterName);
               if (memoryPath != null) {
-                loadedImages.add(
-                    new Image(ImageLoaderUtil.class.getResourceAsStream(memoryPath)));
+                loadedImages.add(new Image(ImageLoaderUtil.class.getResourceAsStream(memoryPath)));
               }
 
               // Update image list on UI thread
@@ -56,10 +52,9 @@ public class ImageLoaderUtil {
   }
 
   /**
-   * Gets the memory image path for a specific character type.
-   * Each character has a unique memory screen image that represents their
-   * interactive puzzle state. This method maps character names to their
-   * corresponding memory image file paths in the resources directory.
+   * Gets the memory image path for a specific character type. Each character has a unique memory
+   * screen image that represents their interactive puzzle state. This method maps character names
+   * to their corresponding memory image file paths in the resources directory.
    *
    * @param characterName the character name ("defendant", "human", or "ai")
    * @return the memory image path or null if character is not recognized
@@ -83,10 +78,10 @@ public class ImageLoaderUtil {
   }
 
   /**
-   * Loads flashback and memory images specifically for the human witness character.
-   * This method handles the unique case where the human witness has two memory screen
-   * images (locked and unlocked phone states) in addition to standard flashback images.
-   * The images are loaded in a background thread to prevent UI blocking during startup.
+   * Loads flashback and memory images specifically for the human witness character. This method
+   * handles the unique case where the human witness has two memory screen images (locked and
+   * unlocked phone states) in addition to standard flashback images. The images are loaded in a
+   * background thread to prevent UI blocking during startup.
    *
    * @param images the list to populate with loaded images in sequence
    * @param onLoaded callback to execute when loading is complete (can be null)
@@ -99,19 +94,18 @@ public class ImageLoaderUtil {
               // Load human witness flashback images
               for (int i = 1; i <= 3; i++) {
                 String path = String.format("/images/flashbacks/human/human%dF.png", i);
-                loadedImages.add(
-                    new Image(ImageLoaderUtil.class.getResourceAsStream(path)));
+                loadedImages.add(new Image(ImageLoaderUtil.class.getResourceAsStream(path)));
               }
 
               // Add both memory images for human witness
               // Load first human memory image
-              loadedImages.add(new Image(
-                  ImageLoaderUtil.class.getResourceAsStream(
-                      "/images/memories/humanMem1.png")));
+              loadedImages.add(
+                  new Image(
+                      ImageLoaderUtil.class.getResourceAsStream("/images/memories/humanMem1.png")));
               // Load second human memory image
-              loadedImages.add(new Image(
-                  ImageLoaderUtil.class.getResourceAsStream(
-                      "/images/memories/humanMem2.png")));
+              loadedImages.add(
+                  new Image(
+                      ImageLoaderUtil.class.getResourceAsStream("/images/memories/humanMem2.png")));
 
               // Update image list on UI thread
               Platform.runLater(
@@ -126,14 +120,14 @@ public class ImageLoaderUtil {
         .start();
   }
 
-      /**
-       * Loads a single Image from a resource path using this class's classloader. Central helper to
-       * reduce repeated new Image(...) callsites across controllers.
-       *
-       * @param resourcePath absolute resource path (e.g. "/images/characters/aegisIdle.png")
-       * @return loaded Image
-       */
-      public static Image loadImage(String resourcePath) {
-        return new Image(ImageLoaderUtil.class.getResourceAsStream(resourcePath));
-      }
+  /**
+   * Loads a single Image from a resource path using this class's classloader. Central helper to
+   * reduce repeated new Image(...) callsites across controllers.
+   *
+   * @param resourcePath absolute resource path (e.g. "/images/characters/aegisIdle.png")
+   * @return loaded Image
+   */
+  public static Image loadImage(String resourcePath) {
+    return new Image(ImageLoaderUtil.class.getResourceAsStream(resourcePath));
+  }
 }
