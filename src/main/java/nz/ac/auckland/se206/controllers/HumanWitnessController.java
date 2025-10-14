@@ -9,8 +9,6 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -38,9 +36,7 @@ public class HumanWitnessController extends ChatController {
   @FXML private Button nextButton;
   @FXML private Slider unlockSlider;
   @FXML private Button dropUpArrow;
-  @FXML private TextArea txtaChat;
-  @FXML private TextField txtInput;
-  @FXML private Button btnSend;
+
   @FXML private Button backBtn;
   @FXML private ImageView notif;
   @FXML private ImageView notifBig;
@@ -283,16 +279,16 @@ public class HumanWitnessController extends ChatController {
                     + " Project Starlight. That could explain why someone might try to use this as"
                     + " leverage."));
 
-  // After a short delay, if the phone hasn't been unlocked yet, nudge the player to check it
-  executeDelayedTask(
-    2000,
-    () -> {
-      if (!GameStateManager.getInstance().getInteractionFlag("OrionInt")) {
-      displayMessage(
-        "You should probably unlock my phone next — there may be messages from"
-          + " the CEO that explain motives related to Project Starlight.");
-      }
-    });
+    // After a short delay, if the phone hasn't been unlocked yet, nudge the player to check it
+    executeDelayedTask(
+        2000,
+        () -> {
+          if (!GameStateManager.getInstance().getInteractionFlag("OrionInt")) {
+            displayMessage(
+                "You should probably unlock my phone next — there may be messages from"
+                    + " the CEO that explain motives related to Project Starlight.");
+          }
+        });
   }
 
   // Handle slider release to transition to humanMem2.png and hide slider
