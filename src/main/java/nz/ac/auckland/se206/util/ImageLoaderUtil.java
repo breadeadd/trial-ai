@@ -125,4 +125,15 @@ public class ImageLoaderUtil {
             })
         .start();
   }
+
+      /**
+       * Loads a single Image from a resource path using this class's classloader. Central helper to
+       * reduce repeated new Image(...) callsites across controllers.
+       *
+       * @param resourcePath absolute resource path (e.g. "/images/characters/aegisIdle.png")
+       * @return loaded Image
+       */
+      public static Image loadImage(String resourcePath) {
+        return new Image(ImageLoaderUtil.class.getResourceAsStream(resourcePath));
+      }
 }

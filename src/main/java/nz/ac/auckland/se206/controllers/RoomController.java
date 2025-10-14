@@ -17,6 +17,7 @@ import javafx.scene.media.MediaPlayer;
 import nz.ac.auckland.se206.App;
 import nz.ac.auckland.se206.CountdownTimer;
 import nz.ac.auckland.se206.states.GameStateManager;
+import nz.ac.auckland.se206.util.ImageLoaderUtil;
 
 /**
  * Controller class for the room view. Handles user interactions within the room where the user can
@@ -29,20 +30,15 @@ public class RoomController {
   private MediaPlayer mediaPlayer; // Keep reference to prevent garbage collection
 
   // set images for hover
-  private Image aegisIdle =
-      new Image(getClass().getResourceAsStream("/images/characters/aegisIdle.png"));
-  private Image aegisHover =
-      new Image(getClass().getResourceAsStream("/images/characters/aegisHover.png"));
+  // set images for hover
+  private Image aegisIdle = ImageLoaderUtil.loadImage("/images/characters/aegisIdle.png");
+  private Image aegisHover = ImageLoaderUtil.loadImage("/images/characters/aegisHover.png");
 
-  private Image orionIdle =
-      new Image(getClass().getResourceAsStream("/images/characters/orionIdle.png"));
-  private Image orionHover =
-      new Image(getClass().getResourceAsStream("/images/characters/orionHover.png"));
+  private Image orionIdle = ImageLoaderUtil.loadImage("/images/characters/orionIdle.png");
+  private Image orionHover = ImageLoaderUtil.loadImage("/images/characters/orionHover.png");
 
-  private Image echoIdle =
-      new Image(getClass().getResourceAsStream("/images/characters/echoIdle.png"));
-  private Image echoHover =
-      new Image(getClass().getResourceAsStream("/images/characters/echoHover.png"));
+  private Image echoIdle = ImageLoaderUtil.loadImage("/images/characters/echoIdle.png");
+  private Image echoHover = ImageLoaderUtil.loadImage("/images/characters/echoHover.png");
 
   // hover image animations
   @FXML private ImageView defImg;

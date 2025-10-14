@@ -76,23 +76,7 @@ public class App extends Application {
     if (bundle == null) {
       throw new IOException("Scene not preloaded: " + fxml);
     }
-    // Wrap the provided root in a centered StackPane so absolute-positioned content
-    // (like the room Pane) remains centered under global scaling.
-    StackPane wrapper = new StackPane(bundle.root);
-    StackPane.setAlignment(bundle.root, Pos.CENTER);
-
-    // If the root is a Region with preferred size, apply that size to the wrapper
-    if (bundle.root instanceof Region) {
-      Region r = (Region) bundle.root;
-      double prefW = r.getPrefWidth() > 0 ? r.getPrefWidth() : r.getWidth();
-      double prefH = r.getPrefHeight() > 0 ? r.getPrefHeight() : r.getHeight();
-      if (prefW > 0 && prefH > 0) {
-        wrapper.setPrefSize(prefW, prefH);
-        wrapper.setMaxSize(prefW, prefH);
-      }
-    }
-
-    rootLayout.setCenter(wrapper);
+    rootLayout.setCenter(createCenteredWrapper(bundle.root));
 
     // Try to resize and re-center the stage (if available) to avoid clipping
     if (rootLayout.getScene() != null && rootLayout.getScene().getWindow() instanceof Stage) {
@@ -291,28 +275,8 @@ public class App extends Application {
                     SceneBundle roomBundle = preloadedBundles.get("room");
                     if (roomBundle != null && roomBundle.root != null) {
                       // Create a wrapper to center the room content inside the scaled root
-                      StackPane centeredRoom = new StackPane(roomBundle.root);
-                      StackPane.setAlignment(roomBundle.root, Pos.CENTER);
-
-                      // If the room root has explicit preferred size, use it to size the wrapper
-                      if (roomBundle.root instanceof Region) {
-                        Region roomRegion = (Region) roomBundle.root;
-                        double prefW =
-                            roomRegion.getPrefWidth() > 0
-                                ? roomRegion.getPrefWidth()
-                                : roomRegion.getWidth();
-                        double prefH =
-                            roomRegion.getPrefHeight() > 0
-                                ? roomRegion.getPrefHeight()
-                                : roomRegion.getHeight();
-                        if (prefW > 0 && prefH > 0) {
-                          centeredRoom.setPrefSize(prefW, prefH);
-                          centeredRoom.setMaxSize(prefW, prefH);
-                        }
-                      }
-
-                      // Place the centered wrapper into the main layout
-                      rootLayout.setCenter(centeredRoom);
+                        // Place the centered wrapper into the main layout
+                        rootLayout.setCenter(createCenteredWrapper(roomBundle.root));
                       roomBundle.root.requestFocus();
 
                       // Ensure the stage matches the scene size and center it on screen after
@@ -336,5 +300,30 @@ public class App extends Application {
 
     // Starting the task
     new Thread(waitTask).start();
+  }
+
+  /**
+   * Create a centered StackPane wrapper for a provided root. If the root is a Region with
+   * preferred size, the wrapper will be sized to that preferred size to avoid layout clipping
+   * when global scaling is applied.
+   *
+   * @param root the scene root to wrap
+   * @return a StackPane that centers the provided root
+   */
+  private static StackPane createCenteredWrapper(Parent root) {
+    StackPane wrapper = new StackPane(root);
+    StackPane.setAlignment(root, Pos.CENTER);
+
+    if (root instanceof Region) {
+      Region r = (Region) root;
+      double prefW = r.getPrefWidth() > 0 ? r.getPrefWidth() : r.getWidth();
+      double prefH = r.getPrefHeight() > 0 ? r.getPrefHeight() : r.getHeight();
+      if (prefW > 0 && prefH > 0) {
+        wrapper.setPrefSize(prefW, prefH);
+        wrapper.setMaxSize(prefW, prefH);
+      }
+    }
+
+    return wrapper;
   }
 }
