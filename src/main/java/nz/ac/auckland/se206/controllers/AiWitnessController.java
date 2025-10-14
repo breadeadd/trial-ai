@@ -43,16 +43,13 @@ public class AiWitnessController extends ChatController {
 
   // set images
   private Image event1 = ImageLoaderUtil.loadImage("/images/memories/assets/event1.png");
-  private Image event1C =
-    ImageLoaderUtil.loadImage("/images/memories/assets/event1Correct.png");
+  private Image event1C = ImageLoaderUtil.loadImage("/images/memories/assets/event1Correct.png");
 
   private Image event2 = ImageLoaderUtil.loadImage("/images/memories/assets/event2.png");
-  private Image event2C =
-    ImageLoaderUtil.loadImage("/images/memories/assets/event2Correct.png");
+  private Image event2C = ImageLoaderUtil.loadImage("/images/memories/assets/event2Correct.png");
 
   private Image event3 = ImageLoaderUtil.loadImage("/images/memories/assets/event3.png");
-  private Image event3C =
-    ImageLoaderUtil.loadImage("/images/memories/assets/event3Correct.png");
+  private Image event3C = ImageLoaderUtil.loadImage("/images/memories/assets/event3Correct.png");
 
   @FXML private ImageView flashbackSlideshow;
   @FXML private ImageView aiFlashback;
