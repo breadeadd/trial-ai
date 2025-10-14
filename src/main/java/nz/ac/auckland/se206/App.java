@@ -219,15 +219,15 @@ public class App extends Application {
             });
 
     // Layouts for timer and title
-  stackPaneRoot = new StackPane(rootLayout, timerLabel);
-  StackPane.setAlignment(timerLabel, Pos.TOP_RIGHT);
-  // Give the timer a small margin from the top-right corner
-  StackPane.setMargin(timerLabel, new Insets(8));
-  // Apply global scaling to the main content (rootLayout) so the timer label
-  // (a sibling in the StackPane) remains unscaled and visible.
-  rootLayout.setScaleX(SCALE_FACTOR);
-  rootLayout.setScaleY(SCALE_FACTOR);
-  scene = new Scene(stackPaneRoot, 800 * SCALE_FACTOR, 600 * SCALE_FACTOR);
+    stackPaneRoot = new StackPane(rootLayout, timerLabel);
+    StackPane.setAlignment(timerLabel, Pos.TOP_RIGHT);
+    // Give the timer a small margin from the top-right corner
+    StackPane.setMargin(timerLabel, new Insets(8));
+    // Apply global scaling to the main content (rootLayout) so the timer label
+    // (a sibling in the StackPane) remains unscaled and visible.
+    rootLayout.setScaleX(SCALE_FACTOR);
+    rootLayout.setScaleY(SCALE_FACTOR);
+    scene = new Scene(stackPaneRoot, 800 * SCALE_FACTOR, 600 * SCALE_FACTOR);
     stage.setScene(scene);
     stage.setTitle("TrialAI");
     stage.show();
