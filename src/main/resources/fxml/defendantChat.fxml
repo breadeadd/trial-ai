@@ -22,7 +22,6 @@
             <Rectangle2D />
          </viewport>
       </ImageView>
-
       <TextArea fx:id="txtaChat" editable="false" layoutX="9.0" layoutY="437.0" opacity="0.9" prefHeight="131.0" prefWidth="771.0" wrapText="true" />
       <TextField fx:id="txtInput" layoutX="8.0" layoutY="574.0" onAction="#onSendMessage" onKeyPressed="#onKeyPressed" prefHeight="26.0" prefWidth="654.0" />
       <Button fx:id="btnSend" layoutX="669.0" layoutY="574.0" mnemonicParsing="false" onAction="#onSendMessage" prefHeight="25.0" prefWidth="109.0" style="-fx-background-color: #5f9ed9;" text="Send" />
@@ -32,12 +31,10 @@
             <Font name="VT323 Regular" size="28.0" />
          </font>
       </Button>
-
       <Rectangle fx:id="button1" arcHeight="5.0" arcWidth="5.0" fill="#1f93ff" focusTraversable="true" height="61.0" layoutX="704.0" layoutY="68.0" onMouseClicked="#button1Clicked" opacity="0.0" stroke="BLACK" strokeType="INSIDE" width="60.0" />
       <Rectangle fx:id="button2" arcHeight="5.0" arcWidth="5.0" fill="#1f93ff" focusTraversable="true" height="61.0" layoutX="704.0" layoutY="169.0" onMouseClicked="#button2Clicked" opacity="0.0" stroke="BLACK" strokeType="INSIDE" width="60.0" />
       <Rectangle fx:id="button3" arcHeight="5.0" arcWidth="5.0" fill="#1f93ff" focusTraversable="true" height="61.0" layoutX="705.0" layoutY="270.0" onMouseClicked="#button3Clicked" opacity="0.0" stroke="BLACK" strokeType="INSIDE" width="60.0" />
       <Rectangle fx:id="button4" arcHeight="5.0" arcWidth="5.0" fill="#1f93ff" focusTraversable="true" height="61.0" layoutX="702.0" layoutY="370.0" onMouseClicked="#button4Clicked" opacity="0.0" stroke="BLACK" strokeType="INSIDE" width="60.0" />
-
       <ImageView fx:id="btn1img" fitHeight="25.0" fitWidth="109.0" layoutX="519.0" layoutY="367.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../images/memories/assets/button1res.png" />
@@ -58,18 +55,17 @@
             <Image url="@../images/memories/assets/button2res.png" />
          </image>
       </ImageView>
-
       <Button fx:id="dropUpArrow" layoutX="14.0" layoutY="540.0" mnemonicParsing="false" onAction="#onToggleChat" prefHeight="30.0" prefWidth="30.0" style="-fx-background-color: #ffffff; -fx-shape: 'M 0 15 L 15 0 L 30 15 Z';" visible="false" />
       <ProgressIndicator fx:id="loading" layoutX="382.0" layoutY="480.0" prefHeight="194.0" prefWidth="27.0" progress="0.0" visible="false" />
-
       <AnchorPane fx:id="popupPane" style="-fx-background-color: rgba(0,0,0,0.7);" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
-            <Button fx:id="closePopupBtn" layoutX="630.0" layoutY="200.0" mnemonicParsing="false" onAction="#onClosePopup" prefHeight="40.0" prefWidth="40.0" style="-fx-background-color: red; -fx-background-radius: 50%; -fx-text-fill: white; -fx-font-size: 20px; -fx-cursor: hand;" text="✕" />
+            <Rectangle fill="transparent" height="80.0" layoutX="184.0" layoutY="247.0" stroke="WHITE" strokeWidth="2.0" width="420.0" />
             <Label fx:id="instructionLabel" alignment="CENTER" layoutX="194.0" layoutY="257.0" prefHeight="60.0" prefWidth="400.0" textAlignment="CENTER" textFill="WHITE" wrapText="true">
                <font>
                   <Font size="20.0" />
                </font>
             </Label>
+            <Button fx:id="closePopupBtn" layoutX="586.0" layoutY="247.0" mnemonicParsing="false" onAction="#onClosePopup" prefHeight="18.0" prefWidth="18.0" style="-fx-background-color: red; -fx-background-radius: 50%; -fx-text-fill: white; -fx-font-size: 10px; -fx-cursor: hand;" text="✕" />
          </children>
       </AnchorPane>
   </children>

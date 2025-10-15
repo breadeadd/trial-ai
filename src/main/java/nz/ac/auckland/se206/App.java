@@ -290,6 +290,7 @@ public class App extends Application {
 
                     // Output for debugging
                     System.out.println("All scenes preloaded and switched to room.");
+                    CountdownTimer.start();
                   } catch (IOException e) {
                     System.err.println("Failed to switch to room scene");
                     e.printStackTrace();
