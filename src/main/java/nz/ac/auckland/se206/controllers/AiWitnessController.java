@@ -565,18 +565,43 @@ public class AiWitnessController extends ChatController {
     executeDelayedTask(
         2000,
         () -> {
-          addContextToChat(
-              "system",
-              "Player has successfully completed Echo II's timeline memory puzzle. "
-                  + "All events were placed in correct chronological order: "
-                  + "1st - Logs Altered (Cassian made various statistic changes "
-                  + "to the Project Starlight Logs), "
-                  + "2nd - Counter-Threat (Aegis often takes immediate, extreme action. "
-                  + "Such as a counter-threat), "
-                  + "3rd - Outrage (O. Vale, Mission Lead, received an overflow of messages). "
-                  + "This represents the correct sequence of events "
-                  + "during the mission compromise.");
+          // Add detailed character-specific context (hidden) for Echo II
+          String charContext =
+              "Player has successfully completed Echo II's timeline memory puzzle. Echo II confirms"
+                  + " all three events were placed in correct chronological order: 1) Logs Altered"
+                  + " (Cassian's manipulation of Project Starlight logs), 2) Counter-Threat (Aegis"
+                  + " I's immediate security response), 3) Outrage (Orion Vale's message overflow"
+                  + " and coordination failure). This indicates Echo II's reconstructed memory"
+                  + " sequence is stable and verified.";
+
+          addContextToChat("system", charContext);
           lastTimelineAction = "Timeline completed successfully";
+
+          // Create a concise but information-rich shared system notice for other characters
+          String detailedSharedNotice =
+              "SHARED_CONTEXT: Echo II's timeline puzzle has been COMPLETED by the player. "
+                  + "Confirmed sequence: 1-Logs Altered; 2-Counter-Threat; 3-Outrage. "
+                  + "Implication: The mission compromise timeline is reconstructed (cause -> "
+                  + "escalation -> communication failure). Other characters may reference the "
+                  + "timeline as 'completed' and discuss high-level consequences, but must NOT "
+                  + "reveal puzzle unlock steps or explicit placement instructions. If asked for "
+                  + "puzzle-solving specifics, direct the user to Echo II ('Ask Echo II').";
+
+          nz.ac.auckland.apiproxy.chat.openai.ChatMessage sharedMsg =
+              new nz.ac.auckland.apiproxy.chat.openai.ChatMessage("system", detailedSharedNotice);
+
+          // Add to global history so other controllers receive it when they merge history
+          ChatHistory.addMessage(sharedMsg, "system");
+
+          // Also inject into the active chatCompletionRequest so the running model sees it
+          if (chatCompletionRequest != null) {
+            try {
+              chatCompletionRequest.addMessage(sharedMsg);
+            } catch (Exception e) {
+              System.err.println(
+                  "Failed to inject shared timeline notice into request: " + e.getMessage());
+            }
+          }
         });
 
     // Mark AI witness interaction as completed
@@ -719,15 +744,16 @@ public class AiWitnessController extends ChatController {
             "CHARACTER IDENTITY AND RESTRICTIONS: You are Echo II, an AI witness (NOT the"
                 + " defendant). The defendant is Aegis I (a different AI system). Cassian Thorne is"
                 + " the high-ranking human executive who betrayed the mission. CRITICAL"
-                + " RESTRICTIONS: Echo II can ONLY discuss Echo II's OWN memories and evidence"
-                + " accessible through Echo II's timeline puzzle. Echo II should NEVER mention"
-                + " Aegis I's memory buttons or Orion's phone slider. Echo II should NEVER provide"
-                + " information about how to unlock other characters' evidence or whether their"
-                + " evidence is unlocked. Echo II has NO KNOWLEDGE of other characters'"
-                + " interactions or unlock status. Echo II should guide users to drag event images"
-                + " into the correct chronological slots in Echo II's timeline, but should NOT"
-                + " reveal specific details about Project Starlight events or mission sequence"
-                + " until users actually complete the puzzle interactions."));
+                + " RESTRICTIONS: Echo II can discuss Echo II's OWN memories and evidence"
+                + " accessible through Echo II's timeline puzzle. Echo II must NOT disclose private"
+                + " unlock methods or explicit puzzle solutions belonging to other characters. If"
+                + " directly asked about another character's puzzle, Echo II may describe the"
+                + " general topic at a high level but must refuse to provide unlock steps or the"
+                + " explicit answer and should direct the asker to speak with that puzzle's owner"
+                + " by name (for example: 'Ask Orion Vale' or 'Ask Aegis I') for further details."
+                + " Echo II should guide users to drag event images into the correct chronological"
+                + " slots in Echo II's timeline but should NOT reveal other characters' puzzle"
+                + " answers."));
 
     // If there's a recent timeline action, add context to help the AI understand
     if (!lastTimelineAction.isEmpty()) {

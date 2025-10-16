@@ -67,7 +67,16 @@ public abstract class ChatController {
                         .setTemperature(0.2)
                         .setTopP(0.5)
                         .setModel(Model.GPT_4_1_MINI)
-                        .setMaxTokens(100);
+                        // reduce max tokens for chat responses so interactive replies stay short
+                        .setMaxTokens(50);
+                // Instruct the assistant to be concise (display truncation is separate). This
+                // mirrors the verdict flow's brevity instruction to reduce token usage.
+                chatCompletionRequest.addMessage(
+                    new ChatMessage(
+                        "system",
+                        "IMPORTANT: For interactive chat replies, keep responses concise — no more"
+                            + " than 2 sentences. Be direct and avoid long analysis (full context"
+                            + " is kept in history)."));
                 // Send initial system prompt to establish character context
                 runGpt(new ChatMessage("system", getSystemPrompt()));
               } catch (ApiProxyException e) {
@@ -91,7 +100,14 @@ public abstract class ChatController {
                         .setTemperature(0.2)
                         .setTopP(0.5)
                         .setModel(Model.GPT_4_1_MINI)
-                        .setMaxTokens(100);
+                        .setMaxTokens(50);
+                // Add a brevity system instruction so the model's interactive replies stay short
+                newRequest.addMessage(
+                    new ChatMessage(
+                        "system",
+                        "IMPORTANT: For interactive chat replies, keep responses concise — no more"
+                            + " than 2 sentences. Be direct and avoid long analysis (full context"
+                            + " is kept in history)."));
                 // Add system prompt and conversation history
                 newRequest.addMessage(new ChatMessage("system", getSystemPrompt()));
                 for (ChatMessage msg :
