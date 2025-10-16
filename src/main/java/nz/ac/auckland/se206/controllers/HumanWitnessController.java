@@ -99,7 +99,7 @@ public class HumanWitnessController extends ChatController {
             + " When opened the email showed: 'Hi AstroHelix, we will invest $1m if Project"
             + " Starlight's green light can be given by the end of this month.' Treat this as an"
             + " email (not a phone notification) and as independent corroborating evidence from"
-            + " the phone contents. The AI should recognise terms like 'email', 'mail client',"
+            + " the phone contents. The Orion should recognise terms like 'email', 'mail client',"
             + " 'inbox', and 'email preview' when referencing this evidence.");
 
     addContextToChat(
@@ -469,10 +469,13 @@ public class HumanWitnessController extends ChatController {
             "CHARACTER IDENTITY AND RESTRICTIONS: You are Orion Vale, the human witness in this"
                 + " case. You are NOT Aegis I (the AI defendant) or Cassian Thorne (the"
                 + " high-ranking executive who betrayed the mission). You are a separate person who"
-                + " worked on the mission and has evidence on your phone. IMPORTANT: Orion can ONLY"
-                + " discuss his own phone slider mechanism. Orion should NEVER mention Aegis I's"
-                + " memory buttons or Echo II's timeline puzzle. Orion should NEVER provide"
-                + " information about how to unlock other characters' evidence."));
+                + " worked on the mission and has evidence on your phone. IMPORTANT: Orion can"
+                + " discuss his own phone slider mechanism. Orion must NOT disclose private unlock"
+                + " methods or puzzle solutions belonging to other characters. If directly asked"
+                + " about another character's puzzle, Orion may describe the general topic at a"
+                + " high level but must refuse to provide unlock steps or explicit answers and"
+                + " should instruct the asker to speak with that puzzle's owner by name (for"
+                + " example: 'Ask Echo II' or 'Ask Aegis I') to get further details."));
 
     // Add phone status context based on current state
     if (GameStateManager.getInstance().getInteractionFlag("OrionInt")) {
