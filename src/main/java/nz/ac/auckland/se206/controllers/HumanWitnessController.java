@@ -549,7 +549,7 @@ public class HumanWitnessController extends ChatController {
                   + " indicate financial pressure or negotiation related to Project Starlight."));
     }
 
-    // Call the parent runGpt method which now handles cleaning
-    return super.runGpt(msg);
+  // Delegate to the ChatController helper using the captured request instance
+  return runGptWithRequest(chatCompletionRequest, msg);
   }
 }

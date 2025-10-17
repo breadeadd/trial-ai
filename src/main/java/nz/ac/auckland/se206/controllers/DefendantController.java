@@ -322,7 +322,7 @@ public class DefendantController extends ChatController {
     }
 
     // Call the parent runGpt method which now handles cleaning
-    return super.runGpt(msg);
+    return runGptWithRequest(chatCompletionRequest, msg);
   }
 
   /** Sends completion messages after all buttons have been pressed with timing delays. */
