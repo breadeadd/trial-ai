@@ -167,9 +167,25 @@ public abstract class ChatController {
    * @throws ApiProxyException if there is an error communicating with the API proxy
    */
   protected ChatMessage runGpt(ChatMessage msg) throws ApiProxyException {
-    chatCompletionRequest.addMessage(msg);
+    // Delegate to the request-scoped helper so callers can ensure they and execution
+    // operate on the same ChatCompletionRequest instance.
+    return runGptWithRequest(chatCompletionRequest, msg);
+  }
+
+  /**
+   * Execute a chat completion using the provided request instance. This ensures the
+   * provided request object is used for both message injection and execution to avoid
+   * races when chatCompletionRequest is replaced concurrently.
+   */
+  protected ChatMessage runGptWithRequest(ChatCompletionRequest request, ChatMessage msg)
+      throws ApiProxyException {
+    if (request == null) {
+      throw new ApiProxyException("ChatCompletionRequest not initialized");
+    }
+
+    request.addMessage(msg);
     try {
-      ChatCompletionResult chatCompletionResult = chatCompletionRequest.execute();
+      ChatCompletionResult chatCompletionResult = request.execute();
       Choice result = chatCompletionResult.getChoices().iterator().next();
       ChatMessage responseMsg = result.getChatMessage();
 
@@ -195,16 +211,14 @@ public abstract class ChatController {
       // Create a new message with cleaned content for display
       ChatMessage cleanedResponse = new ChatMessage(responseMsg.getRole(), cleanedContent);
 
-      // Add the original response (with prefix) to the request for AI context
-      chatCompletionRequest.addMessage(responseMsg);
+      // Add the original response (with prefix) to the same request for AI context
+      request.addMessage(responseMsg);
 
-      // Add the original response to ChatHistory for context (this will have "Character said:"
-      // prefix)
+      // Add the original response to ChatHistory for context (this will have "Character said:" prefix)
       String speaker = responseMsg.getRole().equals("assistant") ? getCharacterName() : "User";
       ChatHistory.addMessage(responseMsg, speaker);
 
-      // Display only the cleaned response (without calling appendChatMessage to avoid double
-      // ChatHistory entry)
+      // Display only the cleaned response
       displayChatMessage(cleanedResponse);
 
       return cleanedResponse;

@@ -587,8 +587,7 @@ public class AiWitnessController extends ChatController {
                   + "reveal puzzle unlock steps or explicit placement instructions. If asked for "
                   + "puzzle-solving specifics, direct the user to Echo II ('Ask Echo II').";
 
-          nz.ac.auckland.apiproxy.chat.openai.ChatMessage sharedMsg =
-              new nz.ac.auckland.apiproxy.chat.openai.ChatMessage("system", detailedSharedNotice);
+      ChatMessage sharedMsg = new ChatMessage("system", detailedSharedNotice);
 
           // Add to global history so other controllers receive it when they merge history
           ChatHistory.addMessage(sharedMsg, "system");
@@ -774,7 +773,7 @@ public class AiWitnessController extends ChatController {
     }
 
     // Call the parent runGpt method which now handles cleaning
-    return super.runGpt(msg);
+    return runGptWithRequest(chatCompletionRequest, msg);
   }
 
   /** Resets all events to their original positions. */
