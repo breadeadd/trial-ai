@@ -68,7 +68,7 @@ public abstract class ChatController {
                         .setTopP(0.5)
                         .setModel(Model.GPT_4_1_MINI)
                         // reduce max tokens for chat responses so interactive replies stay short
-                        .setMaxTokens(50);
+                        .setMaxTokens(100);
                 // Instruct the assistant to be concise (display truncation is separate). This
                 // mirrors the verdict flow's brevity instruction to reduce token usage.
                 chatCompletionRequest.addMessage(
@@ -100,7 +100,7 @@ public abstract class ChatController {
                         .setTemperature(0.2)
                         .setTopP(0.5)
                         .setModel(Model.GPT_4_1_MINI)
-                        .setMaxTokens(50);
+                        .setMaxTokens(100);
                 // Add a brevity system instruction so the model's interactive replies stay short
                 newRequest.addMessage(
                     new ChatMessage(
