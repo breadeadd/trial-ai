@@ -587,7 +587,7 @@ public class AiWitnessController extends ChatController {
                   + "reveal puzzle unlock steps or explicit placement instructions. If asked for "
                   + "puzzle-solving specifics, direct the user to Echo II ('Ask Echo II').";
 
-      ChatMessage sharedMsg = new ChatMessage("system", detailedSharedNotice);
+          ChatMessage sharedMsg = new ChatMessage("system", detailedSharedNotice);
 
           // Add to global history so other controllers receive it when they merge history
           ChatHistory.addMessage(sharedMsg, "system");

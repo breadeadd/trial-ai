@@ -173,9 +173,9 @@ public abstract class ChatController {
   }
 
   /**
-   * Execute a chat completion using the provided request instance. This ensures the
-   * provided request object is used for both message injection and execution to avoid
-   * races when chatCompletionRequest is replaced concurrently.
+   * Execute a chat completion using the provided request instance. This ensures the provided
+   * request object is used for both message injection and execution to avoid races when
+   * chatCompletionRequest is replaced concurrently.
    */
   protected ChatMessage runGptWithRequest(ChatCompletionRequest request, ChatMessage msg)
       throws ApiProxyException {
@@ -214,7 +214,8 @@ public abstract class ChatController {
       // Add the original response (with prefix) to the same request for AI context
       request.addMessage(responseMsg);
 
-      // Add the original response to ChatHistory for context (this will have "Character said:" prefix)
+      // Add the original response to ChatHistory for context (this will have "Character said:"
+      // prefix)
       String speaker = responseMsg.getRole().equals("assistant") ? getCharacterName() : "User";
       ChatHistory.addMessage(responseMsg, speaker);
 
