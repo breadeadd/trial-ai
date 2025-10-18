@@ -549,7 +549,7 @@ public class HumanWitnessController extends ChatController {
                   + " indicate financial pressure or negotiation related to Project Starlight."));
     }
 
-  // Delegate to the ChatController helper using the captured request instance
-  return runGptWithRequest(chatCompletionRequest, msg);
+    // Delegate to the ChatController helper using the captured request instance
+    return runGptWithRequest(chatCompletionRequest, msg);
   }
 }
