@@ -1,4 +1,4 @@
-# ⚖️ TrialAI — Interactive AI Accountability Simulation
+# ⚖️ TrialAI - Interactive AI Accountability Simulation
 
 A JavaFX application developed for **SOFTENG 206** in collaboration with our client **Sentinel AI**. TrialAI places players in a futuristic ethical dilemma where they must evaluate whether an AI has acted responsibly, highlighting real questions about AI autonomy, safety, and its future role in society.
 
@@ -37,11 +37,11 @@ The game aims to teach that:
 
 ## 🛠️ Technologies Used
 
-* **JavaFX** — main GUI
-* **OpenAI GPT API** — conversations, memory logic, verdict evaluation
-* **Text-to-Speech** — voice output
-* **Java Concurrency** — preventing UI freezes
-* **FXML** — structured scene and UI design
+* **JavaFX** - main GUI
+* **OpenAI GPT API** - conversations, memory logic, verdict evaluation
+* **Text-to-Speech** - voice output
+* **Java Concurrency** - preventing UI freezes
+* **FXML** - structured scene and UI design
 
 ---
 
